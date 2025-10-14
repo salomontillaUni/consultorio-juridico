@@ -810,7 +810,7 @@ export function UserRegistrationForm() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="space-y-2">
+              <div className="space-y-4">
                 <Label htmlFor="cedulaSolicitante">C.C. del Solicitante para Firma *</Label>
                 <Input
                   id="cedulaSolicitante"
@@ -874,7 +874,9 @@ export function UserRegistrationForm() {
 
         {/* Navigation Buttons */}
         <div className="flex justify-between mt-6">
-          <Button
+
+          {currentStep > 1 && (
+            <Button
             type="button"
             variant="outline"
             onClick={handlePrevious}
@@ -884,6 +886,9 @@ export function UserRegistrationForm() {
             <ChevronLeft className="h-4 w-4" />
             Anterior
           </Button>
+          )}
+
+          
 
           {currentStep < STEPS.length ? (
             <Button
@@ -916,6 +921,7 @@ export function UserRegistrationForm() {
               key={step.id}
               type="button"
               onClick={() => setCurrentStep(step.id)}
+              //disabled={step.id > currentStep}
               className={`w-3 h-3 rounded-full transition-colors ${
                 step.id === currentStep
                   ? 'bg-blue-600'
