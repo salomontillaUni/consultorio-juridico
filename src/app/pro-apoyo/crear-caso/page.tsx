@@ -1,3 +1,4 @@
+'use client';
 import { useState } from 'react';
 import { StepIndicator } from './components/StepIndicator';
 import { RegistroUsuario } from './components/RegistroUsuario';
@@ -54,10 +55,15 @@ export default function App() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 py-12 px-4">
-      <div className="max-w-6xl mx-auto space-y-8">
+      <div className="max-w-3xl mx-auto space-y-8">
         {/* Indicador de pasos centrado */}
         <StepIndicator currentStep={seccionActual} />
-        
+        <a className='hover:underline text-blue-700 flex items-center transition-colors' href="/">
+          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+          </svg>
+          Volver
+        </a>
         {/* Contenido de cada sección */}
         {seccionActual === 'registro' && (
           <RegistroUsuario onContinuar={handleRegistroCompleto} />

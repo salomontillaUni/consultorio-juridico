@@ -42,7 +42,7 @@ export function RegistroUsuario({ onContinuar, datosIniciales }: RegistroUsuario
   };
 
   return (
-    <Card className="w-full max-w-2xl mx-auto shadow-lg">
+    <Card className="w-full mx-auto shadow-lg">
       <CardHeader className="space-y-1 pb-6">
         <div className="flex items-center gap-2">
           <div className="p-2 bg-blue-100 rounded-lg">
