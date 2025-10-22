@@ -3,7 +3,7 @@
  * Use any TypeScript runner to run this script, for example: `npx tsx seed.ts`
  * Learn more about the Seed Client by following our guide: https://docs.snaplet.dev/seed/getting-started
  */
-import { createSeedClient, type perfilesScalars } from "@snaplet/seed";
+import { createSeedClient } from "@snaplet/seed";
 import { copycat } from '@snaplet/copycat';
 import { supabase } from "./src/utils/supabase";
 
@@ -32,21 +32,9 @@ const main = async () => {
       }
     });
   }
- 
-
-  const {data: databaseProfiles} = await supabase.from('perfiles').select();
-  const perfiles: perfilesScalars[] = databaseProfiles?.map(perfil => ({
-    id: perfil.id,
-    nombre_completo: perfil.nombre_completo,
-    correo: perfil.correo,
-    cedula: perfil.cedula,
-    telefono: perfil.telefono
-  }))??[];
-
-  console.log("Database seeded successfully!");
-  console.log("perfiles creado :", perfiles);
+  console.log("✅ Seeded database successfully");
   process.exit();
-};
+}
 main();
 
 

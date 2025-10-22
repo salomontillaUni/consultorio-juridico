@@ -17,6 +17,24 @@ export function LoginForm() {
     
   };
 
+  const loginUser = async (email: string, password: string) => {
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      console.error("Error al iniciar sesión:", error.message);
+    } else {
+      console.log("Inicio de sesión exitoso");
+      
+    }
+  };
+
+  const getRolUsuario = async (email: string) => {
+    
+  };
+
   function handleOlvidasteContraseña(): void {
     console.log("Redirigiendo a la página de recuperación de contraseña...");
   }
