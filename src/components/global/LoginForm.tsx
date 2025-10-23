@@ -7,7 +7,8 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/navigation";
-import {jwtDecode} from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
+import { User } from "@supabase/supabase-js";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -15,40 +16,64 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [userLoaded, setUserLoaded] = useState(false)
-  const [user, setUser] = useState(null)
-  const [session, setSession] = useState(null)
-  const router = useRouter()
+  const [user, setUser] = useState<User | null>(null)
+  const [session, setSession] = useState<Awaited<ReturnType<typeof supabase.auth.getSession>>['data']['session'] | null>(null)
+  const router = useRouter();
+  const [role, setRole] = useState<Promise<string | null>>();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Iniciando sesión")
     loginUser(email, password);
+    
   };
 
   const loginUser = async (email: string, password: string) => {
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+    try{
+      const {data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+      if (error) {
+        console.error("Error al iniciar sesión:", error.message);
+      } else {
 
-    if (error) {
-      console.error("Error al iniciar sesión:", error.message);
-    } else {
-      console.log("Inicio de sesión exitoso");
-      
+        const user = data.user;
+        const userRole = await getRolUsuario(user ? user.id : null);
+
+        switch (userRole) {
+          case "admin":
+            router.push("/admin/home");
+            break;
+          case "estudiante":
+            router.push("/estudiante/home");
+            break;
+          case "asesor":
+            router.push("/asesor/home");
+            break;
+          case "pro_apoyo":
+            router.push("/pro-apoyo/home");
+            break;
+          default:
+            console.error("Rol de usuario no reconocido:", userRole);
+            supabase.auth.signOut();
+            break;
+        }
+      }
+    }catch(error){
+      console.error("Error inesperado al iniciar sesión:", error);
     }
+
   };
 
   useEffect(() => {
     function saveSession(
-      /** @type {Awaited<ReturnType<typeof supabase.auth.getSession>>['data']['session']} */
-      session
+      session: Awaited<ReturnType<typeof supabase.auth.getSession>>['data']['session']
     ) {
       setSession(session)
       const currentUser = session?.user
       if (session) {
         const jwt = jwtDecode(session.access_token)
-        console.log("JWT Decoded:", jwt)
       }
       setUser(currentUser ?? null)
       setUserLoaded(!!currentUser)
@@ -71,8 +96,17 @@ export function LoginForm() {
     }
   }, [])
 
-  const getRolUsuario = async (email: string) => {
-
+  const getRolUsuario = async (id: string | null): Promise<string | null> => {
+    const { data, error } = await supabase
+      .from("perfiles_roles")
+      .select("role")
+      .eq("user_id", id).single();
+    if (error) {
+      console.error("Error al obtener el rol del usuario:", error.message);
+      supabase.auth.signOut();
+      return null;
+    }
+    return data.role || null;
   };
 
   function handleOlvidasteContraseña(): void {
@@ -104,7 +138,7 @@ export function LoginForm() {
               />
             </div>
           </div>
-          
+
           <div className="space-y-2">
             <Label htmlFor="password">Contraseña</Label>
             <div className="relative">
