@@ -4,7 +4,7 @@ VALUES
 
 INSERT INTO public.asesores (id_perfil, turno, area)
 VALUES
-((SELECT id FROM perfiles WHERE nombre_completo = 'María Gomez'), '4-6', 'laboral'),
+((SELECT id FROM perfiles WHERE nombre_completo = 'María Gomez'), '4-6', 'laboral');
 
 -- USUARIOS (solicitantes)
 
