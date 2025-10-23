@@ -3,12 +3,15 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {Spinner} from "@/components/ui/spinner";
+import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
+import { AlertCircleIcon, EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { User } from "@supabase/supabase-js";
+import { set } from "react-hook-form";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
@@ -20,22 +23,23 @@ export function LoginForm() {
   const [session, setSession] = useState<Awaited<ReturnType<typeof supabase.auth.getSession>>['data']['session'] | null>(null)
   const router = useRouter();
   const [role, setRole] = useState<Promise<string | null>>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Iniciando sesión")
     loginUser(email, password);
-    
   };
 
   const loginUser = async (email: string, password: string) => {
+    setIsLoading(true);
     try{
       const {data, error } = await supabase.auth.signInWithPassword({
         email,
         password,
       });
       if (error) {
-        console.error("Error al iniciar sesión:", error.message);
+        setError("Error al iniciar sesión: " + error.message);
       } else {
 
         const user = data.user;
@@ -55,11 +59,12 @@ export function LoginForm() {
             router.push("/pro-apoyo/home");
             break;
           default:
-            console.error("Rol de usuario no reconocido:", userRole);
+            setError("Rol de usuario no reconocido. Contacta al soporte.");
             supabase.auth.signOut();
             break;
         }
       }
+      setIsLoading(false);
     }catch(error){
       console.error("Error inesperado al iniciar sesión:", error);
     }
@@ -102,7 +107,6 @@ export function LoginForm() {
       .select("role")
       .eq("user_id", id).single();
     if (error) {
-      console.error("Error al obtener el rol del usuario:", error.message);
       supabase.auth.signOut();
       return null;
     }
@@ -172,9 +176,19 @@ export function LoginForm() {
             </button>
           </div>
 
-          <Button type="submit" className="w-full bg-blue-500 hover:bg-blue-600">
+          <Button type="submit" disabled={isLoading} className="w-full bg-blue-500 hover:bg-blue-600">
+            {isLoading ? <Spinner className="mr-2"/> : null}
             Iniciar sesión
           </Button>
+          {error && (
+            <Alert variant="destructive" className="">
+              <AlertCircleIcon />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>
+                {error}
+              </AlertDescription>
+            </Alert>
+          )}
         </form>
 
       </CardContent>
