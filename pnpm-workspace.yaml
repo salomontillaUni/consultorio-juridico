@@ -1,3 +1,6 @@
+ignoredBuiltDependencies:
+  - '@snaplet/seed'
+
 onlyBuiltDependencies:
   - '@tailwindcss/oxide'
   - sharp
