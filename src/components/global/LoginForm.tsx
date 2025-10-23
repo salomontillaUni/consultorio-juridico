@@ -1,20 +1,28 @@
 'use client';
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
 import { supabase } from "../../utils/supabase";
+import { useRouter } from "next/navigation";
+import {jwtDecode} from "jwt-decode";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const [userLoaded, setUserLoaded] = useState(false)
+  const [user, setUser] = useState(null)
+  const [session, setSession] = useState(null)
+  const router = useRouter()
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+    console.log("Iniciando sesión")
+    loginUser(email, password);
   };
 
   const loginUser = async (email: string, password: string) => {
@@ -31,8 +39,40 @@ export function LoginForm() {
     }
   };
 
+  useEffect(() => {
+    function saveSession(
+      /** @type {Awaited<ReturnType<typeof supabase.auth.getSession>>['data']['session']} */
+      session
+    ) {
+      setSession(session)
+      const currentUser = session?.user
+      if (session) {
+        const jwt = jwtDecode(session.access_token)
+        console.log("JWT Decoded:", jwt)
+      }
+      setUser(currentUser ?? null)
+      setUserLoaded(!!currentUser)
+      if (currentUser) {
+        console.log("Usuario actual:", currentUser)
+      }
+    }
+
+    supabase.auth.getSession().then(({ data: { session } }) => saveSession(session))
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (data, session) => {
+        console.log(session)
+        saveSession(session)
+      }
+    )
+
+    return () => {
+      authListener.subscription.unsubscribe();
+    }
+  }, [])
+
   const getRolUsuario = async (email: string) => {
-    
+
   };
 
   function handleOlvidasteContraseña(): void {

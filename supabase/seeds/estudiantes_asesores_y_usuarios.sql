@@ -1,12 +1,10 @@
 INSERT INTO public.estudiantes (id_perfil, semestre, jornada, turno)
 VALUES
-('10b0544f-b235-4c3b-987a-0f9b03b72a8c', 8, 'diurna', '9-11'),
-('5b9c9f8f-b1eb-4491-b37c-aebbe1befe5d', 9, 'nocturna', '2-4');
+((SELECT id FROM perfiles WHERE nombre_completo = 'luis Hernandez'), 8, 'diurna', '9-11');
 
 INSERT INTO public.asesores (id_perfil, turno, area)
 VALUES
-('b6e6e7e9-35ef-4b3a-949f-6ffdd8d23d7b', '4-6', 'laboral'),
-('caa9b78b-d8b0-4260-8ee8-177c3c651f97', '2-4', 'civil');
+((SELECT id FROM perfiles WHERE nombre_completo = 'María Gomez'), '4-6', 'laboral'),
 
 -- USUARIOS (solicitantes)
 

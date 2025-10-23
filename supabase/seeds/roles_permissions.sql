@@ -36,18 +36,16 @@ VALUES
 -- Ejemplo de asignaciones:
 INSERT INTO public.perfiles_roles (user_id, role)
 VALUES
--- Admin (Elody)
-((SELECT id_usuario FROM usuarios WHERE nombre_completo = 'Elody Trantow'), 'admin'),
+-- Admin (Ana)
+((SELECT id FROM perfiles WHERE nombre_completo = 'Ana Martinez'), 'admin'),
 
--- Estudiante (Stacey)
-((SELECT id_usuario FROM usuarios WHERE nombre_completo = 'Stacey Harris'), 'estudiante'),
+-- Estudiante (Luis)
+((SELECT id FROM perfiles WHERE nombre_completo = 'Luis Hernandez'), 'estudiante'),
 
--- Asesor (Betsy)
-((SELECT id_usuario FROM usuarios WHERE nombre_completo = 'Betsy Prohaska'), 'asesor'),
+-- Asesor (Maria Gomez)
+((SELECT id FROM perfiles WHERE nombre_completo = 'Maria Gomez'), 'asesor'),
 
--- Asesor (Hertha)
-((SELECT id_usuario FROM usuarios WHERE nombre_completo = 'Hertha Turcotte'), 'asesor'),
+-- Asesor (Carlos Rodriguez)
+((SELECT id FROM perfiles WHERE nombre_completo = 'Carlos Rodriguez'), 'pro_apoyo');
 
--- Profesional de apoyo (Alessandra)
-((SELECT id_usuario FROM usuarios WHERE nombre_completo = 'Alessandra Waelchi'), 'pro_apoyo');
 
