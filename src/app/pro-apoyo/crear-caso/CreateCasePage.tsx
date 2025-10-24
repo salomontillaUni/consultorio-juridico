@@ -4,6 +4,7 @@ import { AsignacionCaso } from "./components/AsignacionCaso";
 import { ResumenCaso } from "./components/ResumenCaso";
 import { Button } from "@/components/ui/button";
 import { StepIndicator } from "./components/StepIndicator";
+import { on } from "events";
 
 export interface Usuario {
   nombreCompleto: string;
@@ -48,6 +49,7 @@ export default function CreateCasePage({ onBack }: { onBack: () => void }) {
     setUsuario(null);
     setCaso(null);
     setSeccionActual("registro");
+    onBack();
   };
 
   return (
@@ -79,6 +81,7 @@ export default function CreateCasePage({ onBack }: { onBack: () => void }) {
       {seccionActual === "asignacion" && usuario && (
         <AsignacionCaso
           usuario={usuario}
+          datosIniciales={caso}
           onCasoRegistrado={handleCasoRegistrado}
         />
       )}

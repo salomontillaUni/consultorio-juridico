@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
@@ -11,8 +11,11 @@ import type { Usuario, DatosCaso } from '../CreateCasePage';
 interface AsignacionCasoProps {
   usuario: Usuario;
   onCasoRegistrado: (caso: DatosCaso) => void;
+  datosIniciales?: DatosCaso | null;
 }
+
 const casosMaximos = 5;
+
 // Datos de ejemplo
 const estudiantesDisponibles = [
   { id: 1, nombre: 'Ana María Rodríguez', semestre: '8vo', turno: '9-11', casosActuales: 1 },
@@ -30,10 +33,19 @@ const asesoresDisponibles = [
   { id: 5, nombre: 'Dr. Fernando Castro', area: 'Administrativo', turno: 'Mañana' },
 ];
 
-export function AsignacionCaso({ usuario, onCasoRegistrado }: AsignacionCasoProps) {
+export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: AsignacionCasoProps) {
   const [estudianteId, setEstudianteId] = useState<string>('');
   const [asesorId, setAsesorId] = useState<string>('');
   const [observaciones, setObservaciones] = useState('');
+
+  // Si vienen datos iniciales (por ejemplo al editar un caso)
+  useEffect(() => {
+    if (datosIniciales) {
+      setEstudianteId(datosIniciales.estudiante?.id?.toString() || '');
+      setAsesorId(datosIniciales.asesor?.id?.toString() || '');
+      setObservaciones(datosIniciales.observaciones || '');
+    }
+  }, [datosIniciales]);
 
   const fechaCreacion = new Date().toLocaleDateString('es-ES', {
     year: 'numeric',
@@ -62,6 +74,7 @@ export function AsignacionCaso({ usuario, onCasoRegistrado }: AsignacionCasoProp
       observaciones,
     };
 
+    toast.success('Caso registrado exitosamente');
     onCasoRegistrado(datosCaso);
   };
 
@@ -69,11 +82,11 @@ export function AsignacionCaso({ usuario, onCasoRegistrado }: AsignacionCasoProp
   const asesorSeleccionado = asesoresDisponibles.find(a => a.id.toString() === asesorId);
 
   return (
-    <div className="space-y-6 w-3xl">
+    <div className="space-y-6 md:min-w-3xl">
       {/* Información del profesional */}
       <Card className="bg-blue-50 border-blue-200">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Informacion del usuario</CardTitle>
+          <CardTitle className="text-lg">Información del usuario</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
@@ -106,14 +119,15 @@ export function AsignacionCaso({ usuario, onCasoRegistrado }: AsignacionCasoProp
             </div>
           </div>
         </CardHeader>
+
         <CardContent className="space-y-6">
-          {/* Asignación de Estudiante */}
+          {/* Estudiante */}
           <div className="space-y-4 p-4 bg-slate-50 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <Users className="h-5 w-5 text-slate-600" />
               <h3 className="text-slate-900">Estudiante Asignado</h3>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="estudiante">Seleccionar estudiante *</Label>
               <Select value={estudianteId} onValueChange={setEstudianteId}>
@@ -121,21 +135,15 @@ export function AsignacionCaso({ usuario, onCasoRegistrado }: AsignacionCasoProp
                   <SelectValue placeholder="Seleccione un estudiante" />
                 </SelectTrigger>
                 <SelectContent>
-                  {estudiantesDisponibles.length === 0 && (
-                    <div className="p-3 text-sm text-muted-foreground">No hay estudiantes disponibles</div>
-                  )}
-                  {
-                  estudiantesDisponibles.map((estudiante) => (
+                  {estudiantesDisponibles.map((estudiante) => (
                     <SelectItem key={estudiante.id} value={estudiante.id.toString()}>
-                      <div className="flex items-center justify-between w-full">
-                        <div className="flex flex-col">
-                          <span>{estudiante.nombre}</span>
-                          <span className='text-xs text-muted-foreground'>
-                            Semestre {estudiante.semestre} • {estudiante.casosActuales}/{casosMaximos} casos
-                            </span>
-                          </div>
-                        </div>
-                      </SelectItem>
+                      <div className="flex flex-col">
+                        <span>{estudiante.nombre}</span>
+                        <span className="text-xs text-muted-foreground">
+                          Semestre {estudiante.semestre} • {estudiante.casosActuales}/{casosMaximos} casos
+                        </span>
+                      </div>
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -159,13 +167,13 @@ export function AsignacionCaso({ usuario, onCasoRegistrado }: AsignacionCasoProp
             )}
           </div>
 
-          {/* Asignación de Asesor */}
+          {/* Asesor */}
           <div className="space-y-4 p-4 bg-slate-50 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <UserCheck className="h-5 w-5 text-slate-600" />
               <h3 className="text-slate-900">Asesor Asignado</h3>
             </div>
-            
+
             <div className="space-y-2">
               <Label htmlFor="asesor">Seleccionar asesor *</Label>
               <Select value={asesorId} onValueChange={setAsesorId}>
@@ -200,7 +208,7 @@ export function AsignacionCaso({ usuario, onCasoRegistrado }: AsignacionCasoProp
             )}
           </div>
 
-          {/* Datos del Caso */}
+          {/* Datos adicionales */}
           <div className="space-y-4">
             <div className="space-y-2">
               <Label>Fecha de creación</Label>
@@ -217,10 +225,10 @@ export function AsignacionCaso({ usuario, onCasoRegistrado }: AsignacionCasoProp
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="observaciones">Observaciones del profesional (opcional)</Label>
+              <Label htmlFor="observaciones">Observaciones (opcional)</Label>
               <Textarea
                 id="observaciones"
-                placeholder="Ingrese cualquier observación relevante sobre el caso..."
+                placeholder="Ingrese cualquier observación relevante..."
                 value={observaciones}
                 onChange={(e) => setObservaciones(e.target.value)}
                 rows={4}
@@ -229,14 +237,12 @@ export function AsignacionCaso({ usuario, onCasoRegistrado }: AsignacionCasoProp
           </div>
 
           <div className="pt-4 flex justify-center">
-            <Button 
+            <Button
               onClick={handleRegistrarCaso}
-              className="w-sm bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
-            
+              className="bg-blue-600 w-sm hover:bg-blue-700 text-white transition-colors duration-200"
               size="lg"
               disabled={!estudianteId || !asesorId}
             >
-              <CheckCircle2 className="mr-2 h-5 w-5" />
               Continuar
             </Button>
           </div>
