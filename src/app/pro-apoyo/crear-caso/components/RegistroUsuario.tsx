@@ -5,6 +5,7 @@ import { Label } from '@/components/ui/label';
 import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { UserPlus } from 'lucide-react';
+import Link from 'next/link';
 
 interface Usuario {
   nombreCompleto: string;
@@ -17,9 +18,10 @@ interface Usuario {
 interface RegistroUsuarioProps {
   onContinuar: (usuario: Usuario) => void;
   datosIniciales?: Usuario | null;
+  onBack: () => void;
 }
 
-export function RegistroUsuario({ onContinuar, datosIniciales }: RegistroUsuarioProps) {
+export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: RegistroUsuarioProps) {
   const [formData, setFormData] = useState<Usuario>(datosIniciales || {
     nombreCompleto: '',
     tipoDocumento: '',
@@ -44,6 +46,11 @@ export function RegistroUsuario({ onContinuar, datosIniciales }: RegistroUsuario
   return (
     <Card className="md:min-w-3xl mx-auto shadow-lg">
       <CardHeader className="space-y-1 pb-6">
+        <div className="flex items-center gap-2">
+          <button onClick={onBack} className="cursor-pointer text-blue-600 hover:underline">
+            Volver al inicio
+          </button>
+        </div>
         <div className="flex items-center gap-2">
           <div className="p-2 bg-blue-100 rounded-lg">
             <UserPlus className="h-6 w-6 text-blue-600" />

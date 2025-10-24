@@ -76,6 +76,7 @@ export default function CreateCasePage({ onBack }: { onBack: () => void }) {
         <RegistroUsuario
           onContinuar={handleRegistroCompleto}
           datosIniciales={usuario}
+          onBack={onBack}
         />
       )}
       {seccionActual === "asignacion" && usuario && (
