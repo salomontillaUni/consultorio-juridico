@@ -59,7 +59,6 @@ export default function CreateCasePage({ onBack }: { onBack?: () => void }) {
     <div className="bg-linear-to-br from-slate-50 to-slate-100 py-12 px-4">
       <div className="max-w-3xl mx-auto space-y-8">
         {/* Indicador de pasos centrado */}
-        <StepIndicator currentStep={seccionActual} />
         <button
           onClick={() => onBack?.()}
           className="flex items-center text-blue-600 hover:text-blue-700 mb-4 transition-colors"
@@ -69,6 +68,7 @@ export default function CreateCasePage({ onBack }: { onBack?: () => void }) {
           </svg>
           Volver al inicio
         </button>
+        <StepIndicator currentStep={seccionActual} />
         {/* Contenido de cada sección */}
         {seccionActual === 'registro' && (
           <RegistroUsuario onContinuar={handleRegistroCompleto} />

@@ -33,7 +33,7 @@ export default function PaginaPrincipal() {
       <div className="min-h-screen flex flex-col">
         <NavbarProApoyo currentPage={currentPage} onNavigate={handleNavigate} />
         <main className="flex-1 bg-gray-50">
-          <GestionCasosPage />
+          <GestionCasosPage onBack={handleNavigateHome} />
         </main>
       </div>
     );
@@ -80,7 +80,7 @@ export default function PaginaPrincipal() {
                   </div>
                 </div>
                 <Button 
-                  onClick={() => handleNavigate("create")}
+                  onClick={() => handleNavigate("cases")}
                   className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-4 py-2 rounded-md transition-colors duration-200 w-full"
                 >
                   Gestion de Casos
