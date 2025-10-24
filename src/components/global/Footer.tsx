@@ -10,9 +10,7 @@ export default function Footer() {
                     {/* Company Info */}
                     <div className="col-span-1 md:col-span-2">
                         <div className="flex items-center mb-4">
-                            <div className="h-30 w-30 bg-blue-600 rounded-lg flex items-center ">
-                                <Logo/>
-                            </div>
+                            <Logo />
                             <span className="ml-2 text-xl text-gray-900">Consulorio Jurídico</span>
                         </div>
                         <p className="text-gray-600 text-sm max-w-md">
@@ -80,7 +78,7 @@ export default function Footer() {
                 <div className="mt-8 pt-8 border-t border-blue-200">
                     <div className="flex flex-col md:flex-row justify-between items-center">
                         <p className="text-gray-500 text-sm">
-                            © 2024 Consulorio Jurídico. Todos los derechos reservados.
+                            © 2025 Consulorio Jurídico. Todos los derechos reservados.
                         </p>
                     </div>
                 </div>
