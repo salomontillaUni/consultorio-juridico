@@ -8,7 +8,7 @@ const steps = [
   {
     id: 'registro',
     title: 'Registro',
-    description: 'Información del profesional',
+    description: 'Información del usuario',
     icon: FileText,
   },
   {

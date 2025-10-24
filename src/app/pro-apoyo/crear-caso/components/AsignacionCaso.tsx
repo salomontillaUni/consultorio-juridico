@@ -62,7 +62,6 @@ export function AsignacionCaso({ usuario, onCasoRegistrado }: AsignacionCasoProp
       observaciones,
     };
 
-    toast.success('Caso registrado exitosamente');
     onCasoRegistrado(datosCaso);
   };
 
@@ -70,11 +69,11 @@ export function AsignacionCaso({ usuario, onCasoRegistrado }: AsignacionCasoProp
   const asesorSeleccionado = asesoresDisponibles.find(a => a.id.toString() === asesorId);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 w-3xl">
       {/* Información del profesional */}
       <Card className="bg-blue-50 border-blue-200">
         <CardHeader className="pb-3">
-          <CardTitle className="text-lg">Profesional registrando</CardTitle>
+          <CardTitle className="text-lg">Informacion del usuario</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
@@ -98,8 +97,8 @@ export function AsignacionCaso({ usuario, onCasoRegistrado }: AsignacionCasoProp
       <Card className="shadow-lg">
         <CardHeader>
           <div className="flex items-center gap-2">
-            <div className="p-2 bg-purple-100 rounded-lg">
-              <CheckCircle2 className="h-6 w-6 text-purple-600" />
+            <div className="p-2 bg-blue-100 rounded-lg">
+              <CheckCircle2 className="h-6 w-6 text-blue-600" />
             </div>
             <div>
               <CardTitle>Asignación de Caso</CardTitle>
@@ -229,15 +228,16 @@ export function AsignacionCaso({ usuario, onCasoRegistrado }: AsignacionCasoProp
             </div>
           </div>
 
-          <div className="pt-4">
+          <div className="pt-4 flex justify-center">
             <Button 
               onClick={handleRegistrarCaso}
-              className="w-full"
+              className="w-sm bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
+            
               size="lg"
               disabled={!estudianteId || !asesorId}
             >
               <CheckCircle2 className="mr-2 h-5 w-5" />
-              Registrar caso
+              Continuar
             </Button>
           </div>
         </CardContent>

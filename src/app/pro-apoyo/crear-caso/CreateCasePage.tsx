@@ -1,11 +1,9 @@
-'use client';
-import { useState } from 'react';
-import { StepIndicator } from './components/StepIndicator';
-import { RegistroUsuario } from './components/RegistroUsuario';
-import { AsignacionCaso } from './components/AsignacionCaso';
-import { ResumenCaso } from './components/ResumenCaso';
-import { ArrowLeft } from 'lucide-react';
-import Link from 'next/link';
+import { useState } from "react";
+import { RegistroUsuario } from "./components/RegistroUsuario";
+import { AsignacionCaso } from "./components/AsignacionCaso";
+import { ResumenCaso } from "./components/ResumenCaso";
+import { Button } from "@/components/ui/button";
+import { StepIndicator } from "./components/StepIndicator";
 
 export interface Usuario {
   nombreCompleto: string;
@@ -17,75 +15,79 @@ export interface Usuario {
 
 export interface DatosCaso {
   usuario: Usuario;
-  estudiante: {
-    id: number;
-    nombre: string;
-    semestre: string;
-    turno: string;
-    casosActuales: number;
-  };
-  asesor: {
-    id: number;
-    nombre: string;
-    area: string;
-    turno: string;
-  };
+  estudiante: any;
+  asesor: any;
   fechaCreacion: string;
   observaciones: string;
 }
 
-export default function CreateCasePage({ onBack }: { onBack?: () => void }) {
-  const [seccionActual, setSeccionActual] = useState<'registro' | 'asignacion' | 'resumen'>('registro');
+export default function CreateCasePage({ onBack }: { onBack: () => void }) {
+  const [seccionActual, setSeccionActual] = useState<"registro" | "asignacion" | "resumen">("registro");
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [caso, setCaso] = useState<DatosCaso | null>(null);
 
-  const handleRegistroCompleto = (datosUsuario: Usuario) => {
-    setUsuario(datosUsuario);
-    setSeccionActual('asignacion');
+  const handleRegistroCompleto = (usuarioData: Usuario) => {
+    setUsuario(usuarioData);
+    setSeccionActual("asignacion");
   };
 
-  const handleCasoRegistrado = (datosCaso: DatosCaso) => {
-    setCaso(datosCaso);
-    setSeccionActual('resumen');
+  const handleCasoRegistrado = (casoData: DatosCaso) => {
+    setCaso(casoData);
+    setSeccionActual("resumen");
+  };
+
+  const handleRetroceder = () => {
+    if (seccionActual === "asignacion") {
+      setSeccionActual("registro");
+    } else if (seccionActual === "resumen") {
+      setSeccionActual("asignacion");
+    }
   };
 
   const handleNuevoCaso = () => {
     setUsuario(null);
     setCaso(null);
-    setSeccionActual('registro');
+    setSeccionActual("registro");
   };
 
   return (
-    <div className="bg-linear-to-br from-slate-50 to-slate-100 py-12 px-4">
-      <div className="max-w-3xl mx-auto space-y-8">
-        {/* Indicador de pasos centrado */}
-        <button
-          onClick={() => onBack?.()}
-          className="flex items-center text-blue-600 hover:text-blue-700 mb-4 transition-colors"
-        >
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          Volver al inicio
-        </button>
-        <StepIndicator currentStep={seccionActual} />
-        {/* Contenido de cada sección */}
-        {seccionActual === 'registro' && (
-          <RegistroUsuario onContinuar={handleRegistroCompleto} />
-        )}
-        {seccionActual === 'asignacion' && usuario && (
-          <AsignacionCaso 
-            usuario={usuario} 
-            onCasoRegistrado={handleCasoRegistrado}
-          />
-        )}
-        {seccionActual === 'resumen' && caso && (
-          <ResumenCaso 
-            caso={caso}
-            onNuevoCaso={handleNuevoCaso}
-          />
-        )}
+    <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center p-4">
+
+      <div className="mb-6 max-w-3xl w-full flex flex-col gap-2">
+        <div className="flex flex-col items-center justify-between">
+          <StepIndicator currentStep={seccionActual} />
+          {seccionActual !== "registro"  && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleRetroceder}
+              className="text-blue-600 hover:bg-blue-50 transition-colors"
+            >
+              ← Retroceder
+            </Button>
+          )}
+        </div>
       </div>
+
+      {/* Contenido dinámico */}
+      {seccionActual === "registro" && (
+        <RegistroUsuario
+          onContinuar={handleRegistroCompleto}
+          datosIniciales={usuario}
+        />
+      )}
+      {seccionActual === "asignacion" && usuario && (
+        <AsignacionCaso
+          usuario={usuario}
+          onCasoRegistrado={handleCasoRegistrado}
+        />
+      )}
+      {seccionActual === "resumen" && caso && (
+        <ResumenCaso
+          caso={caso}
+          onNuevoCaso={handleNuevoCaso}
+        />
+      )}
     </div>
   );
 }

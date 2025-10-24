@@ -42,7 +42,7 @@ export function RegistroUsuario({ onContinuar, datosIniciales }: RegistroUsuario
   };
 
   return (
-    <Card className="w-full mx-auto shadow-lg">
+    <Card className="w-4xl mx-auto shadow-lg">
       <CardHeader className="space-y-1 pb-6">
         <div className="flex items-center gap-2">
           <div className="p-2 bg-blue-100 rounded-lg">
@@ -124,10 +124,10 @@ export function RegistroUsuario({ onContinuar, datosIniciales }: RegistroUsuario
             </div>
           </div>
 
-          <div className="pt-4">
+          <div className="pt-4 flex justify-center">
             <Button 
               type="submit" 
-              className="w-full"
+              className="w-sm bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
               disabled={!isFormValid()}
             >
               Continuar

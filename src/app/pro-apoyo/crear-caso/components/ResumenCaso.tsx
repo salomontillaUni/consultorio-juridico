@@ -12,84 +12,11 @@ interface ResumenCasoProps {
 }
 
 export function ResumenCaso({ caso, onNuevoCaso }: ResumenCasoProps) {
-  const handleExportar = () => {
-    // Crear objeto con todos los datos del caso
-    const datosExportar = {
-      profesional: {
-        nombre: caso.usuario.nombreCompleto,
-        documento: `${caso.usuario.tipoDocumento.toUpperCase()} ${caso.usuario.numeroDocumento}`,
-        telefono: caso.usuario.telefono,
-        correo: caso.usuario.correoElectronico,
-      },
-      estudiante: {
-        nombre: caso.estudiante.nombre,
-        semestre: caso.estudiante.semestre,
-        turno: caso.estudiante.turno,
-      },
-      asesor: {
-        nombre: caso.asesor.nombre,
-        area: caso.asesor.area,
-        turno: caso.asesor.turno,
-      },
-      caso: {
-        fechaCreacion: caso.fechaCreacion,
-        estado: 'Pendiente de aprobación',
-        observaciones: caso.observaciones || 'Sin observaciones',
-      },
-    };
-
-    // Crear texto formateado para exportar
-    const textoExportar = `
-═══════════════════════════════════════════
-    RESUMEN DE CASO REGISTRADO
-═══════════════════════════════════════════
-
-PROFESIONAL QUE REGISTRA
-────────────────────────────────────────
-Nombre: ${datosExportar.profesional.nombre}
-Documento: ${datosExportar.profesional.documento}
-Teléfono: ${datosExportar.profesional.telefono}
-Correo: ${datosExportar.profesional.correo}
-
-ESTUDIANTE ASIGNADO
-────────────────────────────────────────
-Nombre: ${datosExportar.estudiante.nombre}
-Semestre: ${datosExportar.estudiante.semestre}
-Turno: ${datosExportar.estudiante.turno}
-
-ASESOR ASIGNADO
-────────────────────────────────────────
-Nombre: ${datosExportar.asesor.nombre}
-Área: ${datosExportar.asesor.area}
-Turno: ${datosExportar.asesor.turno}
-
-INFORMACIÓN DEL CASO
-────────────────────────────────────────
-Fecha de creación: ${datosExportar.caso.fechaCreacion}
-Estado: ${datosExportar.caso.estado}
-
-Observaciones:
-${datosExportar.caso.observaciones}
-
-═══════════════════════════════════════════
-Documento generado automáticamente
-${new Date().toLocaleString('es-ES')}
-═══════════════════════════════════════════
-`;
-
-    // Crear archivo de texto y descargarlo
-    const blob = new Blob([textoExportar], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `caso-${caso.usuario.numeroDocumento}-${Date.now()}.txt`;
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
-
-    toast.success('Caso exportado exitosamente');
-  };
+  const handleConfirmacion = () => {
+    // Aquí iría la lógica para guardar el caso en el backend
+    toast.success('El caso ha sido creado exitosamente.');
+    onNuevoCaso();
+  }
 
   return (
     <div className="space-y-6">
@@ -222,23 +149,13 @@ ${new Date().toLocaleString('es-ES')}
       {/* Botones de acción */}
       <div className="flex flex-col sm:flex-row gap-3">
         <Button 
-          onClick={handleExportar}
-          size="lg"
-          className="flex-1"
-          variant="default"
-        >
-          <Download className="mr-2 h-5 w-5" />
-          Exportar Resumen
-        </Button>
-        <Button 
-          onClick={onNuevoCaso}
-          size="lg"
-          className="flex-1"
-          variant="outline"
-        >
-          <PlusCircle className="mr-2 h-5 w-5" />
-          Registrar Nuevo Caso
-        </Button>
+              onClick={handleConfirmacion}
+              className="w-sm bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
+              size="lg"
+            >
+              <CheckCircle2 className="mr-2 h-5 w-5" />
+              Crear Caso
+            </Button>
       </div>
     </div>
   );
