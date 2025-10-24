@@ -161,8 +161,8 @@ ${new Date().toLocaleString('es-ES')}
                 <p className="text-slate-900">{caso.estudiante.semestre}</p>
               </div>
               <div>
-                <span className="text-sm text-muted-foreground">Turno</span>
-                <Badge variant="default">{caso.estudiante.turno}</Badge>
+                <span className="flex text-sm text-muted-foreground">Turno</span>
+                <Badge variant="outline">{caso.estudiante.turno}</Badge>
               </div>
             </div>
           </div>
@@ -178,11 +178,11 @@ ${new Date().toLocaleString('es-ES')}
                 <p className="text-slate-900">{caso.asesor.nombre}</p>
               </div>
               <div>
-                <span className="text-sm text-muted-foreground">Área</span>
+                <span className="flex text-sm text-muted-foreground">Área</span>
                 <Badge variant="outline">{caso.asesor.area}</Badge>
               </div>
               <div>
-                <span className="text-sm text-muted-foreground">Turno</span>
+                <span className="flex text-sm text-muted-foreground">Turno</span>
                 <Badge variant="secondary">{caso.asesor.turno}</Badge>
               </div>
             </div>
