@@ -6,7 +6,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { CheckCircle2, Users, UserCheck } from 'lucide-react';
 import { toast } from 'sonner';
-import type { Usuario, DatosCaso } from '../page';
+import type { Usuario, DatosCaso } from '../CreateCasePage';
 
 interface AsignacionCasoProps {
   usuario: Usuario;

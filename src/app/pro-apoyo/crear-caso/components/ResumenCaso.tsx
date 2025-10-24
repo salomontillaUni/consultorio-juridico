@@ -4,7 +4,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { FileText, Download, PlusCircle, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
-import type { DatosCaso } from '../page';
+import type { DatosCaso } from '../CreateCasePage';
 
 interface ResumenCasoProps {
   caso: DatosCaso;

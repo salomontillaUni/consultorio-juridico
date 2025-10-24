@@ -5,11 +5,11 @@ import { useState } from "react";
 
 interface NavbarProApoyoProps {
   currentPage?: string;
-  onNavigate?: (page: "home" | "cases" | "create") => void;
+  onNavigate?: (page: "inicio" | "cases" | "create") => void;
 }
 
 export default function NavbarProApoyo({
-  currentPage = "home",
+  currentPage = "cases",
   onNavigate,
 }: NavbarProApoyoProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -22,7 +22,7 @@ export default function NavbarProApoyo({
           {/* Logo/Brand */}
           <div className="shrink-0">
             <button
-              onClick={() => onNavigate?.("home")}
+              onClick={() => onNavigate?.("inicio")}
               className="flex items-center hover:opacity-80 transition-opacity duration-200"
             >
               <Logo className="h-12 w-12" />
@@ -45,6 +45,17 @@ export default function NavbarProApoyo({
 
           {/* Menú de escritorio */}
           <nav className="hidden md:flex space-x-8">
+            
+            <button
+              onClick={() => onNavigate?.("inicio")}
+              className={`px-3 py-2 rounded-md transition-colors duration-200 ${
+                currentPage === "inicio"
+                  ? "text-blue-600 border-b-2 border-blue-600"
+                  : "text-gray-700 hover:text-blue-600 hover:border-b-2 hover:border-blue-600"
+              }`}
+            >
+              Inicio
+            </button>
             <button
               onClick={() => onNavigate?.("cases")}
               className={`px-3 py-2 rounded-md transition-colors duration-200 ${
@@ -72,6 +83,19 @@ export default function NavbarProApoyo({
         {isOpen && (
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200 mt-2">
+              <button
+                onClick={() => {
+                  onNavigate?.("inicio");
+                  setIsOpen(false);
+                }}
+                className={`block px-3 py-2 rounded-md w-full text-left transition-colors duration-200 ${
+                  currentPage === "inicio"
+                    ? "text-blue-600"
+                    : "text-gray-700 hover:text-blue-600"
+                }`}
+              >
+                Inicio
+              </button>
               <button
                 onClick={() => {
                   onNavigate?.("cases");
