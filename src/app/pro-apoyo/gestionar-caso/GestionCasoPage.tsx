@@ -127,7 +127,7 @@ const getPriorityColor = (priority: string) => {
   }
 };
 
-export default function SupportCasesPage() {
+export default function SupportCasesPage({onBack}: {onBack?: () => void}) {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("todos");
   const [typeFilter, setTypeFilter] = useState("todos");
@@ -163,36 +163,23 @@ export default function SupportCasesPage() {
       <div className="mb-8">
         <div className="flex items-center justify-between mb-6">
           <div>
-            <Link
-              href="/pro-apoyo/home"
+            <button
+              onClick={onBack}
               className="flex items-center text-blue-600 hover:text-blue-700 mb-4 transition-colors duration-200"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
               Volver al inicio
-            </Link>
-            <h1 className="text-gray-900 mb-2">Supervisión de casos</h1>
+            </button>
+            <h1 className="text-gray-900 mb-2 font-semibold">Supervisión de casos</h1>
             <p className="text-gray-600">Supervisa y apoya el trabajo de los estudiantes en todos los casos legales</p>
           </div>
-          <div className="flex gap-3">
-            <Button variant="outline" className="text-blue-600 border-blue-600 hover:bg-blue-50">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-              </svg>
-              Reporte general
-            </Button>
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
-              Asignar caso
-            </Button>
-          </div>
+          
         </div>
 
         {/* Stats */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
           <div className="bg-white rounded-lg border border-gray-200 p-4">
             <div className="flex items-center">
               <div className="p-2 bg-blue-100 rounded-lg">
@@ -235,19 +222,7 @@ export default function SupportCasesPage() {
             </div>
           </div>
 
-          <div className="bg-white rounded-lg border border-gray-200 p-4">
-            <div className="flex items-center">
-              <div className="p-2 bg-red-100 rounded-lg">
-                <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                </svg>
-              </div>
-              <div className="ml-4">
-                <p className="text-sm text-gray-600">Alta prioridad</p>
-                <p className="text-xl text-gray-900">{mockCases.filter(c => c.priority === 'alta').length}</p>
-              </div>
-            </div>
-          </div>
+          
         </div>
 
         {/* Filters */}
@@ -349,22 +324,11 @@ export default function SupportCasesPage() {
 
             <div className="flex gap-2">
               <Button 
-                variant="outline" 
                 size="sm" 
-                className="flex-1"
+                className="flex-1 bg-blue-600 hover:bg-blue-700 "
                 onClick={() => alert(`Supervisando caso ${caso.caseNumber}`)}
               >
                 Supervisar
-              </Button>
-              <Button variant="outline" size="sm">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-              </Button>
-              <Button variant="outline" size="sm">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                </svg>
               </Button>
             </div>
           </Card>
