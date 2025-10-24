@@ -10,7 +10,7 @@ export default function Footer() {
                     {/* Company Info */}
                     <div className="col-span-1 md:col-span-2">
                         <div className="flex items-center mb-4">
-                            <Logo />
+                            <Logo className="h-20 w-20" />
                             <span className="ml-2 text-xl text-gray-900">Consulorio Jurídico</span>
                         </div>
                         <p className="text-gray-600 text-sm max-w-md">
