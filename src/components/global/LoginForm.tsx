@@ -50,13 +50,13 @@ export function LoginForm() {
             router.push("/admin/home");
             break;
           case "estudiante":
-            router.push("/estudiante/home");
+            router.push("/estudiante");
             break;
           case "asesor":
-            router.push("/asesor/home");
+            router.push("/asesor");
             break;
           case "pro_apoyo":
-            router.push("/pro-apoyo/home");
+            router.push("/pro-apoyo");
             break;
           default:
             setError("Rol de usuario no reconocido. Contacta al soporte.");
