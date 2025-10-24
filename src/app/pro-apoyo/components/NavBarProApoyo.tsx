@@ -1,7 +1,9 @@
 "use client";
 import { Logo } from "@/components/global/LogoUac";
+import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
+import { supabase } from "utils/supabase";
 
 interface NavbarProApoyoProps {
   currentPage?: string;
@@ -14,6 +16,15 @@ export default function NavbarProApoyo({
 }: NavbarProApoyoProps) {
   const [isOpen, setIsOpen] = useState(false);
   const toggleMenu = () => setIsOpen((prev) => !prev);
+
+  const handleLogOut = () => {
+    try{
+      supabase.auth.signOut();
+      window.location.href = '/';
+    }catch(error){
+      console.error("Error during logout:", error);
+    }
+  }
 
   return (
     <header className="bg-white border-b border-blue-100 shadow-sm">
@@ -45,37 +56,39 @@ export default function NavbarProApoyo({
 
           {/* Menú de escritorio */}
           <nav className="hidden md:flex space-x-8">
-            
+
             <button
               onClick={() => onNavigate?.("inicio")}
-              className={`px-3 py-2 rounded-md transition-colors duration-200 ${
-                currentPage === "inicio"
+              className={`px-3 py-2 rounded-md transition-colors duration-200 ${currentPage === "inicio"
                   ? "text-blue-600 border-b-2 border-blue-600"
                   : "text-gray-700 hover:text-blue-600 hover:border-b-2 hover:border-blue-600"
-              }`}
+                }`}
             >
               Inicio
             </button>
             <button
               onClick={() => onNavigate?.("cases")}
-              className={`px-3 py-2 rounded-md transition-colors duration-200 ${
-                currentPage === "cases"
+              className={`px-3 py-2 rounded-md transition-colors duration-200 ${currentPage === "cases"
                   ? "text-blue-600 border-b-2 border-blue-600"
                   : "text-gray-700 hover:text-blue-600 hover:border-b-2 hover:border-blue-600"
-              }`}
+                }`}
             >
               Gestionar casos
             </button>
             <button
               onClick={() => onNavigate?.("create")}
-              className={`px-3 py-2 rounded-md transition-colors duration-200 ${
-                currentPage === "create"
+              className={`px-3 py-2 rounded-md transition-colors duration-200 ${currentPage === "create"
                   ? "text-blue-600 border-b-2 border-blue-600"
                   : "text-gray-700 hover:text-blue-600 hover:border-b-2 hover:border-blue-600"
-              }`}
+                }`}
             >
               Crear caso
             </button>
+            <Button
+              variant='destructive'
+              onClick={handleLogOut}>
+              Cerrar Sesion
+            </Button>
           </nav>
         </div>
 
@@ -88,11 +101,10 @@ export default function NavbarProApoyo({
                   onNavigate?.("inicio");
                   setIsOpen(false);
                 }}
-                className={`block px-3 py-2 rounded-md w-full text-left transition-colors duration-200 ${
-                  currentPage === "inicio"
+                className={`block px-3 py-2 rounded-md w-full text-left transition-colors duration-200 ${currentPage === "inicio"
                     ? "text-blue-600"
                     : "text-gray-700 hover:text-blue-600"
-                }`}
+                  }`}
               >
                 Inicio
               </button>
@@ -101,11 +113,10 @@ export default function NavbarProApoyo({
                   onNavigate?.("cases");
                   setIsOpen(false);
                 }}
-                className={`block px-3 py-2 rounded-md w-full text-left transition-colors duration-200 ${
-                  currentPage === "cases"
+                className={`block px-3 py-2 rounded-md w-full text-left transition-colors duration-200 ${currentPage === "cases"
                     ? "text-blue-600"
                     : "text-gray-700 hover:text-blue-600"
-                }`}
+                  }`}
               >
                 Gestionar casos
               </button>
@@ -114,14 +125,18 @@ export default function NavbarProApoyo({
                   onNavigate?.("create");
                   setIsOpen(false);
                 }}
-                className={`block px-3 py-2 rounded-md w-full text-left transition-colors duration-200 ${
-                  currentPage === "create"
+                className={`block px-3 py-2 rounded-md w-full text-left transition-colors duration-200 ${currentPage === "create"
                     ? "text-blue-600"
                     : "text-gray-700 hover:text-blue-600"
-                }`}
+                  }`}
               >
                 Crear caso
               </button>
+              <Button
+              variant='destructive'
+              onClick={handleLogOut}>
+              Cerrar Sesion
+            </Button>
             </div>
           </div>
         )}

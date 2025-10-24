@@ -10,7 +10,7 @@ export default function App() {
       
       <div className="relative z-10 w-full max-w-md">
         <div className="text-center mb-8">
-          <Logo />
+          <Logo className="h-20 w-20"  />
           <h1 className="text-foreground mb-2 drop-shadow-sm mt-4">Consultorio Juridico</h1>
           <p className="text-muted-foreground">Consultorio Juridico de la Corporacion Universitaria Autonoma del Cauca</p>
         </div>
