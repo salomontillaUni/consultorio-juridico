@@ -23,7 +23,7 @@ export default function NavbarProApoyo({
           <div className="shrink-0">
             <button
               onClick={() => onNavigate?.("inicio")}
-              className="flex items-center hover:opacity-80 transition-opacity duration-200"
+              className="flex items-center hover:opacity-80 cursor-pointer transition-opacity duration-200"
             >
               <Logo className="h-12 w-12" />
               <span className="ml-2 text-xl text-gray-900">Consultorio Jurídico</span>

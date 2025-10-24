@@ -6,6 +6,7 @@ import NavbarProApoyo from '../components/NavBarProApoyo';
 import GestionCasosPage from '../gestionar-caso/GestionCasoPage';
 import { useState } from 'react';
 import CreateCasePage from '../crear-caso/CreateCasePage';
+import { Button } from '@/components/ui/button';
 
 export default function PaginaPrincipal() {
   const [currentPage, setCurrentPage] = useState<'inicio' | 'cases' | 'create'>('inicio');
@@ -43,7 +44,7 @@ export default function PaginaPrincipal() {
       <div className="min-h-screen flex flex-col">
         <NavbarProApoyo currentPage={currentPage} onNavigate={handleNavigate} />
         <main className="flex-1 bg-gray-50">
-          <CreateCasePage/>
+          <CreateCasePage onBack={handleNavigateHome} />
         </main>
       </div>
     );
@@ -78,7 +79,12 @@ export default function PaginaPrincipal() {
                     <FileText className="h-8 w-8 text-blue-600" />
                   </div>
                 </div>
-                <h3 className="text-slate-900">Gestión de Casos</h3>
+                <Button 
+                  onClick={() => handleNavigate("create")}
+                  className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-4 py-2 rounded-md transition-colors duration-200 w-full"
+                >
+                  Gestion de Casos
+                </Button>
                 <p className="text-sm text-slate-600">
                   Registro y seguimiento completo de cada caso legal
                 </p>
@@ -92,12 +98,12 @@ export default function PaginaPrincipal() {
                     <Users className="h-8 w-8 text-purple-600" />
                   </div>
                 </div>
-                <button 
-                    onClick={() => handleNavigate("create")}
-                    className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-md transition-colors duration-200 w-full"
-                  >
-                    Crear nuevo caso
-                  </button>
+                <Button 
+                  onClick={() => handleNavigate("create")}
+                  className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-4 py-2 rounded-md transition-colors duration-200 w-full"
+                >
+                  Crear nuevo caso
+                </Button>
                 <p className="text-sm text-slate-600">
                   Registra un usuario nuevo que solicita asesoria
                 </p>
