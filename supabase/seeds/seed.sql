@@ -36,26 +36,26 @@ VALUES
 -- Ejemplo de asignaciones:
 INSERT INTO public.perfiles_roles (user_id, role)
 VALUES
--- Admin (Ana)
-((SELECT id FROM perfiles WHERE nombre_completo = 'Ana Martinez'), 'admin'),
+-- Admin (maria)
+((SELECT id FROM perfiles WHERE correo = 'admin@ejemplo.com'), 'admin'),
 
 -- Estudiante (Luis)
-((SELECT id FROM perfiles WHERE nombre_completo = 'Luis Hernandez'), 'estudiante'),
+((SELECT id FROM perfiles WHERE correo = 'estudiante@ejemplo.com'), 'estudiante'),
 
 -- Asesor (Maria Gomez)
-((SELECT id FROM perfiles WHERE nombre_completo = 'Maria Gomez'), 'asesor'),
+((SELECT id FROM perfiles WHERE correo = 'asesor@ejemplo.com'), 'asesor'),
 
 -- Asesor (Carlos Rodriguez)
-((SELECT id FROM perfiles WHERE nombre_completo = 'Carlos Rodriguez'), 'pro_apoyo');
+((SELECT id FROM perfiles WHERE correo = 'proapoyo@ejemplo.com'), 'pro_apoyo');
 
 -- ESTUDIANTES Y ASESORES
 INSERT INTO public.estudiantes (id_perfil, semestre, jornada, turno)
 VALUES
-((SELECT id FROM perfiles WHERE nombre_completo = 'Luis Hernandez'), 8, 'diurna', '9-11');
+((SELECT id FROM perfiles WHERE correo = 'estudiante@ejemplo.com'), 8, 'diurna', '9-11');
 
 INSERT INTO public.asesores (id_perfil, turno, area)
 VALUES
-((SELECT id FROM perfiles WHERE nombre_completo = 'Maria Gomez'), '4-6', 'laboral');
+((SELECT id FROM perfiles WHERE correo = 'asesor@ejemplo.com'), '4-6', 'laboral');
 
 -- USUARIOS (solicitantes)
 
@@ -98,11 +98,11 @@ VALUES
 
 INSERT INTO public.estudiantes_casos (id_estudiante, id_caso, fecha_asignacion)
 VALUES
-((SELECT id FROM perfiles WHERE nombre_completo = 'Luis Hernandez'), 1, CURRENT_DATE);
+((SELECT id FROM perfiles WHERE correo = 'estudiante@ejemplo.com'), 1, CURRENT_DATE);
 
 INSERT INTO public.asesores_casos (id_asesor, id_caso, fecha_asignacion)
 VALUES
-((SELECT id FROM perfiles WHERE nombre_completo = 'Maria Gomez'), 1, CURRENT_DATE);
+((SELECT id FROM perfiles WHERE correo = 'asesor@ejemplo.com'), 1, CURRENT_DATE);
 
 -- CONTRATOS LABORALES
 INSERT INTO public.contratos_laborales (
