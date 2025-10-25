@@ -4,6 +4,8 @@ import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/global/LogoUac";
+import { supabase } from "utils/supabase";
+import LogoutButton from "@/components/global/LogoutBtn";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
@@ -36,7 +38,7 @@ export function Navbar() {
         <button className="md:hidden" onClick={() => setOpen(!open)}>
           {open ? <X /> : <Menu />}
         </button>
-        <ul className="hidden md:flex space-x-4">
+        <ul className="hidden md:flex space-x-4 items-center">
           {links.map((link) => {
             const isActive = pathname.startsWith(link.href);
             return (
@@ -54,6 +56,9 @@ export function Navbar() {
               </li>
             );
           })}
+          <li>
+            <LogoutButton></LogoutButton>
+          </li>
         </ul>
       </div>
 
@@ -67,7 +72,7 @@ export function Navbar() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setOpen(false)}
-                className={`block px-3 py-2 rounded-md text-sm ${
+                className={`block px-3 py-2 rounded-md text-sm text-center ${
                   isActive
                     ? "bg-blue-100 text-blue-700"
                     : "text-gray-700 hover:text-blue-600"
@@ -77,6 +82,7 @@ export function Navbar() {
               </Link>
             );
           })}
+            <LogoutButton></LogoutButton>
         </div>
       )}
     </nav>
