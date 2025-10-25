@@ -11,7 +11,8 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Nav } from "react-day-picker";
 import { Navbar } from "app/pro-apoyo/components/NavBarProApoyo";
-
+import {useRouter} from 'next/navigation';
+import Link from "next/link";
 interface RepresentedPerson {
   nombreCompleto: string;
   tipoDocumento: string;
@@ -62,7 +63,6 @@ interface CaseDetails {
   defendant: DefendantDetails;
   caseType: string;
   status: "activo" | "pendiente" | "cerrado" | "revision";
-  priority: "alta" | "media" | "baja";
   dateCreated: string;
   lastUpdate: string;
   nextHearing: string | null;
@@ -119,7 +119,6 @@ const mockCaseDetails: CaseDetails = {
   },
   caseType: "Derecho Civil",
   status: "activo",
-  priority: "alta",
   dateCreated: "2024-01-15",
   lastUpdate: "2024-10-01",
   nextHearing: "2024-10-15",
@@ -184,15 +183,6 @@ const getStatusColor = (status: string) => {
   }
 };
 
-const getPriorityColor = (priority: string) => {
-  switch (priority) {
-    case "alta": return "bg-red-100 text-red-800 border-red-200";
-    case "media": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    case "baja": return "bg-green-100 text-green-800 border-green-200";
-    default: return "bg-gray-100 text-gray-800 border-gray-200";
-  }
-};
-
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params);
@@ -209,6 +199,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const [isEditingNotes, setIsEditingNotes] = useState(false);
   const [editedNotes, setEditedNotes] = useState<string[]>([]);
   const [newNote, setNewNote] = useState('');
+  const router = useRouter();
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
@@ -410,15 +401,15 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           {/* Header */}
           <div className="mb-6">
-            <button
-              onClick={() => window.history.back()}
-              className="flex items-center text-blue-600 hover:text-blue-700 mb-4 transition-colors duration-200"
+            <Link
+              href="/pro-apoyo/gestionar-caso"
+              className="flex items-center text-blue-600 hover:text-blue-700 hover:underline mb-4 transition-colors duration-200 cursor-pointer"
             >
               <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
               </svg>
               Volver a supervisión de casos
-            </button>
+            </Link>
 
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
               <div className="mb-4 lg:mb-0">
@@ -433,9 +424,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 <Badge className={`text-sm ${getStatusColor(caso.status)} justify-center sm:justify-start`}>
                   {caso.status.charAt(0).toUpperCase() + caso.status.slice(1)}
                 </Badge>
-                <Badge className={`text-sm ${getPriorityColor(caso.priority)} justify-center sm:justify-start`}>
-                  Prioridad {caso.priority}
-                </Badge>
               </div>
             </div>
           </div>
@@ -444,12 +432,11 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
           {/* Tabs Navigation */}
           <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-5">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
               <TabsTrigger value="overview">Resumen</TabsTrigger>
               <TabsTrigger value="supervision">Datos estudiante</TabsTrigger>
               <TabsTrigger value="client">Cliente</TabsTrigger>
               <TabsTrigger value="defendant">Demandado</TabsTrigger>
-              <TabsTrigger value="timeline">Cronología</TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}
@@ -1299,85 +1286,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 )}
               </Card>
 
-              {/* Represented Person */}
-              {caso.client.personaRepresentada && (
-                <Card className="p-6">
-                  <div className="flex items-center mb-6">
-                    <div className="p-2 bg-pink-100 rounded-lg mr-3">
-                      <svg className="w-5 h-5 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-                      </svg>
-                    </div>
-                    <h3 className="text-gray-900">Persona representada</h3>
-                  </div>
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                    {!isEditingClient ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div>
-                          <Label className="text-gray-600">Nombre completo</Label>
-                          <p className="text-gray-900">{displayClientData?.personaRepresentada?.nombreCompleto}</p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Tipo de documento</Label>
-                          <p className="text-gray-900">{displayClientData?.personaRepresentada?.tipoDocumento}</p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Número de documento</Label>
-                          <p className="text-gray-900">{displayClientData?.personaRepresentada?.numeroDocumento}</p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Edad</Label>
-                          <p className="text-gray-900">{displayClientData?.personaRepresentada?.edad} años</p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                        <div>
-                          <Label className="text-gray-600">Nombre completo</Label>
-                          <Input
-                            value={editedClientData?.personaRepresentada?.nombreCompleto || ''}
-                            onChange={(e) => handleRepresentedPersonChange('nombreCompleto', e.target.value)}
-                            placeholder="Nombre completo"
-                          />
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Tipo de documento</Label>
-                          <Select
-                            value={editedClientData?.personaRepresentada?.tipoDocumento || ''}
-                            onValueChange={(value) => handleRepresentedPersonChange('tipoDocumento', value)}
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Tipo de documento" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="Tarjeta De Identidad">Tarjeta De Identidad</SelectItem>
-                              <SelectItem value="Registro Civil">Registro Civil</SelectItem>
-                              <SelectItem value="Cédula de Ciudadanía">Cédula de Ciudadanía</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Número de documento</Label>
-                          <Input
-                            value={editedClientData?.personaRepresentada?.numeroDocumento || ''}
-                            onChange={(e) => handleRepresentedPersonChange('numeroDocumento', e.target.value)}
-                            placeholder="Número de documento"
-                          />
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Edad</Label>
-                          <Input
-                            type="number"
-                            value={editedClientData?.personaRepresentada?.edad || ''}
-                            onChange={(e) => handleRepresentedPersonChange('edad', e.target.value)}
-                            placeholder="Edad"
-                          />
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                </Card>
-              )}
+              
             </TabsContent>
 
             {/* Defendant Tab */}
@@ -1503,35 +1412,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 )}
               </Card>
             </TabsContent>
-
-            {/* Timeline Tab */}
-            <TabsContent value="timeline" className="space-y-6">
-              <Card className="p-6">
-                <div className="flex items-center mb-6">
-                  <div className="p-2 bg-blue-100 rounded-lg mr-3">
-                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                    </svg>
-                  </div>
-                  <h3 className="text-gray-900">Cronología del caso</h3>
-                </div>
-                <div className="space-y-4">
-                  {caso.timeline.map((event, index) => (
-                    <div key={index} className="flex gap-4 pb-4 border-b border-gray-100 last:border-b-0">
-                      <div className="shrink-0 w-3 h-3 bg-blue-600 rounded-full mt-2"></div>
-                      <div className="flex-1">
-                        <div className="flex justify-between items-start mb-1">
-                          <h4 className="text-gray-900">{event.event}</h4>
-                          <span className="text-sm text-gray-500">{formatShortDate(event.date)}</span>
-                        </div>
-                        <p className="text-gray-600 text-sm mb-1">{event.description}</p>
-                        <p className="text-blue-600 text-xs">Por: {event.author}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </Card>
-            </TabsContent>
+            
           </Tabs>
         </div>
       </main>
