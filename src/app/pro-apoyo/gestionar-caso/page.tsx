@@ -7,7 +7,6 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
 import { Navbar } from "../components/NavBarProApoyo";
-import { supabase } from "@/utils/supabase";
 import { Caso } from "app/types/database";
 import { getCasos } from "../../../../supabase/queries/getCasos";
 import { Loader2 } from "lucide-react";
@@ -34,6 +33,7 @@ export default function SupportCasesPage() {
     async function fetchData() {
       const data = await getCasos();
       setCasos(data);
+      console.log(data);
       setLoading(false);
     }
     fetchData();

@@ -4,46 +4,43 @@ import type { Caso } from "../../src/app/types/database";
 export async function getCasos(): Promise<Caso[]> {
 
   const { data, error } = await supabase
-    .from("casos")
-    .select(`
-      id_caso,
-      resumen_hechos,
-      observaciones,
-      fecha_creacion,
-      estado,
-      fecha_cierre,
-      aprobacion_asesor,
-      area,
-      tipo_proceso,
-      usuarios (
-        id_usuario,
-        nombre_completo,
-        correo,
-        telefono
-      ),
-      estudiantes_casos (
-        id_estudiante,
-        fecha_asignacion,
-        fecha_fin_asignacion,
-        estudiante:estudiantes (
-          id_perfil,
-          semestre,
-          jornada,
-          turno
-        )
-      ),
-      asesores_casos (
-        id_asesor,
-        fecha_asignacion,
-        fecha_fin_asignacion,
-        asesor:asesores (
-          id_perfil,
-          area,
-          turno
-        )
+  .from('casos')
+  .select(`
+    id_caso,
+    tipo_proceso,
+    resumen_hechos,
+    observaciones,
+    area,
+    estado,
+    aprobacion_asesor,
+    fecha_creacion,
+    fecha_cierre,
+    usuarios (
+      id_usuario,
+      nombre_completo,
+      correo,
+      telefono
+    ),
+    estudiantes_casos (
+      fecha_asignacion,
+      fecha_fin_asignacion,
+      estudiantes (
+        id_perfil,
+        semestre,
+        jornada,
+        turno
       )
-    `)
-    .order("fecha_creacion", { ascending: false });
+    ),
+    asesores_casos (
+      fecha_asignacion,
+      fecha_fin_asignacion,
+      asesores (
+        id_perfil,
+        area,
+        turno
+      )
+    )
+  `);
 
   if (error) {
     console.error("Error al traer los casos:", error);
