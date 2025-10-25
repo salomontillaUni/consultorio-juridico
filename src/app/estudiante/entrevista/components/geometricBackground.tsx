@@ -26,9 +26,9 @@ export function GeometricBackground({ className }: GeometricBackgroundProps) {
       
       {/* Subtle connecting lines */}
       <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-0 left-1/4 w-px h-3/4 bg-gradient-to-b from-blue-400/60 to-transparent"></div>
-        <div className="absolute top-1/4 right-1/3 w-px h-1/2 bg-gradient-to-b from-blue-400/60 to-transparent"></div>
-        <div className="absolute top-1/3 left-0 right-0 h-px bg-gradient-to-r from-transparent via-blue-400/60 to-transparent"></div>
+        <div className="absolute top-0 left-1/4 w-px h-3/4 bg-linear-to-b from-blue-400/60 to-transparent"></div>
+        <div className="absolute top-1/4 right-1/3 w-px h-1/2 bg-linear-to-b from-blue-400/60 to-transparent"></div>
+        <div className="absolute top-1/3 left-0 right-0 h-px bg-linear-to-r from-transparent via-blue-400/60 to-transparent"></div>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -7,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Navbar } from "../components/NavBarEstudiante";
 
 interface RepresentedPerson {
   nombreCompleto: string;
@@ -195,7 +197,10 @@ export default function CaseDetailsPage({ caseId, onBack }: CaseDetailsPageProps
   const caso = mockCaseDetails; // In real app, you'd fetch by caseId
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div>
+        <Navbar/>
+        <main>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       {/* Header */}
       <div className="mb-6">
         <button
@@ -578,5 +583,8 @@ export default function CaseDetailsPage({ caseId, onBack }: CaseDetailsPageProps
         </TabsContent>        
       </Tabs>
     </div>
+        </main>
+    </div>
+    
   );
 }

@@ -12,6 +12,7 @@ import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Separator } from '@/components/ui/separator';
 import { Progress } from '@/components/ui/progress';
 import { CalendarDays, User, MapPin, Briefcase, FileText, Scale, ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
+import { ProgressIndicator } from '@radix-ui/react-progress';
 
 const STEPS = [
   { id: 1, title: 'Información de la Entrevista', icon: CalendarDays },
@@ -28,10 +29,10 @@ export function UserRegistrationForm() {
   const [currentStep, setCurrentStep] = useState(1);
   const initialFormData = {
     // Interview Information
-    fecha: '',
-    area: '',
-    nombreEntrevistador: '',
-    celularEntrevistador: '',
+    fecha: '2024-02-20',
+    area: 'civil',
+    nombreEntrevistador: 'Ya definido por proapoyo',
+    celularEntrevistador: '11111111',
     
     // Applicant Information
     nombreCompleto: '',
@@ -138,8 +139,8 @@ export function UserRegistrationForm() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (validateStep(8)) {
-      console.log('Formulario enviado:', formData);
-      // Handle form submission here
+      // Aquí se manejaría el envío del formulario
+      
     }
   };
 
@@ -168,7 +169,7 @@ export function UserRegistrationForm() {
                   type="date"
                   value={formData.fecha}
                   onChange={(e) => handleInputChange('fecha', e.target.value)}
-                  required
+                  disabled
                 />
               </div>
               
@@ -182,6 +183,7 @@ export function UserRegistrationForm() {
                     <SelectItem value="civil">Civil</SelectItem>
                     <SelectItem value="laboral-publica">Laboral Pública</SelectItem>
                     <SelectItem value="penal">Penal</SelectItem>
+                    <SelectItem value="familia">Familia</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -194,6 +196,7 @@ export function UserRegistrationForm() {
                   onChange={(e) => handleInputChange('nombreEntrevistador', e.target.value)}
                   placeholder="Nombre completo del entrevistador"
                   required
+                  disabled
                 />
               </div>
               
@@ -358,7 +361,7 @@ export function UserRegistrationForm() {
                 ¿Quién solicita el servicio?
               </CardTitle>
               <CardDescription>
-                Información sobre la persona que solicita el servicio
+                ¿Es solicitante o es representante de otra persona?
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -369,65 +372,12 @@ export function UserRegistrationForm() {
                     <SelectValue placeholder="Seleccione quién lo solicita" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="nombre-propio">A nombre propio</SelectItem>
-                    <SelectItem value="persona-discapacidad">Persona con discapacidad</SelectItem>
-                    <SelectItem value="representante-menor">Representante de hijo menor de edad</SelectItem>
-                    <SelectItem value="otro">Otro</SelectItem>
+                    <SelectItem value="true">A nombre propio</SelectItem>
+                    <SelectItem value="false">Representante</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
               
-              {formData.servicioSolicita && formData.servicioSolicita !== 'nombre-propio' && (
-                <>
-                  <div className="space-y-2">
-                    <Label htmlFor="nombreRepresentado">Nombre Completo de la Persona a quien Representa</Label>
-                    <Input
-                      id="nombreRepresentado"
-                      value={formData.nombreRepresentado}
-                      onChange={(e) => handleInputChange('nombreRepresentado', e.target.value)}
-                      placeholder="Nombre completo del representado"
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="tipoDocumentoRepresentado">Tipo de Documento del Representado</Label>
-                      <Select value={formData.tipoDocumentoRepresentado} onValueChange={(value: string) => handleInputChange('tipoDocumentoRepresentado', value)}>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Tipo de documento" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="cc">Cédula de Ciudadanía</SelectItem>
-                          <SelectItem value="ti">Tarjeta de Identidad</SelectItem>
-                          <SelectItem value="rc">Registro Civil</SelectItem>
-                          <SelectItem value="ce">Cédula de Extranjería</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    
-                    <div className="space-y-2">
-                      <Label htmlFor="numeroDocumentoRepresentado">Número de Documento del Representado</Label>
-                      <Input
-                        id="numeroDocumentoRepresentado"
-                        value={formData.numeroDocumentoRepresentado}
-                        onChange={(e) => handleInputChange('numeroDocumentoRepresentado', e.target.value)}
-                        placeholder="Número de documento"
-                      />
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-2">
-                    <Label htmlFor="edadRepresentado">Edad del Representado</Label>
-                    <Input
-                      id="edadRepresentado"
-                      type="number"
-                      value={formData.edadRepresentado}
-                      onChange={(e) => handleInputChange('edadRepresentado', e.target.value)}
-                      placeholder="Edad"
-                    />
-                  </div>
-                </>
-              )}
             </CardContent>
           </Card>
         );
@@ -851,11 +801,13 @@ export function UserRegistrationForm() {
           <h3 className="text-lg font-medium text-gray-900">
             Paso {currentStep} de {STEPS.length}
           </h3>
-          <span className="text-sm text-gray-500">
+          <span className="text-sm text-blue-800">
             {Math.round(progress)}% completado
           </span>
         </div>
-        <Progress value={progress} className="h-2" />
+        <Progress  value={progress} className="h-2 bg-blue-100 ">
+          <ProgressIndicator className="bg-blue-600" />
+        </Progress>
         
         {/* Step Title */}
         {currentStepData && (
@@ -895,7 +847,7 @@ export function UserRegistrationForm() {
               type="button"
               onClick={handleNext}
               disabled={!validateStep(currentStep)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white"
             >
               Siguiente
               <ChevronRight className="h-4 w-4" />
@@ -904,7 +856,7 @@ export function UserRegistrationForm() {
             <Button
               type="submit"
               disabled={!validateStep(8)}
-              className="flex items-center gap-2"
+              className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white"
             >
               <CheckCircle className="h-4 w-4" />
               Enviar Formulario
@@ -918,6 +870,7 @@ export function UserRegistrationForm() {
         <div className="flex space-x-2">
           {STEPS.map((step) => (
             <button
+              //disabled={step.id > currentStep}
               key={step.id}
               type="button"
               onClick={() => setCurrentStep(step.id)}
