@@ -15,9 +15,10 @@ const main = async () => {
   await seed.$resetDatabase();
   //registra usuarios de prueba
   const PASSWORD = "testuser";
-  const nombres = ["Juan Perez", "Maria Gomez", "Carlos Rodriguez", "Ana Martinez", "Luis Hernandez"];
-  for (let i = 0; i < 5; i += 1) {
-    const email = copycat.email(i);
+  const nombres = ["Maria Gomez", "Carlos Rodriguez", "Ana Martinez", "Luis Hernandez"];
+  const correos = ["proapoyo@ejemplo.com", "estudiante@ejemplo.com", "asesor@ejemplo.com", "admin@ejemplo.com"];
+  for (let i = 0; i < 4; i += 1) {
+    const email = correos[i];
     const nombre_completo: string = nombres[i];
     const cedula: string = copycat.int(i, {min: 1000000, max: 9999999}).toString();
     const telefono: string = copycat.phoneNumber(i,  {prefixes: ['+57'], length: {min: 10, max: 10}}).toString();
@@ -32,6 +33,7 @@ const main = async () => {
         }
       }
     });
+    console.log(email, nombre_completo, cedula, telefono);
   }
   console.log("✅ Seeded database successfully");
   process.exit();
