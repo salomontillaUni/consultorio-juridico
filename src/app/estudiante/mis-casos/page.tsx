@@ -167,12 +167,12 @@ export default function CasesPage({ onBack, onViewCase }: CasesPageProps) {
                                 <h1 className="text-gray-900 mb-2">Mis casos</h1>
                                 <p className="text-gray-600">Gestiona y supervisa todos tus casos legales</p>
                             </div>
-                            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                            <Link href={'/estudiante/entrevista'} className=" flex p-3 items-center rounded-2xl bg-blue-600 hover:bg-blue-700 text-white">
                                 <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
                                 </svg>
-                                Nuevo caso
-                            </Button>
+                                Entrevista
+                            </Link>
                         </div>
 
                         {/* Stats */}
