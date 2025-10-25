@@ -24,29 +24,36 @@ export async function getCasos(): Promise<Caso[]> {
     estudiantes_casos (
       fecha_asignacion,
       fecha_fin_asignacion,
-      estudiantes (
+      estudiantes:estudiantes!estudiantes_casos_id_estudiante_fkey (
         id_perfil,
         semestre,
         jornada,
         turno,
-        perfiles (
-          nombre_completo
+        perfiles:perfiles!estudiantes_id_perfil_fkey (
+          nombre_completo,
+          correo,
+          telefono
         )
       )
     ),
     asesores_casos (
       fecha_asignacion,
       fecha_fin_asignacion,
-      asesores (
+      asesores:asesores!asesores_casos_id_asesor_fkey (
         id_perfil,
         area,
         turno,
-        perfiles (
-          nombre_completo
+        perfiles:perfiles!asesores_id_perfil_fkey (
+          nombre_completo,
+          correo,
+          telefono
         )
       )
     )
   `);
+
+
+
 
 
   if (error) {

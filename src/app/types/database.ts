@@ -13,8 +13,8 @@ export type Usuario = {
   id_usuario: string;
   nombre_completo: string;
   sexo?: "M" | "F" | null;
-  cedula?: string | null;
-  telefono?: string | null;
+  cedula: string | null;
+  telefono: string | null;
   edad?: number | null;
   contacto_familiar?: string | null;
   estado_civil?: EstadoCivilEnum | null;

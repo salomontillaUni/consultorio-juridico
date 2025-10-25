@@ -10,6 +10,7 @@ import { Navbar } from "../components/NavBarProApoyo";
 import { Caso } from "app/types/database";
 import { getCasos } from "../../../../supabase/queries/getCasos";
 import { Loader2 } from "lucide-react";
+import { supabase } from "@/utils/supabase";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -203,6 +204,7 @@ export default function SupportCasesPage() {
                   <div>
                     <h3 className="text-gray-900 mb-1">{caso.id_caso}</h3>
                     <p className="text-gray-600">{caso.usuarios.nombre_completo}</p>
+                    <p className="text-gray-800">Documento: {caso.usuarios.cedula}</p>
                   </div>
                   <div className="flex flex-col gap-2">
                     <Badge className={`text-xs ${getStatusColor(caso.estado)}`}>
@@ -221,8 +223,8 @@ export default function SupportCasesPage() {
                     <span className="text-gray-600">Estudiante:</span>
                     <span className="text-blue-600">
                       {caso.estudiantes_casos
-                        .map(ec => ec.estudiante?.perfil?.nombre_completo)
-                        .filter(Boolean) // elimina posibles null
+                        .map(ec => ec.estudiante?.semestre)
+                        .filter(Boolean)
                         .join(", ")}
                     </span>
                   </div>
