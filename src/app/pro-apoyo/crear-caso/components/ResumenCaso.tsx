@@ -27,6 +27,7 @@ export function ResumenCaso({ caso, onNuevoCaso }: ResumenCasoProps) {
     // Aquí iría la lógica para guardar el caso en el backend
     toast.success('El caso ha sido creado exitosamente.');
     setDialogOpen(true); // Abrir el modal de confirmación
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleNuevoCaso = () => {

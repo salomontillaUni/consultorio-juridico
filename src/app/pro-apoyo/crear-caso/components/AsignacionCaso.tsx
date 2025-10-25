@@ -74,8 +74,8 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
       observaciones,
     };
 
-    toast.success('Caso registrado exitosamente');
     onCasoRegistrado(datosCaso);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const estudianteSeleccionado = estudiantesDisponibles.find(e => e.id.toString() === estudianteId);

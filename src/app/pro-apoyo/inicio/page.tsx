@@ -7,29 +7,20 @@ import GestionCasosPage from '../gestionar-caso/page';
 import { useState } from 'react';
 import CreateCasePage from '../crear-caso/page';
 import { Button } from '@/components/ui/button';
+import {useRouter} from 'next/navigation';
 
 export default function PaginaPrincipal() {
   const [currentPage, setCurrentPage] = useState<'inicio' | 'cases' | 'create'>('inicio');
   const [selectedCaseId, setSelectedCaseId] = useState<number | null>(null);
+  const router = useRouter();
   const handleNavigateToCases = () => {
-    setCurrentPage("cases");
+    router.push("/pro-apoyo/gestionar-caso");
   };
 
   const handleNavigateToCreate = () => {
-    setCurrentPage("create");
+    router.push("/pro-apoyo/crear-caso");
   };
 
-  const handleNavigateHome = () => {
-    setCurrentPage("inicio");
-  };
-
-  const handleNavigate = (page: "inicio" | "cases" | "create") => {
-    setCurrentPage(page);
-    setSelectedCaseId(null);
-  };
-
-
-  
   return (
     <div>
       <Navbar/>
@@ -60,7 +51,7 @@ export default function PaginaPrincipal() {
                   </div>
                 </div>
                 <Button 
-                  onClick={() => handleNavigate("cases")}
+                  onClick={() => handleNavigateToCases()}
                   className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-4 py-2 rounded-md transition-colors duration-200 w-full"
                 >
                   Gestion de Casos
@@ -79,7 +70,7 @@ export default function PaginaPrincipal() {
                   </div>
                 </div>
                 <Button 
-                  onClick={() => handleNavigate("create")}
+                  onClick={() => handleNavigateToCreate()}
                   className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-4 py-2 rounded-md transition-colors duration-200 w-full"
                 >
                   Crear nuevo caso

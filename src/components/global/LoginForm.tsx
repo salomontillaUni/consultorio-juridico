@@ -11,7 +11,6 @@ import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { User } from "@supabase/supabase-js";
-import { set } from "react-hook-form";
 
 export function LoginForm() {
   const [email, setEmail] = useState("");

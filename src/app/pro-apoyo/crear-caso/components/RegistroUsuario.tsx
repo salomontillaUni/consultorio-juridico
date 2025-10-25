@@ -33,6 +33,7 @@ export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: Registr
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onContinuar(formData);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleChange = (campo: keyof Usuario, valor: string) => {
@@ -47,7 +48,13 @@ export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: Registr
     <Card className="md:min-w-3xl mx-auto shadow-lg">
       <CardHeader className="space-y-1 pb-6">
         <div className="flex items-center gap-2">
-          <Link href={'/pro-apoyo'} className="cursor-pointer text-blue-600 hover:underline">
+          <Link
+            href={'/pro-apoyo/inicio'}
+            className="flex items-center text-blue-600 hover:text-blue-700 mb-4 transition-colors duration-200"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+            </svg>
             Volver al inicio
           </Link>
         </div>
@@ -77,7 +84,7 @@ export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: Registr
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
               <Label htmlFor="tipoDocumento">Tipo de documento</Label>
-              <Select 
+              <Select
                 value={formData.tipoDocumento}
                 onValueChange={(value) => handleChange('tipoDocumento', value)}
                 required
@@ -132,8 +139,8 @@ export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: Registr
           </div>
 
           <div className="pt-4 flex justify-center">
-            <Button 
-              type="submit" 
+            <Button
+              type="submit"
               className="w-sm bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
               disabled={!isFormValid()}
             >

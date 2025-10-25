@@ -45,6 +45,7 @@ export default function CreateCasePage({ onBack }: { onBack: () => void }) {
     } else if (seccionActual === "resumen") {
       setSeccionActual("asignacion");
     }
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleNuevoCaso = () => {
