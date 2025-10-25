@@ -1,4 +1,6 @@
+'use client'
 import { useState } from "react";
+import React from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -189,12 +191,9 @@ const getPriorityColor = (priority: string) => {
   }
 };
 
-interface SupportCaseDetailsPageProps {
-  caseId: string;
-  onBack: () => void;
-}
 
-export default async function SupportCaseDetailsPage({ caseId, onBack }: SupportCaseDetailsPageProps) {
+export default function Page({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = React.use(params);
   const [activeTab, setActiveTab] = useState("overview");
   const [newSupervisorNote, setNewSupervisorNote] = useState("");
   const [isEditingStudent, setIsEditingStudent] = useState(false);
@@ -407,7 +406,7 @@ export default async function SupportCaseDetailsPage({ caseId, onBack }: Support
       {/* Header */}
       <div className="mb-6">
         <button
-          onClick={onBack}
+          onClick={() => window.history.back()}
           className="flex items-center text-blue-600 hover:text-blue-700 mb-4 transition-colors duration-200"
         >
           <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

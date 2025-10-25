@@ -323,13 +323,12 @@ export default function SupportCasesPage({onBack}: {onBack?: () => void}) {
             </p>
 
             <div className="flex gap-2">
-              <Button 
-                size="sm" 
-                className="flex-1 bg-blue-600 hover:bg-blue-700 "
-                onClick={() => alert(`Supervisando caso ${caso.caseNumber}`)}
+              <Link 
+                className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center px-4 py-2 rounded-md transition-colors duration-200"
+                href={`/pro-apoyo/gestionar-caso/${caso.id}`}
               >
                 Supervisar
-              </Button>
+              </Link>
             </div>
           </Card>
         ))}
