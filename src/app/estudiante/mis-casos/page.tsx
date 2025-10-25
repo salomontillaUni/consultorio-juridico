@@ -13,6 +13,7 @@ interface Case {
     id: string;
     caseNumber: string;
     clientName: string;
+    clientCedula: string;
     caseType: string;
     status: "activo" | "pendiente" | "cerrado" | "revision";
     dateCreated: string;
@@ -26,6 +27,7 @@ const mockCases: Case[] = [
         id: "1",
         caseNumber: "CASO-2024-001",
         clientName: "María González",
+        clientCedula: "12345678",
         caseType: "Derecho Civil",
         status: "activo",
         dateCreated: "2024-01-15",
@@ -37,6 +39,7 @@ const mockCases: Case[] = [
         id: "2",
         caseNumber: "CASO-2024-002",
         clientName: "Carlos Rodríguez",
+        clientCedula: "87654321",
         caseType: "Derecho Laboral",
         status: "pendiente",
         dateCreated: "2024-02-03",
@@ -48,6 +51,7 @@ const mockCases: Case[] = [
         id: "3",
         caseNumber: "CASO-2024-003",
         clientName: "Ana Martínez",
+        clientCedula: "98765432",
         caseType: "Derecho Familiar",
         status: "revision",
         dateCreated: "2024-03-10",
@@ -59,6 +63,7 @@ const mockCases: Case[] = [
         id: "4",
         caseNumber: "CASO-2024-004",
         clientName: "Luis Fernández",
+        clientCedula: "23456789",
         caseType: "Derecho Penal",
         status: "activo",
         dateCreated: "2024-04-22",
@@ -70,6 +75,7 @@ const mockCases: Case[] = [
         id: "5",
         caseNumber: "CASO-2024-005",
         clientName: "Carmen López",
+        clientCedula: "34567890",
         caseType: "Derecho Mercantil",
         status: "cerrado",
         dateCreated: "2024-01-08",
@@ -81,6 +87,7 @@ const mockCases: Case[] = [
         id: "6",
         caseNumber: "CASO-2024-006",
         clientName: "Roberto Silva",
+        clientCedula: "45678901",
         caseType: "Derecho Civil",
         status: "activo",
         dateCreated: "2024-05-14",
@@ -211,17 +218,6 @@ export default function CasesPage({ onBack, onViewCase }: CasesPageProps) {
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="bg-white rounded-lg border border-gray-200 p-4">
-                                <div className="flex items-center">
-                                    <div className="p-2 bg-red-100 rounded-lg">
-                                        <svg className="w-5 h-5 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                        </svg>
-                                    </div>
-
-                                </div>
-                            </div>
                         </div>
 
                         {/* Filters */}
@@ -270,6 +266,7 @@ export default function CasesPage({ onBack, onViewCase }: CasesPageProps) {
                                     <div>
                                         <h3 className="text-gray-900 mb-1">{caso.caseNumber}</h3>
                                         <p className="text-gray-600">{caso.clientName}</p>
+                                        <p className="text-gray-600">Documento: {caso.clientCedula}</p>
                                     </div>
                                     <div className="flex flex-col gap-2">
                                         <Badge className={`text-xs ${getStatusColor(caso.status)}`}>
@@ -289,15 +286,9 @@ export default function CasesPage({ onBack, onViewCase }: CasesPageProps) {
                                         <span className="text-gray-900">{formatDate(caso.dateCreated)}</span>
                                     </div>
                                     <div className="flex justify-between text-sm">
-                                        <span className="text-gray-600">Última actualización:</span>
                                         <span className="text-gray-900">{formatDate(caso.lastUpdate)}</span>
                                     </div>
-                                    {caso.nextHearing && (
-                                        <div className="flex justify-between text-sm">
-                                            <span className="text-gray-600">Próxima audiencia:</span>
-                                            <span className="text-blue-600">{formatDate(caso.nextHearing)}</span>
-                                        </div>
-                                    )}
+                                   
                                 </div>
 
                                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">
@@ -312,16 +303,7 @@ export default function CasesPage({ onBack, onViewCase }: CasesPageProps) {
                                         Ver detalles
                                     </Link>
 
-                                    <Button variant="outline" size="sm">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                                        </svg>
-                                    </Button>
-                                    <Button variant="outline" size="sm">
-                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-                                        </svg>
-                                    </Button>
+                                    
                                 </div>
                             </Card>
                         ))}
