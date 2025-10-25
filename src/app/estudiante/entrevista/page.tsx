@@ -3,7 +3,7 @@ import { GeometricBackground } from "./components/geometricBackground";
 
 export default function App() {
   return (
-    <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-4 bg-gradient-to-br from-blue-50 via-blue-100 to-blue-200">
+    <div className="min-h-screen relative overflow-hidden flex items-center justify-center p-4 bg-linear-to-br from-blue-50 via-blue-100 to-blue-200">
       <GeometricBackground />
       <div className="container mx-auto px-4 max-w-4xl">
         <div className="text-center mb-10 bg-white p-8 rounded-2xl shadow-md">
