@@ -28,7 +28,10 @@ export async function getCasos(): Promise<Caso[]> {
         id_perfil,
         semestre,
         jornada,
-        turno
+        turno,
+        perfiles (
+          nombre_completo
+        )
       )
     ),
     asesores_casos (
@@ -37,10 +40,14 @@ export async function getCasos(): Promise<Caso[]> {
       asesores (
         id_perfil,
         area,
-        turno
+        turno,
+        perfiles (
+          nombre_completo
+        )
       )
     )
   `);
+
 
   if (error) {
     console.error("Error al traer los casos:", error);

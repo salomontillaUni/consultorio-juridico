@@ -214,16 +214,23 @@ export default function SupportCasesPage() {
 
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Tipo:</span>
-                    <span className="text-gray-900">{caso.tipo_proceso}</span>
+                    <span className="text-gray-600">Área:</span>
+                    <span className="text-gray-900">{caso.area}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Estudiante:</span>
-                    <span className="text-blue-600">{caso.estudiantes_casos.map(estudiante => estudiante.id_estudiante).join(", ")}</span>
+                    <span className="text-blue-600">
+                      {caso.estudiantes_casos
+                        .map(ec => ec.estudiante?.perfil?.nombre_completo)
+                        .filter(Boolean) // elimina posibles null
+                        .join(", ")}
+                    </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Asesor:</span>
-                    <span className="text-gray-900">{caso.asesores_casos.map(asesor => asesor.id_asesor).join(", ")}</span>
+                    <span className="text-gray-900">{caso.asesores_casos.map(
+                      ac => ac.asesor?.perfil?.nombre_completo
+                    ).filter(Boolean).join(", ")}</span>
                   </div>
 
                 </div>

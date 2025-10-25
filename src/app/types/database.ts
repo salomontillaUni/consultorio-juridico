@@ -30,6 +30,15 @@ export type Usuario = {
   tiene_representado: boolean;
 };
 
+// --- PERFILES --------------------------------------------------
+export type Perfil = {
+  id: string;
+  nombre_completo: string;
+  correo?: string | null;
+  cedula?: string | null;
+  telefono?: string | null;
+};
+
 // --- ESTUDIANTES -----------------------------------------------
 
 export type Estudiante = {
@@ -37,12 +46,14 @@ export type Estudiante = {
   semestre: number;
   jornada: JornadaEnum;
   turno: TurnoEnum;
+  perfil: Perfil;
 };
 
 // --- ASESORES --------------------------------------------------
 
 export type Asesor = {
   id_perfil: string;
+  perfil: Perfil;
   turno: TurnoEnum;
   area: AreaEnum;
 };
@@ -50,8 +61,6 @@ export type Asesor = {
 // --- RELACIONES ------------------------------------------------
 
 export type EstudianteCaso = {
-  id_estudiante: string;
-  id_caso: number;
   fecha_asignacion?: string | null;
   fecha_fin_asignacion?: string | null;
 
@@ -60,8 +69,6 @@ export type EstudianteCaso = {
 };
 
 export type AsesorCaso = {
-  id_asesor: string;
-  id_caso: number;
   fecha_asignacion?: string | null;
   fecha_fin_asignacion?: string | null;
 
