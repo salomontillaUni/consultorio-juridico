@@ -1,146 +1,84 @@
 "use client";
-import { Logo } from "@/components/global/LogoUac";
-import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
 import { useState } from "react";
-import { supabase } from "utils/supabase";
+import { Menu, X } from "lucide-react";
+import { usePathname } from "next/navigation";
+import Link from "next/link";
+import { Logo } from "@/components/global/LogoUac";
 
-interface NavbarProApoyoProps {
-  currentPage?: string;
-  onNavigate?: (page: "inicio" | "cases" | "create") => void;
-}
+export function Navbar() {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
 
-export default function NavbarProApoyo({
-  currentPage = "cases",
-  onNavigate,
-}: NavbarProApoyoProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const toggleMenu = () => setIsOpen((prev) => !prev);
-
-  const handleLogOut = () => {
-    try{
-      supabase.auth.signOut();
-      window.location.href = '/';
-    }catch(error){
-      console.error("Error during logout:", error);
-    }
-  }
+  const links = [
+    { href: "/pro-apoyo/inicio", label: "Inicio" },
+    { href: "/pro-apoyo/gestionar-caso", label: "Casos" },
+    { href: "/pro-apoyo/crear-caso", label: "Crear Caso" },
+  ];
 
   return (
-    <header className="bg-white border-b border-blue-100 shadow-sm">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <nav className="bg-white border-b shadow-sm">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
           <div className="shrink-0">
-            <button
-              onClick={() => onNavigate?.("inicio")}
-              className="flex items-center hover:opacity-80 cursor-pointer transition-opacity duration-200"
+            <button 
+              onClick={() => window.location.href='/pro-apoyo/inicio'}
+              className="flex items-center hover:opacity-80 transition-opacity duration-200"
             >
-              <Logo className="h-12 w-12" />
-              <span className="ml-2 text-xl text-gray-900">Consultorio Jurídico</span>
+              <Logo className="h-15 w-15" />
+              <span className="ml-2 text-xl text-gray-900">Consulorio Jurídico</span>
               <div className="ml-3 px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs">
                 Profesional de Apoyo
               </div>
             </button>
           </div>
-
-          {/* Botón hamburguesa (solo móvil) */}
-          <div className="md:hidden">
-            <button
-              onClick={toggleMenu}
-              className="p-2 rounded-md text-gray-700 hover:text-blue-600 hover:bg-gray-100"
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </button>
-          </div>
-
-          {/* Menú de escritorio */}
-          <nav className="hidden md:flex space-x-8">
-
-            <button
-              onClick={() => onNavigate?.("inicio")}
-              className={`px-3 py-2 rounded-md transition-colors duration-200 ${currentPage === "inicio"
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-700 hover:text-blue-600 hover:border-b-2 hover:border-blue-600"
-                }`}
-            >
-              Inicio
-            </button>
-            <button
-              onClick={() => onNavigate?.("cases")}
-              className={`px-3 py-2 rounded-md transition-colors duration-200 ${currentPage === "cases"
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-700 hover:text-blue-600 hover:border-b-2 hover:border-blue-600"
-                }`}
-            >
-              Gestionar casos
-            </button>
-            <button
-              onClick={() => onNavigate?.("create")}
-              className={`px-3 py-2 rounded-md transition-colors duration-200 ${currentPage === "create"
-                  ? "text-blue-600 border-b-2 border-blue-600"
-                  : "text-gray-700 hover:text-blue-600 hover:border-b-2 hover:border-blue-600"
-                }`}
-            >
-              Crear caso
-            </button>
-            <Button
-              variant='destructive'
-              onClick={handleLogOut}>
-              Cerrar Sesion
-            </Button>
-          </nav>
         </div>
-
-        {/* Menú móvil (aparece solo cuando isOpen = true) */}
-        {isOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-gray-200 mt-2">
-              <button
-                onClick={() => {
-                  onNavigate?.("inicio");
-                  setIsOpen(false);
-                }}
-                className={`block px-3 py-2 rounded-md w-full text-left transition-colors duration-200 ${currentPage === "inicio"
-                    ? "text-blue-600"
-                    : "text-gray-700 hover:text-blue-600"
+        <button className="md:hidden" onClick={() => setOpen(!open)}>
+          {open ? <X /> : <Menu />}
+        </button>
+        <ul className="hidden md:flex space-x-4">
+          {links.map((link) => {
+            const isActive = pathname.startsWith(link.href);
+            return (
+              <li key={link.href}>
+                <Link
+                  href={link.href}
+                  className={`px-3 py-2 rounded-md text-sm font-medium ${
+                    isActive
+                      ? "bg-blue-100 text-blue-700"
+                      : "text-gray-700 hover:text-blue-600"
                   }`}
-              >
-                Inicio
-              </button>
-              <button
-                onClick={() => {
-                  onNavigate?.("cases");
-                  setIsOpen(false);
-                }}
-                className={`block px-3 py-2 rounded-md w-full text-left transition-colors duration-200 ${currentPage === "cases"
-                    ? "text-blue-600"
-                    : "text-gray-700 hover:text-blue-600"
-                  }`}
-              >
-                Gestionar casos
-              </button>
-              <button
-                onClick={() => {
-                  onNavigate?.("create");
-                  setIsOpen(false);
-                }}
-                className={`block px-3 py-2 rounded-md w-full text-left transition-colors duration-200 ${currentPage === "create"
-                    ? "text-blue-600"
-                    : "text-gray-700 hover:text-blue-600"
-                  }`}
-              >
-                Crear caso
-              </button>
-              <Button
-              variant='destructive'
-              onClick={handleLogOut}>
-              Cerrar Sesion
-            </Button>
-            </div>
-          </div>
-        )}
+                >
+                  {link.label}
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
       </div>
-    </header>
+
+      {/* Menú móvil */}
+      {open && (
+        <div className="md:hidden border-t border-gray-200 px-4 py-2">
+          {links.map((link) => {
+            const isActive = pathname.startsWith(link.href);
+            return (
+              <Link
+                key={link.href}
+                href={link.href}
+                onClick={() => setOpen(false)}
+                className={`block px-3 py-2 rounded-md text-sm ${
+                  isActive
+                    ? "bg-blue-100 text-blue-700"
+                    : "text-gray-700 hover:text-blue-600"
+                }`}
+              >
+                {link.label}
+              </Link>
+            );
+          })}
+        </div>
+      )}
+    </nav>
   );
 }

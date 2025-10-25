@@ -47,16 +47,16 @@ export function LoginForm() {
 
         switch (userRole) {
           case "admin":
-            router.push("/admin/home");
+            router.push("/admin/inicio");
             break;
           case "estudiante":
-            router.push("/estudiante");
+            router.push("/estudiante/inicio");
             break;
           case "asesor":
-            router.push("/asesor");
+            router.push("/asesor/inicio");
             break;
           case "pro_apoyo":
-            router.push("/pro-apoyo");
+            router.push("/pro-apoyo/inicio");
             break;
           default:
             setError("Rol de usuario no reconocido. Contacta al soporte.");

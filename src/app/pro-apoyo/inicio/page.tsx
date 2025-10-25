@@ -2,10 +2,10 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { FileText, Scale, Users, BookOpen } from 'lucide-react';
-import NavbarProApoyo from './components/NavBarProApoyo';
-import GestionCasosPage from './gestionar-caso/GestionCasoPage';
+import {Navbar} from '../components/NavBarProApoyo';
+import GestionCasosPage from '../gestionar-caso/page';
 import { useState } from 'react';
-import CreateCasePage from './crear-caso/CreateCasePage';
+import CreateCasePage from '../crear-caso/page';
 import { Button } from '@/components/ui/button';
 
 export default function PaginaPrincipal() {
@@ -28,31 +28,11 @@ export default function PaginaPrincipal() {
     setSelectedCaseId(null);
   };
 
-  if (currentPage === "cases") {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <NavbarProApoyo currentPage={currentPage} onNavigate={handleNavigate} />
-        <main className="flex-1 bg-gray-50">
-          <GestionCasosPage onBack={handleNavigateHome} />
-        </main>
-      </div>
-    );
-  }
-  
-  if (currentPage === "create") {
-    return (
-      <div className="min-h-screen flex flex-col">
-        <NavbarProApoyo currentPage={currentPage} onNavigate={handleNavigate} />
-        <main className="flex-1 bg-gray-50">
-          <CreateCasePage onBack={handleNavigateHome} />
-        </main>
-      </div>
-    );
-  }
+
   
   return (
     <div>
-      <NavbarProApoyo currentPage="inicio" onNavigate={handleNavigate} />
+      <Navbar/>
       <div className="h-[calc(100vh-4rem)] bg-linear-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
         <div className="max-w-4xl w-full space-y-8">
           {/* Header */}

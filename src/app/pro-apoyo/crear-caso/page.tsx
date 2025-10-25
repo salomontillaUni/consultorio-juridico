@@ -1,3 +1,4 @@
+'use client'
 import { useState } from "react";
 import { RegistroUsuario } from "./components/RegistroUsuario";
 import { AsignacionCaso } from "./components/AsignacionCaso";
@@ -5,6 +6,7 @@ import { ResumenCaso } from "./components/ResumenCaso";
 import { Button } from "@/components/ui/button";
 import { StepIndicator } from "./components/StepIndicator";
 import { on } from "events";
+import { Navbar } from "../components/NavBarProApoyo";
 
 export interface Usuario {
   nombreCompleto: string;
@@ -49,11 +51,14 @@ export default function CreateCasePage({ onBack }: { onBack: () => void }) {
     setUsuario(null);
     setCaso(null);
     setSeccionActual("registro");
-    onBack();
+    
   };
 
   return (
-    <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center p-4">
+    <div>
+      <Navbar/>
+      <main>
+        <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center p-4">
 
       <div className="mb-6 max-w-3xl w-full flex flex-col gap-2">
         <div className="flex flex-col items-center justify-between">
@@ -93,5 +98,8 @@ export default function CreateCasePage({ onBack }: { onBack: () => void }) {
         />
       )}
     </div>
+      </main>
+    </div>
+    
   );
 }

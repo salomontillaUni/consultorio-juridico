@@ -5,7 +5,7 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { FileText, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
-import type { DatosCaso } from '../CreateCasePage';
+import type { DatosCaso } from '../page';
 import {
   Dialog,
   DialogContent,

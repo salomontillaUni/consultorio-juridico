@@ -47,9 +47,9 @@ export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: Registr
     <Card className="md:min-w-3xl mx-auto shadow-lg">
       <CardHeader className="space-y-1 pb-6">
         <div className="flex items-center gap-2">
-          <button onClick={onBack} className="cursor-pointer text-blue-600 hover:underline">
+          <Link href={'/pro-apoyo'} className="cursor-pointer text-blue-600 hover:underline">
             Volver al inicio
-          </button>
+          </Link>
         </div>
         <div className="flex items-center gap-2">
           <div className="p-2 bg-blue-100 rounded-lg">
