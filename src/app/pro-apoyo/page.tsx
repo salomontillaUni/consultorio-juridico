@@ -2,10 +2,10 @@
 
 import { Card, CardContent } from '@/components/ui/card';
 import { FileText, Scale, Users, BookOpen } from 'lucide-react';
-import NavbarProApoyo from '../components/NavBarProApoyo';
-import GestionCasosPage from '../gestionar-caso/GestionCasoPage';
+import NavbarProApoyo from './components/NavBarProApoyo';
+import GestionCasosPage from './gestionar-caso/GestionCasoPage';
 import { useState } from 'react';
-import CreateCasePage from '../crear-caso/CreateCasePage';
+import CreateCasePage from './crear-caso/CreateCasePage';
 import { Button } from '@/components/ui/button';
 
 export default function PaginaPrincipal() {
