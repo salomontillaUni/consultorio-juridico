@@ -121,14 +121,6 @@ const getStatusColor = (status: string) => {
   }
 };
 
-const getPriorityColor = (priority: string) => {
-  switch (priority) {
-    case "alta": return "bg-red-100 text-red-800 border-red-200";
-    case "media": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    case "baja": return "bg-green-100 text-green-800 border-green-200";
-    default: return "bg-gray-100 text-gray-800 border-gray-200";
-  }
-};
 
 export default function SupportCasesPage({ onBack }: { onBack?: () => void }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -292,9 +284,7 @@ export default function SupportCasesPage({ onBack }: { onBack?: () => void }) {
                     <Badge className={`text-xs ${getStatusColor(caso.status)}`}>
                       {caso.status.charAt(0).toUpperCase() + caso.status.slice(1)}
                     </Badge>
-                    <Badge className={`text-xs ${getPriorityColor(caso.priority)}`}>
-                      {caso.priority.charAt(0).toUpperCase() + caso.priority.slice(1)}
-                    </Badge>
+                    
                   </div>
                 </div>
 
@@ -315,12 +305,7 @@ export default function SupportCasesPage({ onBack }: { onBack?: () => void }) {
                     <span className="text-gray-600">Última actualización:</span>
                     <span className="text-gray-900">{formatDate(caso.lastUpdate)}</span>
                   </div>
-                  {caso.nextHearing && (
-                    <div className="flex justify-between text-sm">
-                      <span className="text-gray-600">Próxima audiencia:</span>
-                      <span className="text-blue-600">{formatDate(caso.nextHearing)}</span>
-                    </div>
-                  )}
+                  
                 </div>
 
                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">
