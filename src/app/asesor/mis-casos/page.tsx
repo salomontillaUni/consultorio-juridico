@@ -140,7 +140,7 @@ export default function AdvisorCasesPage({ onBack, onViewCase }: AdvisorCasesPag
                     {/* Header */}
                     <div className="mb-8">
                         <Link
-                            href="/asesor/mis-casos"
+                            href="/asesor/inicio"
                             className="flex items-center text-blue-600 hover:text-blue-700 mb-4 transition-colors cursor-pointer hover:underline"
                         >
                             <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

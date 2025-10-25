@@ -1,145 +1,57 @@
 "use client";
-import { ReactEventHandler, useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
-import { Nav } from "react-day-picker";
 import { Navbar } from "../components/NavBarProApoyo";
-
-interface Case {
-  id: string;
-  caseNumber: string;
-  clientName: string;
-  caseType: string;
-  status: "activo" | "pendiente" | "cerrado" | "revision";
-  priority: "alta" | "media" | "baja";
-  dateCreated: string;
-  lastUpdate: string;
-  nextHearing: string | null;
-  description: string;
-  assignedStudent: string;
-  advisor: string;
-}
-
-const mockCases: Case[] = [
-  {
-    id: "1",
-    caseNumber: "CASO-2024-001",
-    clientName: "María González",
-    caseType: "Derecho Civil",
-    status: "activo",
-    priority: "alta",
-    dateCreated: "2024-01-15",
-    lastUpdate: "2024-10-01",
-    nextHearing: "2024-10-15",
-    description: "Demanda por incumplimiento de contrato de servicios profesionales",
-    assignedStudent: "Ana Carolina Méndez Ruiz",
-    advisor: "Dr. Carlos Eduardo Vargas Molina"
-  },
-  {
-    id: "2",
-    caseNumber: "CASO-2024-002",
-    clientName: "Carlos Rodríguez",
-    caseType: "Derecho Laboral",
-    status: "pendiente",
-    priority: "media",
-    dateCreated: "2024-02-03",
-    lastUpdate: "2024-09-28",
-    nextHearing: null,
-    description: "Despido improcedente y reclamación de indemnización",
-    assignedStudent: "Miguel Andrés Torres Vargas",
-    advisor: "Dra. Laura Patricia Ruiz Gómez"
-  },
-  {
-    id: "3",
-    caseNumber: "CASO-2024-003",
-    clientName: "Ana Martínez",
-    caseType: "Derecho Familiar",
-    status: "revision",
-    priority: "alta",
-    dateCreated: "2024-03-10",
-    lastUpdate: "2024-10-02",
-    nextHearing: "2024-10-20",
-    description: "Proceso de divorcio y custodia de menores",
-    assignedStudent: "Carolina Isabel Herrera López",
-    advisor: "Dr. Fernando José Acosta Núñez"
-  },
-  {
-    id: "4",
-    caseNumber: "CASO-2024-004",
-    clientName: "Luis Fernández",
-    caseType: "Derecho Penal",
-    status: "activo",
-    priority: "alta",
-    dateCreated: "2024-04-22",
-    lastUpdate: "2024-10-03",
-    nextHearing: "2024-10-12",
-    description: "Defensa en proceso por delito contra la salud pública",
-    assignedStudent: "Sebastián Alejandro Morales Cruz",
-    advisor: "Dr. Pablo Enrique Castillo Rodríguez"
-  },
-  {
-    id: "5",
-    caseNumber: "CASO-2024-005",
-    clientName: "Carmen López",
-    caseType: "Derecho Mercantil",
-    status: "cerrado",
-    priority: "baja",
-    dateCreated: "2024-01-08",
-    lastUpdate: "2024-08-15",
-    nextHearing: null,
-    description: "Constitución de sociedad mercantil y redacción de estatutos",
-    assignedStudent: "Andrea Valentina Ospina Jiménez",
-    advisor: "Dra. Mónica Alexandra Peña Suárez"
-  },
-  {
-    id: "6",
-    caseNumber: "CASO-2024-006",
-    clientName: "Roberto Silva",
-    caseType: "Derecho Civil",
-    status: "activo",
-    priority: "media",
-    dateCreated: "2024-05-14",
-    lastUpdate: "2024-09-30",
-    nextHearing: "2024-10-18",
-    description: "Reclamación de deudas y ejecución hipotecaria",
-    assignedStudent: "Juan David Ramírez Ortega",
-    advisor: "Dr. Ricardo Alberto Díaz Murillo"
-  }
-];
+import { supabase } from "@/utils/supabase";
+import { Caso } from "app/types/database";
+import { getCasos } from "../../../../supabase/queries/getCasos";
+import { Loader2 } from "lucide-react";
 
 const getStatusColor = (status: string) => {
   switch (status) {
-    case "activo": return "bg-green-100 text-green-800 border-green-200";
-    case "pendiente": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    case "cerrado": return "bg-gray-100 text-gray-800 border-gray-200";
-    case "revision": return "bg-blue-100 text-blue-800 border-blue-200";
+    case "aprobado": return "bg-green-100 text-green-800 border-green-200";
+    case "en_proceso": return "bg-yellow-100 text-yellow-800 border-yellow-200";
+    case "pendiente_aprobacion": return "bg-gray-100 text-gray-800 border-gray-200";
+    case "archivado": return "bg-blue-100 text-blue-800 border-blue-200";
     default: return "bg-gray-100 text-gray-800 border-gray-200";
   }
 };
 
-
-export default function SupportCasesPage({ onBack }: { onBack?: () => void }) {
+export default function SupportCasesPage() {
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("todos");
   const [typeFilter, setTypeFilter] = useState("todos");
   const [studentFilter, setStudentFilter] = useState("todos");
+  const [casos, setCasos] = useState<Caso[] | null>(null);
+  const [loading, setLoading] = useState(true);
 
-  const filteredCases = mockCases.filter(caso => {
+  useEffect(() => {
+    async function fetchData() {
+      const data = await getCasos();
+      setCasos(data);
+      setLoading(false);
+    }
+    fetchData();
+  }, []);
+
+  const filteredCases = casos?.filter(caso => {
     const matchesSearch =
-      caso.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      caso.caseNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      caso.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      caso.assignedStudent.toLowerCase().includes(searchTerm.toLowerCase());
+      caso.usuarios?.nombre_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      caso.usuarios?.cedula?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      caso.observaciones?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      caso.area.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = statusFilter === "todos" || caso.status === statusFilter;
-    const matchesType = typeFilter === "todos" || caso.caseType === typeFilter;
-    const matchesStudent = studentFilter === "todos" || caso.assignedStudent === studentFilter;
+    const matchesStatus = statusFilter === "todos" || caso.estado === statusFilter;
+    const matchesArea = typeFilter === "todos" || caso.area === typeFilter;
+    const matchesStudent = studentFilter === "todos" || caso.usuarios?.nombre_completo === studentFilter;
+    const matchesCedula = studentFilter === "todos" || caso.usuarios?.cedula === studentFilter;
 
-    return matchesSearch && matchesStatus && matchesType && matchesStudent;
+    return matchesSearch && matchesStatus && matchesArea && matchesStudent && matchesCedula;
   });
 
   const formatDate = (dateString: string) => {
@@ -150,8 +62,14 @@ export default function SupportCasesPage({ onBack }: { onBack?: () => void }) {
     });
   };
 
-  const uniqueStudents = [...new Set(mockCases.map(c => c.assignedStudent))];
-
+  const uniqueStudents = [...new Set(casos?.map(c => c.usuarios?.nombre_completo))];
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -186,7 +104,7 @@ export default function SupportCasesPage({ onBack }: { onBack?: () => void }) {
                   </div>
                   <div className="ml-4">
                     <p className="text-sm text-gray-600">Total casos</p>
-                    <p className="text-xl text-gray-900">{mockCases.length}</p>
+                    <p className="text-xl text-gray-900">{casos?.length}</p>
                   </div>
                 </div>
               </div>
@@ -199,8 +117,8 @@ export default function SupportCasesPage({ onBack }: { onBack?: () => void }) {
                     </svg>
                   </div>
                   <div className="ml-4">
-                    <p className="text-sm text-gray-600">Activos</p>
-                    <p className="text-xl text-gray-900">{mockCases.filter(c => c.status === 'activo').length}</p>
+                    <p className="text-sm text-gray-600">Aprobados</p>
+                    <p className="text-xl text-gray-900">{casos?.filter(c => c.estado === 'aprobado').length}</p>
                   </div>
                 </div>
               </div>
@@ -238,10 +156,10 @@ export default function SupportCasesPage({ onBack }: { onBack?: () => void }) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="todos">Todos los estados</SelectItem>
-                  <SelectItem value="activo">Activo</SelectItem>
-                  <SelectItem value="pendiente">Pendiente</SelectItem>
-                  <SelectItem value="revision">En revisión</SelectItem>
-                  <SelectItem value="cerrado">Cerrado</SelectItem>
+                  <SelectItem value="aprobado">Aprobado</SelectItem>
+                  <SelectItem value="en_proceso">En proceso</SelectItem>
+                  <SelectItem value="pendiente_aprobacion">Pendiente de aprobación</SelectItem>
+                  <SelectItem value="archivado">Archivado</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
@@ -263,9 +181,15 @@ export default function SupportCasesPage({ onBack }: { onBack?: () => void }) {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="todos">Todos los estudiantes</SelectItem>
-                  {uniqueStudents.map(student => (
-                    <SelectItem key={student} value={student}>{student}</SelectItem>
-                  ))}
+                  {
+                    uniqueStudents.length > 0 ? (
+                      uniqueStudents.map(student => (
+                        <SelectItem key={student} value={student}>{student}</SelectItem>
+                      ))
+                    ) : (
+                      <SelectItem value="ninguno">No hay estudiantes disponibles</SelectItem>
+                    )
+                  }
                 </SelectContent>
               </Select>
             </div>
@@ -273,49 +197,45 @@ export default function SupportCasesPage({ onBack }: { onBack?: () => void }) {
 
           {/* Cases Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
-            {filteredCases.map((caso) => (
-              <Card key={caso.id} className="p-6 hover:shadow-md max-w-2xl transition-shadow duration-200">
+            {filteredCases?.map((caso) => (
+              <Card key={caso.id_caso} className="p-6 hover:shadow-md max-w-2xl transition-shadow duration-200">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-gray-900 mb-1">{caso.caseNumber}</h3>
-                    <p className="text-gray-600">{caso.clientName}</p>
+                    <h3 className="text-gray-900 mb-1">{caso.id_caso}</h3>
+                    <p className="text-gray-600">{caso.usuarios.nombre_completo}</p>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Badge className={`text-xs ${getStatusColor(caso.status)}`}>
-                      {caso.status.charAt(0).toUpperCase() + caso.status.slice(1)}
+                    <Badge className={`text-xs ${getStatusColor(caso.estado)}`}>
+                      {caso.estado.charAt(0).toUpperCase() + caso.estado.slice(1)}
                     </Badge>
-                    
+
                   </div>
                 </div>
 
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Tipo:</span>
-                    <span className="text-gray-900">{caso.caseType}</span>
+                    <span className="text-gray-900">{caso.tipo_proceso}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Estudiante:</span>
-                    <span className="text-blue-600">{caso.assignedStudent}</span>
+                    <span className="text-blue-600">{caso.estudiantes_casos.map(estudiante => estudiante.id_estudiante).join(", ")}</span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Asesor:</span>
-                    <span className="text-gray-900">{caso.advisor}</span>
+                    <span className="text-gray-900">{caso.asesores_casos.map(asesor => asesor.id_asesor).join(", ")}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Última actualización:</span>
-                    <span className="text-gray-900">{formatDate(caso.lastUpdate)}</span>
-                  </div>
-                  
+
                 </div>
 
                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                  {caso.description}
+                  {caso.resumen_hechos}
                 </p>
 
                 <div className="flex gap-2">
                   <Link
                     className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center px-4 py-2 rounded-md transition-colors duration-200"
-                    href={`/pro-apoyo/gestionar-caso/${caso.id}`}
+                    href={`/pro-apoyo/gestionar-caso/${caso.id_caso}`}
                   >
                     Supervisar
                   </Link>
@@ -324,7 +244,7 @@ export default function SupportCasesPage({ onBack }: { onBack?: () => void }) {
             ))}
           </div>
 
-          {filteredCases.length === 0 && (
+          {filteredCases?.length === 0 && (
             <div className="text-center py-12">
               <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
