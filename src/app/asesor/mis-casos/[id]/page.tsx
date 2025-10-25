@@ -22,9 +22,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     id: id,
     caseNumber: "CJ-2024-001",
     status: "pending_approval",
-    priority: "high",
     createdDate: "2024-01-15",
-    lastUpdate: "2024-01-16",
     
     // Cliente
     clientName: "María González",
@@ -135,10 +133,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             <p className="text-gray-600">Cliente: {caseData.clientName}</p>
           </div>
           
-          <div className="mt-4 sm:mt-0 text-right">
-            <p className="text-sm text-gray-600">Creado: {new Date(caseData.createdDate).toLocaleDateString()}</p>
-            <p className="text-sm text-gray-600">Actualizado: {new Date(caseData.lastUpdate).toLocaleDateString()}</p>
-          </div>
         </div>
       </div>
 
