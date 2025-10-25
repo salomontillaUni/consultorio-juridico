@@ -33,8 +33,11 @@ export default function SupportCasesPage() {
   useEffect(() => {
     async function fetchData() {
       const data = await getCasos();
+      const { data: perfiles, error } = await supabase
+        .from('perfiles')
+        .select('id, nombre_completo, telefono');
       setCasos(data);
-      console.log(data);
+      console.log(data, perfiles, error);
       setLoading(false);
     }
     fetchData();

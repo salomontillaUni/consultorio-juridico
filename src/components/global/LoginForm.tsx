@@ -18,7 +18,7 @@ export function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [userLoaded, setUserLoaded] = useState(false)
-  const [user, setUser] = useState<User | null>(null)
+  const [user, setUser] = useState(null)
   const [session, setSession] = useState<Awaited<ReturnType<typeof supabase.auth.getSession>>['data']['session'] | null>(null)
   const router = useRouter();
   const [role, setRole] = useState<Promise<string | null>>();
@@ -39,12 +39,24 @@ export function LoginForm() {
       });
       if (error) {
         setError("Error al iniciar sesión: " + error.message);
-      } else {
+      } 
+      setIsLoading(false);
+    }catch(error){
+      console.error("Error inesperado al iniciar sesión:", error);
+    }
 
-        const user = data.user;
-        const userRole = await getRolUsuario(user ? user.id : null);
+  };
 
-        switch (userRole) {
+  useEffect(() => {
+    function saveSession(
+      session: Awaited<ReturnType<typeof supabase.auth.getSession>>['data']['session']
+    ) {
+      setSession(session)
+      const currentUser = session?.user
+      if (session) {
+        const jwt = jwtDecode(session.access_token)
+        currentUser.appRole = jwt.user_role;
+        switch (currentUser.appRole) {
           case "admin":
             router.push("/admin/inicio");
             break;
@@ -63,27 +75,7 @@ export function LoginForm() {
             break;
         }
       }
-      setIsLoading(false);
-    }catch(error){
-      console.error("Error inesperado al iniciar sesión:", error);
-    }
-
-  };
-
-  useEffect(() => {
-    function saveSession(
-      session: Awaited<ReturnType<typeof supabase.auth.getSession>>['data']['session']
-    ) {
-      setSession(session)
-      const currentUser = session?.user
-      if (session) {
-        const jwt = jwtDecode(session.access_token)
-      }
-      setUser(currentUser ?? null)
       setUserLoaded(!!currentUser)
-      if (currentUser) {
-        console.log("Usuario actual:", currentUser)
-      }
     }
 
     supabase.auth.getSession().then(({ data: { session } }) => saveSession(session))
@@ -99,18 +91,6 @@ export function LoginForm() {
       authListener.subscription.unsubscribe();
     }
   }, [])
-
-  const getRolUsuario = async (id: string | null): Promise<string | null> => {
-    const { data, error } = await supabase
-      .from("perfiles_roles")
-      .select("role")
-      .eq("user_id", id).single();
-    if (error) {
-      supabase.auth.signOut();
-      return null;
-    }
-    return data.role || null;
-  };
 
   function handleOlvidasteContraseña(): void {
     console.log("Redirigiendo a la página de recuperación de contraseña...");
