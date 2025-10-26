@@ -77,8 +77,9 @@ export default function CreateCasePage({ onBack }: { onBack: () => void }) {
           onCasoRegistrado={handleCasoRegistrado}
         />
       )}
-      {seccionActual === "resumen" && caso && (
+      {seccionActual === "resumen" && caso && usuario && (
         <ResumenCaso
+          usuario={usuario}
           caso={caso}
           onNuevoCaso={handleNuevoCaso}
         />

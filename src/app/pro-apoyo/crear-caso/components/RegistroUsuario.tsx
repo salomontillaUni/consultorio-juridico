@@ -17,7 +17,6 @@ interface RegistroUsuarioProps {
 
 export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: RegistroUsuarioProps) {
   const [formData, setFormData] = useState<Usuario>(datosIniciales || {
-    id_usuario: '',
     nombre_completo: '',
     sexo: '',
     cedula: '',

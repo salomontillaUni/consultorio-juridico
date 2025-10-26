@@ -30,18 +30,26 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
 
   // Si vienen datos iniciales (por ejemplo al editar un caso)
   useEffect(() => {
-    if (datosIniciales) {
-      setEstudianteId(datosIniciales.estudiantes_casos[0]?.estudiante.id_perfil?.toString() || '');
-      setAsesorId(datosIniciales.asesores_casos[0]?.asesor.id_perfil?.toString() || '');
-      setObservaciones(datosIniciales.observaciones || '');
-    }
+    if (!datosIniciales) return;
+
+    const estudianteAsignado = Array.isArray(datosIniciales.estudiantes_casos) && datosIniciales.estudiantes_casos.length > 0
+      ? datosIniciales.estudiantes_casos[0].estudiante
+      : null;
+
+    const asesorAsignado = Array.isArray(datosIniciales.asesores_casos) && datosIniciales.asesores_casos.length > 0
+      ? datosIniciales.asesores_casos[0].asesor
+      : null;
+
+    setEstudianteId(estudianteAsignado?.id_perfil?.toString() || '');
+    setAsesorId(asesorAsignado?.id_perfil?.toString() || '');
+    setObservaciones(datosIniciales.observaciones || '');
   }, [datosIniciales]);
 
   // Cargar estudiantes y asesores disponibles al montar
   useEffect(() => {
     const getData = async () => {
       try {
-        const estudiantes = await getEstudiantes(); 
+        const estudiantes = await getEstudiantes();
         setEstudiantesDisponibles(estudiantes);
 
         const asesores = await getAsesores();
@@ -70,8 +78,6 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
     }
     console.log(datosIniciales)
     const datosCaso: Caso = {
-      id_caso: datosIniciales?.id_caso || 0,
-      id_usuario: usuario.id_usuario,
       area: datosIniciales?.area || 'otros',
       fecha_creacion: datosIniciales?.fecha_creacion || new Date().toISOString(),
       estado: datosIniciales?.estado || 'pendiente_aprobacion',
