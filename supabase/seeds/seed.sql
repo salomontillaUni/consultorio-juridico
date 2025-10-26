@@ -15,10 +15,14 @@ VALUES
 ('pro_apoyo', 'estudiantes.read'),
 ('pro_apoyo', 'estudiantes_casos.read'),
 ('pro_apoyo', 'estudiantes_casos.update'),
+('pro_apoyo', 'estudiantes_casos.delete'),
+('pro_apoyo', 'estudiantes_casos.create'),
 ('pro_apoyo', 'asesores.read'),
 ('pro_apoyo', 'asesores.update'),
+('pro_apoyo', 'asesores_casos.create'),
 ('pro_apoyo', 'asesores_casos.read'),
 ('pro_apoyo', 'asesores_casos.update'),
+('pro_apoyo', 'asesores_casos.delete'),
 ('pro_apoyo', 'demandados.read');
 
 -- 🔹 ESTUDIANTE: puede leer casos asignados y actualizar observaciones
