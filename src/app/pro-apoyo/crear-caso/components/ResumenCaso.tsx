@@ -5,7 +5,6 @@ import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { FileText, CheckCircle2 } from 'lucide-react';
 import { toast } from 'sonner';
-import type { DatosCaso } from '../page';
 import {
   Dialog,
   DialogContent,
@@ -14,19 +13,19 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
+import { Caso } from 'app/types/database';
 
 interface ResumenCasoProps {
-  caso: DatosCaso;
+  caso: Caso;
   onNuevoCaso: () => void;
 }
 
 export function ResumenCaso({ caso, onNuevoCaso }: ResumenCasoProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleConfirmacion = () => {
-    // Aquí iría la lógica para guardar el caso en el backend
-    toast.success('El caso ha sido creado exitosamente.');
-    setDialogOpen(true); // Abrir el modal de confirmación
+    setDialogOpen(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
@@ -54,21 +53,27 @@ export function ResumenCaso({ caso, onNuevoCaso }: ResumenCasoProps) {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-slate-50 rounded-lg">
               <div>
                 <span className="text-sm text-muted-foreground">Nombre completo</span>
-                <p className="text-slate-900">{caso.usuario.nombreCompleto}</p>
+                <p className="text-slate-900">{caso.usuarios.nombre_completo}</p>
+              </div>
+              <div>
+                <span className="text-sm text-muted-foreground">Sexo</span>
+                <p className="text-slate-900">
+                  Sexo {caso.usuarios.sexo}
+                </p>
               </div>
               <div>
                 <span className="text-sm text-muted-foreground">Documento</span>
                 <p className="text-slate-900">
-                  {caso.usuario.tipoDocumento.toUpperCase()} {caso.usuario.numeroDocumento}
+                  Documento {caso.usuarios.cedula}
                 </p>
               </div>
               <div>
                 <span className="text-sm text-muted-foreground">Teléfono</span>
-                <p className="text-slate-900">{caso.usuario.telefono}</p>
+                <p className="text-slate-900">{caso.usuarios.telefono}</p>
               </div>
               <div>
                 <span className="text-sm text-muted-foreground">Correo electrónico</span>
-                <p className="text-slate-900">{caso.usuario.correoElectronico}</p>
+                <p className="text-slate-900">{caso.usuarios.correo}</p>
               </div>
             </div>
           </div>
@@ -81,15 +86,15 @@ export function ResumenCaso({ caso, onNuevoCaso }: ResumenCasoProps) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-blue-50 rounded-lg">
               <div>
                 <span className="text-sm text-muted-foreground">Nombre</span>
-                <p className="text-slate-900">{caso.estudiante.nombre}</p>
+                <p className="text-slate-900">{caso.estudiantes_casos[0]?.estudiante.perfil.nombre_completo}</p>
               </div>
               <div>
                 <span className="text-sm text-muted-foreground">Semestre</span>
-                <p className="text-slate-900">{caso.estudiante.semestre}</p>
+                <p className="text-slate-900">{caso.estudiantes_casos[0]?.estudiante.semestre}</p>
               </div>
               <div>
                 <span className="flex text-sm text-muted-foreground">Turno</span>
-                <Badge variant="outline">{caso.estudiante.turno}</Badge>
+                <Badge variant="outline">{caso.estudiantes_casos[0]?.estudiante.turno}</Badge>
               </div>
             </div>
           </div>
@@ -102,15 +107,15 @@ export function ResumenCaso({ caso, onNuevoCaso }: ResumenCasoProps) {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-purple-50 rounded-lg">
               <div>
                 <span className="text-sm text-muted-foreground">Nombre</span>
-                <p className="text-slate-900">{caso.asesor.nombre}</p>
+                <p className="text-slate-900">{caso.asesores_casos[0]?.asesor.perfil.nombre_completo}</p>
               </div>
               <div>
                 <span className="flex text-sm text-muted-foreground">Área</span>
-                <Badge variant="outline">{caso.asesor.area}</Badge>
+                <Badge variant="outline">{caso.asesores_casos[0]?.asesor.area}</Badge>
               </div>
               <div>
                 <span className="flex text-sm text-muted-foreground">Turno</span>
-                <Badge variant="secondary">{caso.asesor.turno}</Badge>
+                <Badge variant="secondary">{caso.asesores_casos[0]?.asesor.turno}</Badge>
               </div>
             </div>
           </div>
@@ -124,7 +129,7 @@ export function ResumenCaso({ caso, onNuevoCaso }: ResumenCasoProps) {
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
                   <span className="text-sm text-muted-foreground">Fecha de creación</span>
-                  <p className="text-slate-900">{caso.fechaCreacion}</p>
+                  <p className="text-slate-900">{caso.fecha_creacion.split('T')[0]}</p>
                 </div>
                 <div>
                   <span className="text-sm text-muted-foreground">Estado</span>

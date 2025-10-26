@@ -6,54 +6,54 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Textarea } from '@/components/ui/textarea';
 import { CheckCircle2, Users, UserCheck } from 'lucide-react';
 import { toast } from 'sonner';
-import type { Usuario, DatosCaso } from '../page';
+import { Asesor, Caso, Estudiante, Usuario } from 'app/types/database';
+import { getEstudiantes } from '../../../../../supabase/queries/getEstudiantes';
+import { getAsesores } from '../../../../../supabase/queries/getAsesores';
 
 interface AsignacionCasoProps {
   usuario: Usuario;
-  onCasoRegistrado: (caso: DatosCaso) => void;
-  datosIniciales?: DatosCaso | null;
+  onCasoRegistrado: (caso: Caso) => void;
+  datosIniciales?: Caso | null;
 }
 
 const casosMaximos = 5;
 
-// Datos de ejemplo
-const estudiantesDisponibles = [
-  { id: 1, nombre: 'Ana María Rodríguez', semestre: '8vo', turno: '9-11', casosActuales: 1 },
-  { id: 2, nombre: 'Carlos Andrés López', semestre: '9no', turno: '9-11', casosActuales: 2 },
-  { id: 3, nombre: 'María Fernanda Pérez', semestre: '7mo', turno: '2-4', casosActuales: 3 },
-  { id: 4, nombre: 'Juan Diego Martínez', semestre: '10mo', turno: '2-4', casosActuales: 2 },
-  { id: 5, nombre: 'Laura Sofía García', semestre: '8vo', turno: '4-6', casosActuales: 2 },
-];
-
-const asesoresDisponibles = [
-  { id: 1, nombre: 'Dr. Roberto Sánchez', area: 'Civil', turno: 'Mañana' },
-  { id: 2, nombre: 'Dra. Patricia Gómez', area: 'Penal', turno: 'Tarde' },
-  { id: 3, nombre: 'Dr. Miguel Ángel Torres', area: 'Familiar', turno: 'Mañana' },
-  { id: 4, nombre: 'Dra. Carmen Ruiz', area: 'Laboral', turno: 'Tarde' },
-  { id: 5, nombre: 'Dr. Fernando Castro', area: 'Administrativo', turno: 'Mañana' },
-];
 
 export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: AsignacionCasoProps) {
   const [estudianteId, setEstudianteId] = useState<string>('');
   const [asesorId, setAsesorId] = useState<string>('');
   const [observaciones, setObservaciones] = useState('');
+  const [estudiantesDisponibles, setEstudiantesDisponibles] = useState<Estudiante[]>([]);
+  const [asesoresDisponibles, setAsesoresDisponibles] = useState<Asesor[]>([]);
+  const [estudianteSeleccionado, setEstudianteSeleccionado] = useState<Estudiante | null>(null);
+  const [asesorSeleccionado, setAsesorSeleccionado] = useState<Asesor | null>(null);
 
   // Si vienen datos iniciales (por ejemplo al editar un caso)
   useEffect(() => {
     if (datosIniciales) {
-      setEstudianteId(datosIniciales.estudiante?.id?.toString() || '');
-      setAsesorId(datosIniciales.asesor?.id?.toString() || '');
+      setEstudianteId(datosIniciales.estudiantes_casos[0]?.estudiante.id_perfil?.toString() || '');
+      setAsesorId(datosIniciales.asesores_casos[0]?.asesor.id_perfil?.toString() || '');
       setObservaciones(datosIniciales.observaciones || '');
     }
   }, [datosIniciales]);
 
-  const fechaCreacion = new Date().toLocaleDateString('es-ES', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  });
+  // Cargar estudiantes y asesores disponibles al montar
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const estudiantes = await getEstudiantes(); 
+        setEstudiantesDisponibles(estudiantes);
+
+        const asesores = await getAsesores();
+        setAsesoresDisponibles(asesores);
+      } catch (error) {
+        console.error("Error al obtener estudiantes o asesores:", error);
+        toast.error('Error al obtener estudiantes o asesores');
+      }
+    };
+
+    getData();
+  }, []);
 
   const handleRegistrarCaso = () => {
     if (!estudianteId || !asesorId) {
@@ -61,16 +61,23 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
       return;
     }
 
-    const estudiante = estudiantesDisponibles.find(e => e.id.toString() === estudianteId);
-    const asesor = asesoresDisponibles.find(a => a.id.toString() === asesorId);
+    const estudiante = estudiantesDisponibles.find(e => e.id_perfil.toString() === estudianteId);
+    const asesor = asesoresDisponibles.find(a => a.id_perfil.toString() === asesorId);
 
-    if (!estudiante || !asesor) return;
+    if (!estudiante || !asesor) {
+      toast.error("No se pudo encontrar el estudiante o asesor seleccionado");
+      return;
+    }
 
-    const datosCaso: DatosCaso = {
-      usuario,
-      estudiante,
-      asesor,
-      fechaCreacion,
+    const datosCaso: Caso = {
+      id_caso: datosIniciales?.id_caso || 0,
+      id_usuario: usuario.id_usuario,
+      area: datosIniciales?.area || 'otros',
+      fecha_creacion: datosIniciales?.fecha_creacion || new Date().toISOString(),
+      estado: datosIniciales?.estado || 'pendiente_aprobacion',
+      usuarios: usuario,
+      estudiantes_casos: [{ estudiante }],
+      asesores_casos: [{ asesor }],
       observaciones,
     };
 
@@ -78,8 +85,6 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  const estudianteSeleccionado = estudiantesDisponibles.find(e => e.id.toString() === estudianteId);
-  const asesorSeleccionado = asesoresDisponibles.find(a => a.id.toString() === asesorId);
 
   return (
     <div className="space-y-6 md:min-w-3xl">
@@ -92,15 +97,15 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
           <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
             <div>
               <span className="text-muted-foreground">Nombre:</span>
-              <p>{usuario.nombreCompleto}</p>
+              <p>{usuario.nombre_completo}</p>
             </div>
             <div>
-              <span className="text-muted-foreground">Documento:</span>
-              <p>{usuario.tipoDocumento.toUpperCase()} {usuario.numeroDocumento}</p>
+              <span className="text-muted-foreground">Sexo:</span>
+              <p>{usuario.sexo}</p>
             </div>
             <div>
               <span className="text-muted-foreground">Correo:</span>
-              <p>{usuario.correoElectronico}</p>
+              <p>{usuario.correo}</p>
             </div>
           </div>
         </CardContent>
@@ -136,11 +141,11 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
                 </SelectTrigger>
                 <SelectContent>
                   {estudiantesDisponibles.map((estudiante) => (
-                    <SelectItem key={estudiante.id} value={estudiante.id.toString()}>
+                    <SelectItem key={estudiante.id_perfil} value={estudiante.id_perfil.toString()}>
                       <div className="flex flex-col">
-                        <span>{estudiante.nombre}</span>
+                        <span>{estudiante.perfil.nombre_completo}</span>
                         <span className="text-xs text-muted-foreground">
-                          Semestre {estudiante.semestre} • {estudiante.casosActuales}/{casosMaximos} casos
+                          Semestre {estudiante.semestre} • n/{casosMaximos} casos
                         </span>
                       </div>
                     </SelectItem>
@@ -161,7 +166,7 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
                 </div>
                 <div>
                   <span className="text-muted-foreground">Nombre:</span>
-                  <p>{estudianteSeleccionado.nombre}</p>
+                  <p>{estudianteSeleccionado.perfil.nombre_completo}</p>
                 </div>
               </div>
             )}
@@ -182,8 +187,8 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
                 </SelectTrigger>
                 <SelectContent>
                   {asesoresDisponibles.map((asesor) => (
-                    <SelectItem key={asesor.id} value={asesor.id.toString()}>
-                      {asesor.nombre} - {asesor.area} ({asesor.turno})
+                    <SelectItem key={asesor.id_perfil} value={asesor.id_perfil.toString()}>
+                      {asesor.perfil.nombre_completo} - {asesor.area} ({asesor.turno})
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -202,7 +207,7 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
                 </div>
                 <div>
                   <span className="text-muted-foreground">Nombre:</span>
-                  <p>{asesorSeleccionado.nombre}</p>
+                  <p>{asesorSeleccionado.perfil.nombre_completo}</p>
                 </div>
               </div>
             )}
@@ -213,7 +218,7 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
             <div className="space-y-2">
               <Label>Fecha de creación</Label>
               <div className="p-3 bg-slate-50 rounded border border-slate-200 text-sm">
-                {fechaCreacion}
+                {new Date().toLocaleDateString()}
               </div>
             </div>
 

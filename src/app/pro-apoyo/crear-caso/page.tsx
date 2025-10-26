@@ -7,34 +7,19 @@ import { Button } from "@/components/ui/button";
 import { StepIndicator } from "./components/StepIndicator";
 import { on } from "events";
 import { Navbar } from "../components/NavBarProApoyo";
-
-export interface Usuario {
-  nombreCompleto: string;
-  tipoDocumento: string;
-  numeroDocumento: string;
-  telefono: string;
-  correoElectronico: string;
-}
-
-export interface DatosCaso {
-  usuario: Usuario;
-  estudiante: any;
-  asesor: any;
-  fechaCreacion: string;
-  observaciones: string;
-}
+import { Caso, Usuario } from "app/types/database";
 
 export default function CreateCasePage({ onBack }: { onBack: () => void }) {
   const [seccionActual, setSeccionActual] = useState<"registro" | "asignacion" | "resumen">("registro");
   const [usuario, setUsuario] = useState<Usuario | null>(null);
-  const [caso, setCaso] = useState<DatosCaso | null>(null);
+  const [caso, setCaso] = useState<Caso | null>(null);
 
   const handleRegistroCompleto = (usuarioData: Usuario) => {
     setUsuario(usuarioData);
     setSeccionActual("asignacion");
   };
 
-  const handleCasoRegistrado = (casoData: DatosCaso) => {
+  const handleCasoRegistrado = (casoData: Caso) => {
     setCaso(casoData);
     setSeccionActual("resumen");
   };

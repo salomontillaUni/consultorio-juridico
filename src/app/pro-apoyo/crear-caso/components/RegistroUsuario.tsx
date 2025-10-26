@@ -6,14 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { UserPlus } from 'lucide-react';
 import Link from 'next/link';
+import { Usuario } from 'app/types/database';
 
-interface Usuario {
-  nombreCompleto: string;
-  tipoDocumento: string;
-  numeroDocumento: string;
-  telefono: string;
-  correoElectronico: string;
-}
 
 interface RegistroUsuarioProps {
   onContinuar: (usuario: Usuario) => void;
@@ -23,11 +17,12 @@ interface RegistroUsuarioProps {
 
 export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: RegistroUsuarioProps) {
   const [formData, setFormData] = useState<Usuario>(datosIniciales || {
-    nombreCompleto: '',
-    tipoDocumento: '',
-    numeroDocumento: '',
+    id_usuario: '',
+    nombre_completo: '',
+    sexo: '',
+    cedula: '',
     telefono: '',
-    correoElectronico: '',
+    correo: '',
   });
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -39,9 +34,15 @@ export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: Registr
   const handleChange = (campo: keyof Usuario, valor: string) => {
     setFormData(prev => ({ ...prev, [campo]: valor }));
   };
-
   const isFormValid = () => {
-    return Object.values(formData).every(value => value.trim() !== '');
+    if(!formData) return false;
+    return (
+      formData.nombre_completo.trim() !== '' &&
+      formData.sexo !== '' &&
+      formData.cedula.trim() !== '' &&
+      formData.telefono.trim() !== '' &&
+      formData.correo.trim() !== ''
+    );
   };
 
   return (
@@ -75,27 +76,27 @@ export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: Registr
             <Input
               id="nombreCompleto"
               placeholder="Ingrese su nombre completo"
-              value={formData.nombreCompleto}
-              onChange={(e) => handleChange('nombreCompleto', e.target.value)}
+              value={formData.nombre_completo}
+              onChange={(e) => handleChange('nombre_completo', e.target.value)}
               required
             />
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="space-y-2">
-              <Label htmlFor="tipoDocumento">Tipo de documento</Label>
+              <Label htmlFor="sexo">Sexo</Label>
               <Select
-                value={formData.tipoDocumento}
-                onValueChange={(value) => handleChange('tipoDocumento', value)}
+                value={formData.sexo}
+                onValueChange={(value) => handleChange('sexo', value)}
                 required
               >
                 <SelectTrigger id="tipoDocumento">
-                  <SelectValue placeholder="Seleccione tipo" />
+                  <SelectValue placeholder="Seleccione" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="cedula">Cédula de ciudadanía</SelectItem>
-                  <SelectItem value="pasaporte">Pasaporte</SelectItem>
-                  <SelectItem value="ce">Cedula de extranjería</SelectItem>
+                  <SelectItem value="M">Masculino</SelectItem>
+                  <SelectItem value="F">Femenino</SelectItem>
+                  <SelectItem value="O">Otro</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -105,8 +106,8 @@ export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: Registr
               <Input
                 id="numeroDocumento"
                 placeholder="Ej: 12345678"
-                value={formData.numeroDocumento}
-                onChange={(e) => handleChange('numeroDocumento', e.target.value)}
+                value={formData.cedula || ''}
+                onChange={(e) => handleChange('cedula', e.target.value)}
                 required
               />
             </div>
@@ -119,7 +120,7 @@ export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: Registr
                 id="telefono"
                 type="tel"
                 placeholder="Ej: +57 300 1234567"
-                value={formData.telefono}
+                value={formData.telefono || ''}
                 onChange={(e) => handleChange('telefono', e.target.value)}
                 required
               />
@@ -131,8 +132,8 @@ export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: Registr
                 id="correoElectronico"
                 type="email"
                 placeholder="ejemplo@correo.com"
-                value={formData.correoElectronico}
-                onChange={(e) => handleChange('correoElectronico', e.target.value)}
+                value={formData.correo || ''}
+                onChange={(e) => handleChange('correo', e.target.value)}
                 required
               />
             </div>

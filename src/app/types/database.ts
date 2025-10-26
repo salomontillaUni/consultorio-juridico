@@ -12,22 +12,22 @@ export type TipoContratoEnum = 'escrito' | 'verbal' | 'prestacion_servicios' | '
 export type Usuario = {
   id_usuario: string;
   nombre_completo: string;
-  sexo?: "M" | "F" | null;
-  cedula: string | null;
-  telefono: string | null;
+  sexo: "M" | "F" | "O" | "";
+  cedula: string;
+  telefono: string;
   edad?: number | null;
   contacto_familiar?: string | null;
   estado_civil?: EstadoCivilEnum | null;
   estrato?: number | null;
   direccion?: string | null;
-  correo?: string | null;
+  correo: string;
   tipo_vivienda?: string | null;
   situacion_laboral?: string | null;
   otros_ingresos?: boolean | null;
   valor_otros_ingresos?: number | null;
   concepto_otros_ingresos?: string | null;
-  tiene_contrato: boolean;
-  tiene_representado: boolean;
+  tiene_contrato?: boolean;
+  tiene_representado?: boolean;
 };
 
 // --- PERFILES --------------------------------------------------
@@ -86,9 +86,9 @@ export type Caso = {
   fecha_creacion: string;
   estado: EstadoEnum;
   fecha_cierre?: string | null;
-  aprobacion_asesor: boolean;
+  aprobacion_asesor?: boolean;
   area: AreaEnum;
-  tipo_proceso: string;
+  tipo_proceso?: string;
 
   // Relaciones
   usuarios: Usuario;
