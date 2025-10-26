@@ -29,14 +29,13 @@ export default function SupportCasesPage() {
   const [typeFilter, setTypeFilter] = useState("todos");
   const [studentFilter, setStudentFilter] = useState("todos");
   const [casos, setCasos] = useState<Caso[] | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     async function fetchData() {
+      setLoading(true);
       const data = await getCasos();
-      console.log((await supabase.from('estudiantes_casos').select('*')));
       setCasos(data);
-      console.log(data);
       setLoading(false);
     }
     fetchData();
