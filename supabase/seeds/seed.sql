@@ -8,6 +8,7 @@ VALUES
 ('pro_apoyo', 'usuarios.create'),
 ('pro_apoyo', 'usuarios.read'),
 ('pro_apoyo', 'usuarios.update'),
+('pro_apoyo', 'perfiles.read'),
 ('pro_apoyo', 'casos.create'),
 ('pro_apoyo', 'casos.read'),
 ('pro_apoyo', 'casos.update'),

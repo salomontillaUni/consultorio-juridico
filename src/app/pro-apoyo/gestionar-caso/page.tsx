@@ -11,6 +11,7 @@ import { Caso } from "app/types/database";
 import { getCasos } from "../../../../supabase/queries/getCasos";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/utils/supabase";
+import { get } from "http";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -33,11 +34,9 @@ export default function SupportCasesPage() {
   useEffect(() => {
     async function fetchData() {
       const data = await getCasos();
-      const { data: perfiles, error } = await supabase
-        .from('perfiles')
-        .select('id, nombre_completo, telefono');
+      console.log((await supabase.from('estudiantes_casos').select('*')));
       setCasos(data);
-      console.log(data, perfiles, error);
+      console.log(data);
       setLoading(false);
     }
     fetchData();
