@@ -49,7 +49,7 @@ export default function Page({ params }:{ params: Promise<{ id_caso: string }> }
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
-  console.log(id_caso)
+  
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
       year: 'numeric',
@@ -59,40 +59,34 @@ export default function Page({ params }:{ params: Promise<{ id_caso: string }> }
   };
 
   async function traerDatos() {
-    try {
-      setLoading(true);
-      setError(null);
+  try {
+    setLoading(true);
+    setError(null);
 
-      const [casoFetch, demandadoFetch] = await Promise.all([
-        getCasoById(id_caso),
-        getDemandadoByCasoId(id_caso),
-      ]);
-      if (!casoFetch) {
-        setError("Caso no encontrado");
-      } else {
-        setCaso(casoFetch);
-        setDemandado(demandadoFetch);
-        console.log(demandadoFetch)
-      }
-    } catch (err) {
-      console.error(err);
-      setError("Error al obtener los datos del caso");
-    } finally {
-      setLoading(false);
+    const [casoFetch, demandadoFetch] = await Promise.all([
+      getCasoById(id_caso),
+      getDemandadoByCasoId(id_caso),
+    ]);
+
+    if (!casoFetch) {
+      setError("Caso no encontrado");
+      return;
     }
+
+    setCaso(casoFetch);
+    setDemandado(demandadoFetch);
+  } catch (err) {
+    console.error(err);
+    setError("Error al obtener los datos del caso");
+  } finally {
+    setLoading(false);
   }
+}
 
-  useEffect(() => {
-    traerDatos();
-  }, []);
+useEffect(() => {
+  traerDatos();
+}, []);
 
-  const formatShortDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('es-ES', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
-    });
-  };
 
   const handleEditStudent = () => {
     const studentData: Estudiante[] = caso?.estudiantes_casos.map(ec => ec.estudiante) || [];
@@ -273,7 +267,6 @@ export default function Page({ params }:{ params: Promise<{ id_caso: string }> }
     const updatedNotes = editedNotes.split('\n').filter((_, i) => i !== index);
     setEditedNotes(updatedNotes.join('\n'));
   };
-
   const displayStudentData = isEditingStudent ? editedStudentData : caso?.estudiantes_casos.map(ec => ec.estudiante);
   const displayClientData = isEditingClient ? editedClientData : caso?.usuarios;
   const displayDefendantData = isEditingDefendant ? editedDefendantData : demandado;

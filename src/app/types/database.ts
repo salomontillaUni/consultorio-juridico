@@ -92,8 +92,8 @@ export type Caso = {
 
   // Relaciones
   usuarios: Usuario;
-  estudiantes_casos?: EstudianteCaso[];
-  asesores_casos?: AsesorCaso[];
+  estudiantes_casos: EstudianteCaso[];
+  asesores_casos: AsesorCaso[];
 };
 // --- DEMANDADOS -------------------------------------------------
 export type Demandado = {
