@@ -17,6 +17,7 @@ export async function getCasos(): Promise<Caso[]> {
     fecha_cierre,
     usuarios (
       id_usuario,
+      cedula,
       nombre_completo,
       correo,
       telefono
@@ -24,12 +25,12 @@ export async function getCasos(): Promise<Caso[]> {
     estudiantes_casos (
       fecha_asignacion,
       fecha_fin_asignacion,
-      estudiantes:estudiantes!estudiantes_casos_id_estudiante_fkey (
+      estudiante:estudiantes!estudiantes_casos_id_estudiante_fkey (
         id_perfil,
         semestre,
         jornada,
         turno,
-        perfiles:perfiles!estudiantes_id_perfil_fkey (
+        perfil:perfiles!estudiantes_id_perfil_fkey (
           nombre_completo,
           correo,
           telefono
@@ -39,11 +40,11 @@ export async function getCasos(): Promise<Caso[]> {
     asesores_casos (
       fecha_asignacion,
       fecha_fin_asignacion,
-      asesores:asesores!asesores_casos_id_asesor_fkey (
+      asesor:asesores!asesores_casos_id_asesor_fkey (
         id_perfil,
         area,
         turno,
-        perfiles:perfiles!asesores_id_perfil_fkey (
+        perfil:perfiles!asesores_id_perfil_fkey (
           nombre_completo,
           correo,
           telefono

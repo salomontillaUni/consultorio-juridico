@@ -225,7 +225,7 @@ export default function SupportCasesPage() {
                     <span className="text-gray-600">Estudiante:</span>
                     <span className="text-blue-600">
                       {caso.estudiantes_casos
-                        .map(ec => ec.estudiante?.semestre)
+                        .map(ec => ec.estudiante?.perfil?.nombre_completo)
                         .filter(Boolean)
                         .join(", ")}
                     </span>
