@@ -27,7 +27,9 @@ export function ResumenCaso({ caso, onNuevoCaso }: ResumenCasoProps) {
   const handleConfirmacion = () => {
     setDialogOpen(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
+    
   };
+    
 
   const handleNuevoCaso = () => {
     setDialogOpen(false);

@@ -57,7 +57,7 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
 
   const handleRegistrarCaso = () => {
     if (!estudianteId || !asesorId) {
-      toast.error('Por favor complete todos los campos requeridos');
+      console.error('Por favor complete todos los campos requeridos');
       return;
     }
 
@@ -65,15 +65,12 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
     const asesor = asesoresDisponibles.find(a => a.id_perfil.toString() === asesorId);
 
     if (!estudiante || !asesor) {
-      toast.error("No se pudo encontrar el estudiante o asesor seleccionado");
+      console.error("No se pudo encontrar el estudiante o asesor seleccionado");
       return;
     }
-    if (!datosIniciales || !datosIniciales.id_caso) {
-      toast.error("Datos iniciales inválidos: falta id_caso");
-      return;
-    }
+    console.log(datosIniciales)
     const datosCaso: Caso = {
-      id_caso: datosIniciales.id_caso,
+      id_caso: datosIniciales?.id_caso || 0,
       id_usuario: usuario.id_usuario,
       area: datosIniciales?.area || 'otros',
       fecha_creacion: datosIniciales?.fecha_creacion || new Date().toISOString(),
@@ -97,7 +94,7 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
           <CardTitle className="text-lg">Información del usuario</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+          <div className="grid grid-cols-2 md:grid-cols-2 gap-4 text-sm">
             <div>
               <span className="text-muted-foreground">Nombre:</span>
               <p>{usuario.nombre_completo}</p>
@@ -105,6 +102,10 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
             <div>
               <span className="text-muted-foreground">Sexo:</span>
               <p>{usuario.sexo}</p>
+            </div>
+            <div>
+              <span className="text-muted-foreground">Cedula:</span>
+              <p>{usuario.cedula}</p>
             </div>
             <div>
               <span className="text-muted-foreground">Correo:</span>
@@ -133,7 +134,7 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
           <div className="space-y-4 p-4 bg-slate-50 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <Users className="h-5 w-5 text-slate-600" />
-              <h3 className="text-slate-900">Estudiante Asignado</h3>
+              <h3 className="text-slate-900">Asignar a un estudiante</h3>
             </div>
 
             <div className="space-y-2">
@@ -179,7 +180,7 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
           <div className="space-y-4 p-4 bg-slate-50 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <UserCheck className="h-5 w-5 text-slate-600" />
-              <h3 className="text-slate-900">Asesor Asignado</h3>
+              <h3 className="text-slate-900">Asignar a un asesor</h3>
             </div>
 
             <div className="space-y-2">
