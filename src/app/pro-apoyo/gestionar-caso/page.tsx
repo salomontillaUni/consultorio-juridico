@@ -41,20 +41,31 @@ export default function SupportCasesPage() {
     fetchData();
   }, []);
 
-  const filteredCases = casos?.filter(caso => {
-    const matchesSearch =
-      caso.usuarios?.nombre_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      caso.usuarios?.cedula?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      caso.observaciones?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      caso.area.toLowerCase().includes(searchTerm.toLowerCase());
+  const filteredCases = (casos ?? []).filter(caso => {
+  const nombre = caso.usuarios?.nombre_completo?.toLowerCase() || "";
+  const cedula = caso.usuarios?.cedula?.toString().toLowerCase() || "";
+  const observaciones = caso.observaciones?.toLowerCase() || "";
+  const area = caso.area?.toLowerCase() || "";
 
-    const matchesStatus = statusFilter === "todos" || caso.estado === statusFilter;
-    const matchesArea = typeFilter === "todos" || caso.area === typeFilter;
-    const matchesStudent = studentFilter === "todos" || caso.usuarios?.nombre_completo === studentFilter;
-    const matchesCedula = studentFilter === "todos" || caso.usuarios?.cedula === studentFilter;
+  // Búsqueda general
+  const matchesSearch =
+    nombre.includes(searchTerm.toLowerCase()) ||
+    cedula.includes(searchTerm.toLowerCase()) ||
+    observaciones.includes(searchTerm.toLowerCase()) ||
+    area.includes(searchTerm.toLowerCase());
 
-    return matchesSearch && matchesStatus && matchesArea && matchesStudent && matchesCedula;
-  });
+  // Estado, área y estudiante
+  const matchesStatus = statusFilter === "todos" || caso.estado === statusFilter;
+  const matchesArea = typeFilter === "todos" || caso.area === typeFilter;
+  const matchesStudent =
+    studentFilter === "todos" ||
+    caso.estudiantes_casos?.some(
+      ec => ec.estudiante.perfil.nombre_completo === studentFilter
+    );
+
+  return matchesSearch && matchesStatus && matchesArea && matchesStudent;
+});
+
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('es-ES', {
@@ -64,7 +75,7 @@ export default function SupportCasesPage() {
     });
   };
 
-  const uniqueStudents = [...new Set(casos?.map(c => c.usuarios?.nombre_completo))];
+  const uniqueStudents = [...new Set(casos?.map(c => c.estudiantes_casos?.map(ec => ec.estudiante.perfil.nombre_completo)).flat())];
   if (loading) {
     return (
       <div className="flex justify-center items-center h-full">
@@ -203,8 +214,8 @@ export default function SupportCasesPage() {
               <Card key={caso.id_caso} className="p-6 hover:shadow-md max-w-2xl transition-shadow duration-200">
                 <div className="flex justify-between items-start mb-4">
                   <div>
-                    <h3 className="text-gray-900 mb-1">{caso.id_caso}</h3>
-                    <p className="text-gray-600">{caso.usuarios.nombre_completo}</p>
+                    <h3 className="text-gray-900 mb-1">No. Caso: {caso.id_caso}</h3>
+                    <p className="text-gray-600">Usuario: <span className="font-semibold">{caso.usuarios.nombre_completo}</span></p>
                     <p className="text-gray-800">Documento: {caso.usuarios.cedula}</p>
                   </div>
                   <div className="flex flex-col gap-2">
@@ -234,7 +245,7 @@ export default function SupportCasesPage() {
                     <span className="text-gray-600">Asesor:</span>
 
                     <span className="text-gray-900">
-                      { caso?.asesores_casos.length ? (
+                      {caso?.asesores_casos.length ? (
                         <p className="text-blue-600">{caso?.asesores_casos.map(asesor => asesor.asesor.perfil.nombre_completo).join(', ')}</p>
                       ) : (
                         <p className="text-gray-600">No hay asesores asignados</p>
@@ -244,7 +255,9 @@ export default function SupportCasesPage() {
                 </div>
 
                 <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                  {caso.resumen_hechos}
+                  {caso.resumen_hechos ?? (
+                    <span className="italic text-gray-400">No hay resumen de los hechos por ahora.</span>
+                  )}
                 </p>
 
                 <div className="flex gap-2">
