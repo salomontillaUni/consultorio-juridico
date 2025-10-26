@@ -95,3 +95,13 @@ export type Caso = {
   estudiantes_casos: EstudianteCaso[];
   asesores_casos: AsesorCaso[];
 };
+// --- DEMANDADOS -------------------------------------------------
+export type Demandado = {
+  id_demandado: string;
+  id_caso: number;
+  nombre_completo: string;
+  documento: string | null;
+  celular: string | null;
+  lugar_residencia: string | null;
+  correo: string | null;
+};
