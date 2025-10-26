@@ -1,0 +1,2 @@
+ALTER TABLE casos 
+ALTER COLUMN tipo_proceso DROP NOT NULL;

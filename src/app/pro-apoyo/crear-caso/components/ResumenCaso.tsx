@@ -17,6 +17,7 @@ import { Caso, Usuario } from 'app/types/database';
 import { insertUsuarioNuevo } from '../../../../../supabase/queries/insertUsuarioNuevo';
 import { insertCasoNuevo } from '../../../../../supabase/queries/insertCasoNuevo';
 import { insertEstudiantesCasos } from '../../../../../supabase/queries/insertEstudiantesCasos';
+import { insertAsesoresCasos } from '../../../../../supabase/queries/insertAsesoresCasos';
 
 interface ResumenCasoProps {
   caso: Caso;
@@ -35,25 +36,39 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
     window.scrollTo({ top: 0, behavior: "smooth" });
     console.log("Caso a insertar:", caso);
     console.log("Usuario a insertar:", usuario);
-    
+    insertData();
   };
 
   const insertData = async () => {
-    setIsLoading(true);
-    try{
-      await insertUsuarioNuevo(usuario);
-      const usuarioData = await insertUsuarioNuevo(usuario);
-      console.log(usuarioData);
-      const id_usuario = usuarioData?.[0]?.id_usuario;
-      const casoData = await insertCasoNuevo(caso, id_usuario);
-      console.log(casoData);
+    console.log("Iniciando inserción de datos...");
+  setIsLoading(true);
+  try {
+    const usuarioData = await insertUsuarioNuevo(usuario);
 
-    }catch (error) {
-      console.error("Error al insertar el usuario:", error);
-    }finally {
-      setIsLoading(false);
+    const id_usuario = usuarioData?.[0]?.id_usuario;
+    if (!id_usuario) {
+      throw new Error("No se obtuvo el id_usuario del usuario insertado");
     }
-  };
+    const casoData = await insertCasoNuevo(caso, id_usuario);
+    console.log("Caso insertado:", casoData);
+
+    const id_estudiante = caso.estudiantes_casos?.[0]?.estudiante.id_perfil;
+    const id_caso = casoData?.[0]?.id_caso;
+    const id_asesor = caso.asesores_casos?.[0]?.asesor.id_perfil;
+
+    if (id_caso && id_estudiante && id_asesor) {
+      await insertEstudiantesCasos(id_caso.toString(), id_estudiante);
+      await insertAsesoresCasos(id_caso.toString(), id_asesor);
+    } else {
+      console.error("Faltan IDs para vincular estudiante o asesor al caso.");
+    }
+  } catch (error) {
+    console.error("Error al insertar el usuario:", error);
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const handleNuevoCaso = () => {
     setDialogOpen(false);
