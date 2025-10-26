@@ -3,60 +3,35 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {Spinner} from "@/components/ui/spinner";
-import {Alert, AlertDescription, AlertTitle} from "@/components/ui/alert";
+import { Spinner } from "@/components/ui/spinner";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircleIcon, EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
 import { supabase } from "../../utils/supabase";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
-import { User } from "@supabase/supabase-js";
+import { CustomJwtPayload } from "app/types/jwt";
 
 export function LoginForm() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
-  const [userLoaded, setUserLoaded] = useState(false)
-  const [user, setUser] = useState(null)
-  const [session, setSession] = useState<Awaited<ReturnType<typeof supabase.auth.getSession>>['data']['session'] | null>(null)
-  const router = useRouter();
-  const [role, setRole] = useState<Promise<string | null>>();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    loginUser(email, password);
-  };
-
-  const loginUser = async (email: string, password: string) => {
-    setIsLoading(true);
-    try{
-      const {data, error } = await supabase.auth.signInWithPassword({
-        email,
-        password,
-      });
-      if (error) {
-        setError("Error al iniciar sesión: " + error.message);
-      } 
-      setIsLoading(false);
-    }catch(error){
-      console.error("Error inesperado al iniciar sesión:", error);
-    }
-
-  };
-
-  useEffect(() => {
-    function saveSession(
-      session: Awaited<ReturnType<typeof supabase.auth.getSession>>['data']['session']
-    ) {
-      setSession(session)
-      const currentUser = session?.user
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      if (error) setError(error.message);
+      const session = data.session;
       if (session) {
-        const jwt = jwtDecode(session.access_token)
-        currentUser.appRole = jwt.user_role;
-        switch (currentUser.appRole) {
+        const jwt = jwtDecode<CustomJwtPayload>(session.access_token);
+        const role = jwt.user_role;
+        switch (role) {
           case "admin":
             router.push("/admin/inicio");
             break;
@@ -70,27 +45,15 @@ export function LoginForm() {
             router.push("/pro-apoyo/inicio");
             break;
           default:
-            setError("Rol de usuario no reconocido. Contacta al soporte.");
-            supabase.auth.signOut();
-            break;
+            setError("Rol de usuario no reconocido.");
         }
       }
-      setUserLoaded(!!currentUser)
+    } catch (error) {
+      setError("Error al iniciar sesión. " + error);
+    } finally {
+      setIsLoading(false);
     }
-
-    supabase.auth.getSession().then(({ data: { session } }) => saveSession(session))
-
-    const { data: authListener } = supabase.auth.onAuthStateChange(
-      async (data, session) => {
-        console.log(session)
-        saveSession(session)
-      }
-    )
-
-    return () => {
-      authListener.subscription.unsubscribe();
-    }
-  }, [])
+  };
 
   function handleOlvidasteContraseña(): void {
     console.log("Redirigiendo a la página de recuperación de contraseña...");
@@ -105,7 +68,7 @@ export function LoginForm() {
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
-        <form onSubmit={handleSubmit} className="space-y-4">
+        <form onSubmit={handleLogin} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="email">Correo</Label>
             <div className="relative">
@@ -156,7 +119,7 @@ export function LoginForm() {
           </div>
 
           <Button type="submit" disabled={isLoading} className="w-full bg-blue-500 hover:bg-blue-600">
-            {isLoading ? <Spinner className="mr-2"/> : null}
+            {isLoading ? <Spinner className="mr-2" /> : null}
             Iniciar sesión
           </Button>
           {error && (
@@ -173,4 +136,5 @@ export function LoginForm() {
       </CardContent>
     </Card>
   );
+
 }
