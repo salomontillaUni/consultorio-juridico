@@ -223,17 +223,22 @@ export default function SupportCasesPage() {
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Estudiante:</span>
                     <span className="text-blue-600">
-                      {caso.estudiantes_casos
-                        .map(ec => ec.estudiante?.perfil?.nombre_completo)
-                        .filter(Boolean)
-                        .join(", ")}
+                      {caso?.estudiantes_casos.length ? (
+                        <p className="text-blue-600">{caso?.estudiantes_casos.map(estudiante => estudiante.estudiante.perfil.nombre_completo).join(', ')}</p>
+                      ) : (
+                        <p className="text-gray-600">No hay estudiantes asignados</p>
+                      )}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Asesor:</span>
-                    <span className="text-gray-900">{caso.asesores_casos.map(
-                      ac => ac.asesor?.perfil?.nombre_completo
-                    ).filter(Boolean).join(", ")}</span>
+
+                    <span className="text-gray-900">
+                      { caso?.asesores_casos.length ? (
+                        <p className="text-blue-600">{caso?.asesores_casos.map(asesor => asesor.asesor.perfil.nombre_completo).join(', ')}</p>
+                      ) : (
+                        <p className="text-gray-600">No hay asesores asignados</p>
+                      )}</span>
                   </div>
 
                 </div>
