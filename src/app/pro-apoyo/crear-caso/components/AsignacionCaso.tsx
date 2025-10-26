@@ -68,9 +68,12 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
       toast.error("No se pudo encontrar el estudiante o asesor seleccionado");
       return;
     }
-
+    if (!datosIniciales || !datosIniciales.id_caso) {
+      toast.error("Datos iniciales inválidos: falta id_caso");
+      return;
+    }
     const datosCaso: Caso = {
-      id_caso: datosIniciales?.id_caso || 0,
+      id_caso: datosIniciales.id_caso,
       id_usuario: usuario.id_usuario,
       area: datosIniciales?.area || 'otros',
       fecha_creacion: datosIniciales?.fecha_creacion || new Date().toISOString(),
