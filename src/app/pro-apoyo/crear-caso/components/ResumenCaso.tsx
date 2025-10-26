@@ -13,23 +13,47 @@ import {
   DialogDescription,
   DialogFooter,
 } from '@/components/ui/dialog';
-import { Caso } from 'app/types/database';
+import { Caso, Usuario } from 'app/types/database';
+import { insertUsuarioNuevo } from '../../../../../supabase/queries/insertUsuarioNuevo';
+import { insertCasoNuevo } from '../../../../../supabase/queries/insertCasoNuevo';
+import { insertEstudiantesCasos } from '../../../../../supabase/queries/insertEstudiantesCasos';
 
 interface ResumenCasoProps {
   caso: Caso;
+  usuario: Usuario;
   onNuevoCaso: () => void;
 }
 
-export function ResumenCaso({ caso, onNuevoCaso }: ResumenCasoProps) {
+export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [casoInsertar, setCasoInsertar] = useState<Caso>(caso);
+  const [usuarioInsertar, setUsuarioInsertar] = useState<Usuario>(usuario);
 
   const handleConfirmacion = () => {
     setDialogOpen(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
+    console.log("Caso a insertar:", caso);
+    console.log("Usuario a insertar:", usuario);
     
   };
-    
+
+  const insertData = async () => {
+    setIsLoading(true);
+    try{
+      await insertUsuarioNuevo(usuario);
+      const usuarioData = await insertUsuarioNuevo(usuario);
+      console.log(usuarioData);
+      const id_usuario = usuarioData?.[0]?.id_usuario;
+      const casoData = await insertCasoNuevo(caso, id_usuario);
+      console.log(casoData);
+
+    }catch (error) {
+      console.error("Error al insertar el usuario:", error);
+    }finally {
+      setIsLoading(false);
+    }
+  };
 
   const handleNuevoCaso = () => {
     setDialogOpen(false);
@@ -85,41 +109,57 @@ export function ResumenCaso({ caso, onNuevoCaso }: ResumenCasoProps) {
           {/* Estudiante asignado */}
           <div>
             <h3 className="text-slate-900 mb-3">Estudiante Asignado</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-blue-50 rounded-lg">
-              <div>
-                <span className="text-sm text-muted-foreground">Nombre</span>
-                <p className="text-slate-900">{caso.estudiantes_casos[0]?.estudiante.perfil.nombre_completo}</p>
+            {caso.estudiantes_casos && caso.estudiantes_casos.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-blue-50 rounded-lg">
+                <div>
+                  <span className="text-sm text-muted-foreground">Nombre</span>
+                  <p className="text-slate-900">
+                    {caso.estudiantes_casos[0].estudiante.perfil.nombre_completo}
+                  </p>
+                </div>
+                <div>
+                  <span className="text-sm text-muted-foreground">Semestre</span>
+                  <p className="text-slate-900">
+                    {caso.estudiantes_casos[0].estudiante.semestre}
+                  </p>
+                </div>
+                <div>
+                  <span className="flex text-sm text-muted-foreground">Turno</span>
+                  <Badge variant="outline">
+                    {caso.estudiantes_casos[0].estudiante.turno}
+                  </Badge>
+                </div>
               </div>
-              <div>
-                <span className="text-sm text-muted-foreground">Semestre</span>
-                <p className="text-slate-900">{caso.estudiantes_casos[0]?.estudiante.semestre}</p>
-              </div>
-              <div>
-                <span className="flex text-sm text-muted-foreground">Turno</span>
-                <Badge variant="outline">{caso.estudiantes_casos[0]?.estudiante.turno}</Badge>
-              </div>
-            </div>
+            ) : (
+              <p className="text-gray-500 text-sm italic">Sin estudiante asignado</p>
+            )}
           </div>
 
           <Separator />
 
           {/* Asesor asignado */}
           <div>
-            <h3 className="text-slate-900 mb-3">Asesor Asignado</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-purple-50 rounded-lg">
-              <div>
-                <span className="text-sm text-muted-foreground">Nombre</span>
-                <p className="text-slate-900">{caso.asesores_casos[0]?.asesor.perfil.nombre_completo}</p>
-              </div>
-              <div>
-                <span className="flex text-sm text-muted-foreground">Área</span>
-                <Badge variant="outline">{caso.asesores_casos[0]?.asesor.area}</Badge>
-              </div>
-              <div>
-                <span className="flex text-sm text-muted-foreground">Turno</span>
-                <Badge variant="secondary">{caso.asesores_casos[0]?.asesor.turno}</Badge>
-              </div>
-            </div>
+            {caso.asesores_casos && caso.asesores_casos.length > 0 ? (
+              <>
+                <h3 className="text-slate-900 mb-3">Asesor Asignado</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-purple-50 rounded-lg">
+                  <div>
+                    <span className="text-sm text-muted-foreground">Nombre</span>
+                    <p className="text-slate-900">{caso.asesores_casos[0]?.asesor.perfil.nombre_completo}</p>
+                  </div>
+                  <div>
+                    <span className="flex text-sm text-muted-foreground">Área</span>
+                    <Badge variant="outline">{caso.asesores_casos[0]?.asesor.area}</Badge>
+                  </div>
+                  <div>
+                    <span className="flex text-sm text-muted-foreground">Turno</span>
+                    <Badge variant="secondary">{caso.asesores_casos[0]?.asesor.turno}</Badge>
+                  </div>
+                </div>
+              </>
+            ) : (
+              <p className="text-gray-500 text-sm italic">Sin asesor asignado</p>
+            )}
           </div>
 
           <Separator />

@@ -10,7 +10,7 @@ export type TipoContratoEnum = 'escrito' | 'verbal' | 'prestacion_servicios' | '
 // --- USUARIOS --------------------------------------------------
 
 export type Usuario = {
-  id_usuario: string;
+  id_usuario?: string;
   nombre_completo: string;
   sexo: "M" | "F" | "O" | "";
   cedula: string;
@@ -79,8 +79,8 @@ export type AsesorCaso = {
 // --- CASOS -----------------------------------------------------
 
 export type Caso = {
-  id_caso: number;
-  id_usuario: string;
+  id_caso?: number;
+  id_usuario?: string;
   resumen_hechos?: string | null;
   observaciones?: string | null;
   fecha_creacion: string;
@@ -92,8 +92,8 @@ export type Caso = {
 
   // Relaciones
   usuarios: Usuario;
-  estudiantes_casos: EstudianteCaso[];
-  asesores_casos: AsesorCaso[];
+  estudiantes_casos?: EstudianteCaso[];
+  asesores_casos?: AsesorCaso[];
 };
 // --- DEMANDADOS -------------------------------------------------
 export type Demandado = {

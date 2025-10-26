@@ -11,7 +11,7 @@ export async function insertEstudiantesCasos( id_caso:string, id_estudiante:stri
   });
 
   if (error) {
-    console.error("Error al insertar el usuario:", error);
+    console.error("Error al insertar el estudiante:", error);
     return [];
   }
   return data;
