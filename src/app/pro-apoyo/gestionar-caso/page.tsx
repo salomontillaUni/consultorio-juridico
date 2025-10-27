@@ -12,6 +12,7 @@ import { getCasos } from "../../../../supabase/queries/getCasos";
 import { Loader2 } from "lucide-react";
 import { supabase } from "@/utils/supabase";
 import { get } from "http";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 const getStatusColor = (status: string) => {
   switch (status) {
@@ -30,6 +31,8 @@ export default function SupportCasesPage() {
   const [studentFilter, setStudentFilter] = useState("todos");
   const [casos, setCasos] = useState<Caso[] | null>(null);
   const [loading, setLoading] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 10;
 
   useEffect(() => {
     async function fetchData() {
@@ -83,6 +86,12 @@ export default function SupportCasesPage() {
       </div>
     );
   }
+  // Paginación
+  const totalPages = Math.ceil(filteredCases.length / ITEMS_PER_PAGE);
+  const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+  const endIndex = startIndex + ITEMS_PER_PAGE;
+  const currentCases = filteredCases.slice(startIndex, endIndex);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Navbar />
@@ -209,8 +218,8 @@ export default function SupportCasesPage() {
           </div>
 
           {/* Cases Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-center">
-            {filteredCases?.map((caso) => (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+            {currentCases?.map((caso) => (
               <Card key={caso.id_caso} className="p-6 hover:shadow-md max-w-2xl transition-shadow duration-200">
                 <div className="flex justify-between items-start mb-4">
                   <div>
@@ -294,6 +303,66 @@ export default function SupportCasesPage() {
               </Button>
             </div>
           )}
+          {filteredCases.length > 0 && totalPages > 1 && (
+        <div className="mt-8 flex flex-col items-center gap-4">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  size="default"
+                  onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+              
+              {[...Array(totalPages)].map((_, i) => {
+                const pageNumber = i + 1;
+                // Mostrar solo algunas páginas alrededor de la página actual
+                if (
+                  pageNumber === 1 ||
+                  pageNumber === totalPages ||
+                  (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                ) {
+                  return (
+                    <PaginationItem key={pageNumber}>
+                      <PaginationLink
+                        size="default"
+                        onClick={() => setCurrentPage(pageNumber)}
+                        isActive={currentPage === pageNumber}
+                        className="cursor-pointer"
+                      >
+                        {pageNumber}
+                      </PaginationLink>
+                    </PaginationItem>
+                  );
+                } else if (
+                  pageNumber === currentPage - 2 ||
+                  pageNumber === currentPage + 2
+                ) {
+                  return (
+                    <PaginationItem key={pageNumber}>
+                      <span className="px-4">...</span>
+                    </PaginationItem>
+                  );
+                }
+                return null;
+              })}
+              
+              <PaginationItem>
+                <PaginationNext 
+                  size="default"
+                  onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+          
+          <p className="text-sm text-gray-600">
+            Mostrando {startIndex + 1}-{Math.min(endIndex, filteredCases.length)} de {filteredCases.length} casos
+          </p>
+        </div>
+      )}
         </div>
       </main>
     </div>
