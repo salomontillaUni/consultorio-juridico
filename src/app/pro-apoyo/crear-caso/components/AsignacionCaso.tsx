@@ -80,7 +80,7 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
     const datosCaso: Caso = {
       area: datosIniciales?.area || 'otros',
       fecha_creacion: datosIniciales?.fecha_creacion || new Date().toISOString(),
-      estado: datosIniciales?.estado || 'pendiente_aprobacion',
+      estado: datosIniciales?.estado || 'en_proceso',
       usuarios: usuario,
       estudiantes_casos: [{ estudiante }],
       asesores_casos: [{ asesor }],
@@ -235,7 +235,7 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
             <div className="space-y-2">
               <Label>Estado inicial</Label>
               <div className="p-3 bg-yellow-50 rounded border border-yellow-200 text-sm text-yellow-800">
-                Pendiente de aprobación
+                En proceso
               </div>
             </div>
 

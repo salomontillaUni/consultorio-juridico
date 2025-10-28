@@ -14,12 +14,12 @@ import { supabase } from "@/utils/supabase";
 import { get } from "http";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
-const getStatusColor = (status: string) => {
+export const getStatusColor = (status: string) => {
   switch (status) {
     case "aprobado": return "bg-green-100 text-green-800 border-green-200";
-    case "en_proceso": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    case "pendiente_aprobacion": return "bg-gray-100 text-gray-800 border-gray-200";
-    case "archivado": return "bg-blue-100 text-blue-800 border-blue-200";
+    case "pendiente_aprobacion": return "bg-yellow-100 text-yellow-800 border-yellow-200";
+    case "en_proceso": return "bg-blue-100 text-black-800 border-blue-200";
+    case "archivado": return "bg-gray-100 text-gray-800 border-gray-200";
     default: return "bg-gray-100 text-gray-800 border-gray-200";
   }
 };
@@ -194,7 +194,6 @@ export default function SupportCasesPage() {
                   <SelectItem value="Derecho Laboral">Derecho Laboral</SelectItem>
                   <SelectItem value="Derecho Familiar">Derecho Familiar</SelectItem>
                   <SelectItem value="Derecho Penal">Derecho Penal</SelectItem>
-                  <SelectItem value="Derecho Mercantil">Derecho Mercantil</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={studentFilter} onValueChange={setStudentFilter}>
