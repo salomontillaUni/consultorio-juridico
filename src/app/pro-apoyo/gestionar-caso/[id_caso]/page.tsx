@@ -96,7 +96,6 @@ useEffect(() => {
 
   const handleSaveStudent = () => {
     if (editedStudentData) {
-      console.log('Guardando datos del estudiante:', editedStudentData);
       setIsEditingStudent(false);
       setEditedStudentData(null);
     }
@@ -139,7 +138,6 @@ useEffect(() => {
 
   const handleSaveClient = () => {
     if (editedClientData) {
-      console.log('Guardando datos del cliente:', editedClientData);
       setIsEditingClient(false);
       setEditedClientData(null);
     }
@@ -167,7 +165,6 @@ useEffect(() => {
 
   const handleSaveDefendant = () => {
     if (editedDefendantData) {
-      console.log('Guardando datos del demandado:', editedDefendantData);
       setIsEditingDefendant(false);
       setEditedDefendantData(null);
     }
@@ -210,7 +207,6 @@ useEffect(() => {
 
   const handleSaveCaseInfo = () => {
     if (editedCaseData) {
-      console.log('Guardando información del caso:', editedCaseData);
       setIsEditingCaseInfo(false);
       setEditedCaseData(null);
     }
@@ -238,7 +234,6 @@ useEffect(() => {
   };
 
   const handleSaveNotes = () => {
-    console.log('Guardando observaciones:', editedNotes);
     setIsEditingNotes(false);
     setEditedNotes('');
     setNewNote('');
@@ -270,7 +265,6 @@ useEffect(() => {
   const displayStudentData = isEditingStudent ? editedStudentData : caso?.estudiantes_casos.map(ec => ec.estudiante);
   const displayClientData = isEditingClient ? editedClientData : caso?.usuarios;
   const displayDefendantData = isEditingDefendant ? editedDefendantData : demandado;
-  console.log(displayDefendantData);
   const displayCaseData= isEditingCaseInfo ? editedCaseData : caso;
   const displayNotes = isEditingNotes ? editedNotes : caso?.observaciones || '';
 
