@@ -28,8 +28,8 @@ VALUES
 -- 🔹 ESTUDIANTE: puede leer casos asignados y actualizar observaciones
 INSERT INTO public.role_permissions (role, permission)
 VALUES
-('estudiante', 'casos.read'),
-('estudiante', 'casos.update'),
+('estudiante', 'casos_asignados.read'),
+('estudiante', 'casos_asignados.update'),
 ('estudiante', 'usuarios.read'),
 ('estudiante', 'demandados.read'),
 ('estudiante', 'estudiantes.read');
@@ -37,9 +37,10 @@ VALUES
 -- 🔹 ASESOR: puede aprobar casos, leer, actualizar y cerrar
 INSERT INTO public.role_permissions (role, permission)
 VALUES
-('asesor', 'casos.read'),
-('asesor', 'casos.update'),
-('asesor', 'casos.delete'),
+('asesor', 'casos_asignados.read'),
+('asesor', 'casos_asignados.update'),
+('asesor', 'casos_asignados.delete'),
+('asesor', 'demandados.read')
 ('asesor', 'usuarios.read'),
 ('asesor', 'asesores.read');
 

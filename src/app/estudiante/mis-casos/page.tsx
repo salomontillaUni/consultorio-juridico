@@ -10,6 +10,7 @@ import { Navbar } from "../components/NavBarEstudiante";
 import { getStatusColor } from "app/pro-apoyo/gestionar-caso/page";
 import { Caso } from "app/types/database";
 import { getCasos } from "../../../../supabase/queries/getCasos";
+import { supabase } from "@/utils/supabase";
 
 export default function CasesPage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -24,7 +25,7 @@ export default function CasesPage() {
             const data = await getCasos();
             setCasos(data);
             setLoading(false);
-        }
+        } 
         fetchData();
     }, []);
 
@@ -174,8 +175,8 @@ export default function CasesPage() {
                                 <div className="flex justify-between items-start mb-4">
                                     <div>
                                         <h3 className="text-gray-900 mb-1"> ID caso:{caso.id_caso}</h3>
-                                        <p className="text-gray-600">Usuario: {caso.usuarios.nombre_completo}</p>
-                                        <p className="text-gray-600">Documento: {caso.usuarios.cedula}</p>
+                                        <p className="text-gray-600">Usuario: {caso.usuarios?.nombre_completo}</p>
+                                        <p className="text-gray-600">Documento: {caso.usuarios?.cedula}</p>
                                     </div>
                                     <div className="flex flex-col gap-2">
                                         <Badge className={`text-xs ${getStatusColor(caso.estado)}`}>
