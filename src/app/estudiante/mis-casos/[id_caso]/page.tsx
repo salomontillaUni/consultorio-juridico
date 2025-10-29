@@ -15,6 +15,7 @@ import { Caso, Demandado } from "app/types/database";
 import { getCasoById } from "../../../../../supabase/queries/getCasoById";
 import { getDemandadoByCasoId } from "../../../../../supabase/queries/getDemandadoByCasoId";
 import { formatDate, getStatusColor } from "app/pro-apoyo/gestionar-caso/page";
+import { CassetteTapeIcon } from "lucide-react";
 
 
 export default function Page({ params }: { params: Promise<{ id_caso: string }> }) {
@@ -45,6 +46,7 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
       }
 
       setCaso(casoFetch);
+      console.log(casoFetch);
       setDemandado(demandadoFetch);
     } catch (err) {
       console.error(err);
@@ -304,15 +306,23 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                     <p className="text-gray-900 mb-4">{caso?.usuarios.situacion_laboral}</p>
 
                     <Label className="text-gray-600">Otros ingresos</Label>
-                    <p className="text-gray-900">{caso?.usuarios.otros_ingresos}</p>
+                    {caso?.usuarios.otros_ingresos ? (
+                      <p className="text-gray-900 mb-4">Sí</p>
+                    ) : (
+                      <p className="text-gray-900 mb-4">No</p>
+                    )}
                   </div>
-                  <div>
-                    <Label className="text-gray-600">Valor de otros ingresos</Label>
+
+                  {caso?.usuarios.otros_ingresos && (
+                    <div>
+                      <Label className="text-gray-600">Valor de otros ingresos</Label>
                     <p className="text-gray-900 mb-4">{caso?.usuarios.valor_otros_ingresos}</p>
 
                     <Label className="text-gray-600">Concepto de otros ingresos</Label>
                     <p className="text-gray-900">{caso?.usuarios.concepto_otros_ingresos}</p>
-                  </div>
+                    </div>
+                  )}
+
                 </div>
               </Card>
 

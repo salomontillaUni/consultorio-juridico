@@ -17,10 +17,23 @@ export async function getCasoById(id_caso: string): Promise<Caso> {
       fecha_cierre,
       usuarios (
         id_usuario,
-        cedula,
         nombre_completo,
+        sexo,
+        cedula,
+        edad,
+        telefono,
+        contacto_familiar,
+        estado_civil,
+        estrato,
+        direccion,
         correo,
-        telefono
+        tipo_vivienda,
+        situacion_laboral,
+        otros_ingresos,
+        valor_otros_ingresos,
+        concepto_otros_ingresos,
+        tiene_contrato,
+        tiene_representado
       ),
       estudiantes_casos (
         fecha_asignacion,
@@ -33,7 +46,8 @@ export async function getCasoById(id_caso: string): Promise<Caso> {
           perfil:perfiles!estudiantes_id_perfil_fkey (
             nombre_completo,
             correo,
-            telefono
+            telefono,
+            cedula
           )
         )
       ),
@@ -47,7 +61,8 @@ export async function getCasoById(id_caso: string): Promise<Caso> {
           perfil:perfiles!asesores_id_perfil_fkey (
             nombre_completo,
             correo,
-            telefono
+            telefono,
+            cedula
           )
         )
       )
