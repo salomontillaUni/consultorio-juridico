@@ -6,6 +6,7 @@ export type TurnoEnum = "9-11" | "2-4" | "4-6";
 export type JornadaEnum = "diurna" | "nocturna" | "mixto";
 export type EstadoCivilEnum = "soltero" | "casado" | "union libre" | 'otro';
 export type TipoContratoEnum = 'escrito' | 'verbal' | 'prestacion_servicios' | 'otro';
+export type situacionLaboral = 'dependiente' | 'desempleado' | 'independiente' | 'otro';
 
 // --- USUARIOS --------------------------------------------------
 
@@ -22,7 +23,7 @@ export type Usuario = {
   direccion?: string | null;
   correo: string;
   tipo_vivienda?: string | null;
-  situacion_laboral?: string | null;
+  situacion_laboral?: situacionLaboral | null;
   otros_ingresos?: boolean | null;
   valor_otros_ingresos?: number | null;
   concepto_otros_ingresos?: string | null;

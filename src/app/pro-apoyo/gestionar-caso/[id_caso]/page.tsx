@@ -18,7 +18,7 @@ import { getDemandadoByCasoId } from "../../../../../supabase/queries/getDemanda
 import { formatDate, getStatusColor } from "../page";
 
 
-export default function Page({ params }:{ params: Promise<{ id_caso: string }> } ) {
+export default function Page({ params }: { params: Promise<{ id_caso: string }> }) {
   const { id_caso } = React.use(params);
   const [activeTab, setActiveTab] = useState("overview");
   const [isEditingStudent, setIsEditingStudent] = useState(false);
@@ -33,41 +33,41 @@ export default function Page({ params }:{ params: Promise<{ id_caso: string }> }
   const [editedNotes, setEditedNotes] = useState<string>('');
   const [newNote, setNewNote] = useState('');
   const [caso, setCaso] = useState<Caso>();
-   
+
   const [demandado, setDemandado] = useState<Demandado | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
- 
+
 
   async function traerDatos() {
-  try {
-    setLoading(true);
-    setError(null);
+    try {
+      setLoading(true);
+      setError(null);
 
-    const [casoFetch, demandadoFetch] = await Promise.all([
-      getCasoById(id_caso),
-      getDemandadoByCasoId(id_caso),
-    ]);
+      const [casoFetch, demandadoFetch] = await Promise.all([
+        getCasoById(id_caso),
+        getDemandadoByCasoId(id_caso),
+      ]);
 
-    if (!casoFetch) {
-      setError("Caso no encontrado");
-      return;
+      if (!casoFetch) {
+        setError("Caso no encontrado");
+        return;
+      }
+
+      setCaso(casoFetch);
+      setDemandado(demandadoFetch);
+    } catch (err) {
+      console.error(err);
+      setError("Error al obtener los datos del caso");
+    } finally {
+      setLoading(false);
     }
-
-    setCaso(casoFetch);
-    setDemandado(demandadoFetch);
-  } catch (err) {
-    console.error(err);
-    setError("Error al obtener los datos del caso");
-  } finally {
-    setLoading(false);
   }
-}
 
-useEffect(() => {
-  traerDatos();
-}, []);
+  useEffect(() => {
+    traerDatos();
+  }, []);
 
 
   const handleEditStudent = () => {
@@ -92,7 +92,7 @@ useEffect(() => {
     if (editedStudentData) {
       const updatedData = [...editedStudentData];
       const fieldParts = field.split('.');
-      
+
       if (fieldParts.length === 2 && fieldParts[0] === 'perfil') {
         updatedData[index] = {
           ...updatedData[index],
@@ -107,7 +107,7 @@ useEffect(() => {
           [field]: value
         };
       }
-      
+
       setEditedStudentData(updatedData);
     }
   };
@@ -130,7 +130,7 @@ useEffect(() => {
     setEditedClientData(null);
   };
 
-  const handleClientDataChange = (field: keyof Usuario, value: string) => {
+  const handleClientDataChange = (field: keyof Usuario, value: string | boolean) => {
     if (editedClientData) {
       setEditedClientData({
         ...editedClientData,
@@ -247,7 +247,7 @@ useEffect(() => {
   const displayStudentData = isEditingStudent ? editedStudentData : caso?.estudiantes_casos.map(ec => ec.estudiante);
   const displayClientData = isEditingClient ? editedClientData : caso?.usuarios;
   const displayDefendantData = isEditingDefendant ? editedDefendantData : demandado;
-  const displayCaseData= isEditingCaseInfo ? editedCaseData : caso;
+  const displayCaseData = isEditingCaseInfo ? editedCaseData : caso;
   const displayNotes = isEditingNotes ? editedNotes : caso?.observaciones || '';
 
   return (
@@ -367,7 +367,7 @@ useEffect(() => {
                         <div>
                           <Label className="text-gray-600">Estudiantes asignados</Label>
                           {displayCaseData?.estudiantes_casos.length ? (
-                            <p className="text-blue-600 mb-4">{displayCaseData?.estudiantes_casos.map(estudiante => 
+                            <p className="text-blue-600 mb-4">{displayCaseData?.estudiantes_casos.map(estudiante =>
                               estudiante.estudiante.perfil.nombre_completo).join(', ')}</p>
                           ) : (
                             <p className="text-gray-600 mb-4">No hay estudiantes asignados</p>
@@ -376,7 +376,7 @@ useEffect(() => {
 
                           <Label className="text-gray-600">Asesores asignados</Label>
                           {displayCaseData?.asesores_casos.length ? (
-                            <p className="text-gray-900">{displayCaseData?.asesores_casos.map(asesor => 
+                            <p className="text-gray-900">{displayCaseData?.asesores_casos.map(asesor =>
                               asesor.asesor.perfil.nombre_completo).join(', ')}</p>
                           ) : (
                             <p className="text-gray-600 mb-4">No hay asesores asignados</p>
@@ -400,7 +400,6 @@ useEffect(() => {
                                 <SelectItem value="Civil">Civil</SelectItem>
                                 <SelectItem value="Penal">Penal</SelectItem>
                                 <SelectItem value="Familia">Familia</SelectItem>
-                                <SelectItem value="Comercial">Comercial</SelectItem>
                                 <SelectItem value="Administrativo">Administrativo</SelectItem>
                               </SelectContent>
                             </Select>
@@ -716,6 +715,10 @@ useEffect(() => {
                       <Label className="text-gray-600">Turno</Label>
                       <p className="text-gray-900">{displayStudentData?.map(student => student.turno).join(', ')}</p>
                     </div>
+                    <div>
+                      <Label className="text-gray-600">Teléfono</Label>
+                      <p className="text-gray-900">{displayStudentData?.map(student => student.perfil.telefono || 'No registrado').join(', ')}</p>
+                    </div>
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -774,16 +777,16 @@ useEffect(() => {
                             <SelectValue placeholder="Seleccionar semestre" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="I">I</SelectItem>
-                            <SelectItem value="II">II</SelectItem>
-                            <SelectItem value="III">III</SelectItem>
-                            <SelectItem value="IV">IV</SelectItem>
-                            <SelectItem value="V">V</SelectItem>
-                            <SelectItem value="VI">VI</SelectItem>
-                            <SelectItem value="VII">VII</SelectItem>
-                            <SelectItem value="VIII">VIII</SelectItem>
-                            <SelectItem value="IX">IX</SelectItem>
-                            <SelectItem value="X">X</SelectItem>
+                            <SelectItem value="1">1</SelectItem>
+                            <SelectItem value="2">2</SelectItem>
+                            <SelectItem value="3">3</SelectItem>
+                            <SelectItem value="4">4</SelectItem>
+                            <SelectItem value="5">5</SelectItem>
+                            <SelectItem value="6">6</SelectItem>
+                            <SelectItem value="7">7</SelectItem>
+                            <SelectItem value="8">8</SelectItem>
+                            <SelectItem value="9">9</SelectItem>
+                            <SelectItem value="10">10</SelectItem>
                           </SelectContent>
                         </Select>
                       ))}
@@ -800,9 +803,9 @@ useEffect(() => {
                             <SelectValue placeholder="Seleccionar jornada" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Diurna">Diurna</SelectItem>
-                            <SelectItem value="Nocturna">Nocturna</SelectItem>
-                            <SelectItem value="Fin de semana">Fin de semana</SelectItem>
+                            <SelectItem value="diurna">Diurna</SelectItem>
+                            <SelectItem value="nocturna">Nocturna</SelectItem>
+                            <SelectItem value="mixto">Mixto</SelectItem>
                           </SelectContent>
                         </Select>
                       ))}
@@ -819,11 +822,21 @@ useEffect(() => {
                             <SelectValue placeholder="Seleccionar turno" />
                           </SelectTrigger>
                           <SelectContent>
-                            <SelectItem value="Mañana">Mañana</SelectItem>
-                            <SelectItem value="Tarde">Tarde</SelectItem>
-                            <SelectItem value="Noche">Noche</SelectItem>
+                            <SelectItem value="9-11">9-11</SelectItem>
+                            <SelectItem value="2-4">2-4</SelectItem>
+                            <SelectItem value="4-6">4-6</SelectItem>
                           </SelectContent>
                         </Select>
+                      ))}
+                    </div>
+                    <div>
+                      <Label className="text-gray-600">Teléfono</Label>
+                      {editedStudentData?.map((student, index) => (
+                        <Input
+                          key={student.perfil.id || index}
+                          value={student.perfil.telefono || ''}
+                          onChange={(e) => handleStudentDataChange(index, 'telefono', e.target.value)}
+                        />
                       ))}
                     </div>
                   </div>
@@ -884,19 +897,27 @@ useEffect(() => {
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div>
                       <Label className="text-gray-600">Nombre completo</Label>
-                      <p className="text-gray-900">{displayClientData?.nombre_completo}</p>
+                      <p className="text-gray-900">{caso?.usuarios.nombre_completo}</p>
+                    </div>
+                    <div>
+                      <Label className="text-gray-600">Sexo</Label>
+                      <p className="text-gray-900">{caso?.usuarios.sexo}</p>
                     </div>
                     <div>
                       <Label className="text-gray-600">Cédula</Label>
-                      <p className="text-gray-900">{displayClientData?.cedula}</p>
+                      <p className="text-gray-900">{caso?.usuarios.cedula}</p>
                     </div>
                     <div>
-                      <Label className="text-gray-600">Teléfono</Label>
-                      <p className="text-gray-900">{displayClientData?.telefono}</p>
+                      <Label className="text-gray-600">Edad</Label>
+                      <p className="text-gray-900">{caso?.usuarios.edad} años</p>
                     </div>
                     <div>
-                      <Label className="text-gray-600">Correo electrónico</Label>
-                      <p className="text-blue-600">{displayClientData?.correo}</p>
+                      <Label className="text-gray-600">Estado civil</Label>
+                      <p className="text-gray-900">{caso?.usuarios.estado_civil}</p>
+                    </div>
+                    <div>
+                      <Label className="text-gray-600">Estrato</Label>
+                      <p className="text-gray-900">{caso?.usuarios.estrato}</p>
                     </div>
                   </div>
                 ) : (
@@ -910,6 +931,22 @@ useEffect(() => {
                       />
                     </div>
                     <div>
+                      <Label className="text-gray-600">Sexo</Label>
+                      <Select
+                        value={editedClientData?.sexo}
+                        onValueChange={(value) => handleClientDataChange('sexo', value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar sexo" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="M">Masculino</SelectItem>
+                          <SelectItem value="F">Femenino</SelectItem>
+                          <SelectItem value="O">Otro</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
                       <Label className="text-gray-600">Cédula</Label>
                       <Input
                         value={editedClientData?.cedula || ''}
@@ -918,22 +955,222 @@ useEffect(() => {
                       />
                     </div>
                     <div>
+                      <Label className="text-gray-600">Edad</Label>
+                      <Input
+                        type="number"
+                        value={editedClientData?.edad || ''}
+                        onChange={(e) => handleClientDataChange('edad', e.target.value)}
+                        placeholder="Edad en años"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-gray-600">Estado civil</Label>
+                      <Select
+                        value={editedClientData?.estado_civil || ''}
+                        onValueChange={(value) => handleClientDataChange('estado_civil', value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar estado civil" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="soltero">Soltero</SelectItem>
+                          <SelectItem value="casado">Casado</SelectItem>
+                          <SelectItem value="union libre">Union Libre</SelectItem>
+                          <SelectItem value="otro">Otro</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label className="text-gray-600">Estrato</Label>
+                      <Select
+                        value={editedClientData?.estrato?.toString()}
+                        onValueChange={(value) => handleClientDataChange('estrato', value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar estrato" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="1">Estrato 1</SelectItem>
+                          <SelectItem value="2">Estrato 2</SelectItem>
+                          <SelectItem value="3">Estrato 3</SelectItem>
+                          <SelectItem value="4">Estrato 4</SelectItem>
+                          <SelectItem value="5">Estrato 5</SelectItem>
+                          <SelectItem value="6">Estrato 6</SelectItem>
+                          <SelectItem value="Otro">Otro</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                )}
+              </Card>
+              <Card className="p-6">
+                <div className="flex items-center mb-6">
+                  <div className="p-2 bg-green-100 rounded-lg mr-3">
+                    <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-gray-900">Información de contacto</h3>
+                </div>
+                {!isEditingClient ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <Label className="text-gray-600">Teléfono</Label>
+                      <p className="text-gray-900 mb-4">{caso?.usuarios.telefono}</p>
+
+                      <Label className="text-gray-600">Correo electrónico</Label>
+                      <p className="text-gray-900 mb-4">{caso?.usuarios.correo}</p>
+
+                      <Label className="text-gray-600">Dirección</Label>
+                      <p className="text-gray-900">{caso?.usuarios.direccion}</p>
+                    </div>
+                    <div>
+                      <Label className="text-gray-600">Contacto de familiar</Label>
+                      <p className="text-gray-900 mb-4">{caso?.usuarios.contacto_familiar}</p>
+
+                      <Label className="text-gray-600">Tipo de vivienda</Label>
+                      <p className="text-gray-900 mb-4">{caso?.usuarios.tipo_vivienda}</p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
                       <Label className="text-gray-600">Teléfono</Label>
                       <Input
                         value={editedClientData?.telefono || ''}
                         onChange={(e) => handleClientDataChange('telefono', e.target.value)}
-                        placeholder="+57 300 123 4567"
+                        placeholder="Número de teléfono"
+                        className="mb-4"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-gray-600">Contacto de familiar</Label>
+                      <Input
+                        value={editedClientData?.contacto_familiar || ''}
+                        onChange={(e) => handleClientDataChange('contacto_familiar', e.target.value)}
+                        placeholder="Contacto de un familiar"
+                        className="mb-4"
                       />
                     </div>
                     <div>
                       <Label className="text-gray-600">Correo electrónico</Label>
                       <Input
-                        type="email"
                         value={editedClientData?.correo || ''}
                         onChange={(e) => handleClientDataChange('correo', e.target.value)}
-                        placeholder="correo@email.com"
+                        placeholder="Correo electrónico"
+                        className="mb-4"
                       />
                     </div>
+                    <div>
+                      <Label className="text-gray-600">Tipo de vivienda</Label>
+                      <Input
+                        value={editedClientData?.tipo_vivienda || ''}
+                        onChange={(e) => handleClientDataChange('tipo_vivienda', e.target.value)}
+                        placeholder="Tipo de vivienda"
+                        className="mb-4"
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-gray-600">Dirección</Label>
+                      <Input
+                        value={editedClientData?.direccion || ''}
+                        onChange={(e) => handleClientDataChange('direccion', e.target.value)}
+                        placeholder="Dirección"
+                        className="mb-4"
+                      />
+                    </div>
+                  </div>
+                )}
+              </Card>
+
+              {/* Financial Information */}
+              <Card className="p-6">
+                <div className="flex items-center mb-6">
+                  <div className="p-2 bg-emerald-100 rounded-lg mr-3">
+                    <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                  </div>
+                  <h3 className="text-gray-900">Información laboral y financiera</h3>
+                </div>
+                {!isEditingClient ? (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <Label className="text-gray-600">Situación laboral</Label>
+                      <p className="text-gray-900 mb-4">{caso?.usuarios.situacion_laboral}</p>
+
+                      <Label className="text-gray-600">Otros ingresos</Label>
+                      {caso?.usuarios.otros_ingresos ? (
+                        <p className="text-gray-900 mb-4">Sí</p>
+                      ) : (
+                        <p className="text-gray-900 mb-4">No</p>
+                      )}
+                    </div>
+
+                    {caso?.usuarios.otros_ingresos && (
+                      <div>
+                        <Label className="text-gray-600">Valor de otros ingresos</Label>
+                        <p className="text-gray-900 mb-4">{caso?.usuarios.valor_otros_ingresos}</p>
+
+                        <Label className="text-gray-600">Concepto de otros ingresos</Label>
+                        <p className="text-gray-900">{caso?.usuarios.concepto_otros_ingresos}</p>
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                      <Label className="text-gray-600">Situación laboral</Label>
+                      <Select
+                        value={editedClientData?.situacion_laboral?.toString()}
+                        onValueChange={(value) => handleClientDataChange('situacion_laboral', value)}
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar situación laboral" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="dependiente">Dependiente</SelectItem>
+                          <SelectItem value="desempleado">Desempleado</SelectItem>
+                          <SelectItem value="independiente">Independiente</SelectItem>
+                          <SelectItem value="otro">Otro</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                    <div>
+                      <Label className="text-gray-600">Valor de otros ingresos</Label>
+                      <Input
+                        type="text"
+                        value={editedClientData?.valor_otros_ingresos || ''}
+                        onChange={(e) => handleClientDataChange('valor_otros_ingresos', e.target.value)}
+                      />
+                    </div>
+                    <div>
+                      <Label className="text-gray-600">Otros ingresos</Label>
+                      <Select
+                        value={String(editedClientData?.otros_ingresos)}
+                        onValueChange={(value) =>
+                          handleClientDataChange('otros_ingresos', value === 'true')
+                        }
+                      >
+                        <SelectTrigger>
+                          <SelectValue placeholder="Seleccionar" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value="true">Sí</SelectItem>
+                          <SelectItem value="false">No</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+
+                    <div>
+                      <Label className="text-gray-600">Concepto de otros ingresos</Label>
+                      <Input
+                        type="text"
+                        value={editedClientData?.concepto_otros_ingresos || ''}
+                        onChange={(e) => handleClientDataChange('concepto_otros_ingresos', e.target.value)}
+                      />
+                    </div>
+
                   </div>
                 )}
               </Card>
