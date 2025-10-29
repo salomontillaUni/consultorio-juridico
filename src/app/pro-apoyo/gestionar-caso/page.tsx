@@ -47,14 +47,14 @@ export default function SupportCasesPage() {
   const filteredCases = (casos ?? []).filter(caso => {
   const nombre = caso.usuarios?.nombre_completo?.toLowerCase() || "";
   const cedula = caso.usuarios?.cedula?.toString().toLowerCase() || "";
-  const observaciones = caso.observaciones?.toLowerCase() || "";
+  const resumenHechos = caso.resumen_hechos?.toLowerCase() || "";
   const area = caso.area?.toLowerCase() || "";
 
   // Búsqueda general
   const matchesSearch =
     nombre.includes(searchTerm.toLowerCase()) ||
     cedula.includes(searchTerm.toLowerCase()) ||
-    observaciones.includes(searchTerm.toLowerCase()) ||
+    resumenHechos.includes(searchTerm.toLowerCase()) ||
     area.includes(searchTerm.toLowerCase());
 
   // Estado, área y estudiante

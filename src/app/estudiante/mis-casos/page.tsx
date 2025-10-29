@@ -11,6 +11,7 @@ import { getStatusColor } from "app/pro-apoyo/gestionar-caso/page";
 import { Caso } from "app/types/database";
 import { getCasos } from "../../../../supabase/queries/getCasos";
 import { supabase } from "@/utils/supabase";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 export default function CasesPage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -25,21 +26,19 @@ export default function CasesPage() {
             const data = await getCasos();
             setCasos(data);
             setLoading(false);
-        } 
+        }
         fetchData();
     }, []);
 
     const filteredCases = (casos ?? []).filter(caso => {
         const nombre = caso.usuarios?.nombre_completo?.toLowerCase() || "";
         const cedula = caso.usuarios?.cedula?.toString().toLowerCase() || "";
-        const observaciones = caso.observaciones?.toLowerCase() || "";
         const area = caso.area?.toLowerCase() || "";
 
         // Búsqueda general
         const matchesSearch =
             nombre.includes(searchTerm.toLowerCase()) ||
             cedula.includes(searchTerm.toLowerCase()) ||
-            observaciones.includes(searchTerm.toLowerCase()) ||
             area.includes(searchTerm.toLowerCase());
 
         // Estado, área 
@@ -56,6 +55,13 @@ export default function CasesPage() {
             day: 'numeric'
         });
     };
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 2;
+    // Paginación
+    const totalPages = Math.ceil(filteredCases.length / ITEMS_PER_PAGE);
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const currentCases = filteredCases.slice(startIndex, endIndex);
 
     return (
         <div>
@@ -159,10 +165,10 @@ export default function CasesPage() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="todos">Todos los tipos</SelectItem>
-                                    <SelectItem value="Derecho Civil">Derecho Civil</SelectItem>
-                                    <SelectItem value="Derecho Laboral">Derecho Laboral</SelectItem>
-                                    <SelectItem value="Derecho Familiar">Derecho Familiar</SelectItem>
-                                    <SelectItem value="Derecho Penal">Derecho Penal</SelectItem>
+                                    <SelectItem value="civil">Derecho Civil</SelectItem>
+                                    <SelectItem value="laboral">Derecho Laboral</SelectItem>
+                                    <SelectItem value="familiar">Derecho Familiar</SelectItem>
+                                    <SelectItem value="penal">Derecho Penal</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
@@ -170,7 +176,7 @@ export default function CasesPage() {
 
                     {/* Cases Grid */}
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                        {filteredCases.map((caso) => (
+                        {currentCases.map((caso) => (
                             <Card key={caso.id_caso} className="p-6 hover:shadow-md transition-shadow duration-200">
                                 <div className="flex justify-between items-start mb-4">
                                     <div>
@@ -250,6 +256,69 @@ export default function CasesPage() {
                             >
                                 Limpiar filtros
                             </Button>
+                        </div>
+                    )}
+                    {filteredCases.length > 0 && totalPages > 1 && (
+                        <div className="mt-8 flex flex-col items-center gap-4">
+                            <Pagination>
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious
+                                            size="default"
+                                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                            className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                        />
+                                    </PaginationItem>
+
+                                    {[...Array(totalPages)].map((_, i) => {
+                                        const pageNumber = i + 1;
+                                        // Mostrar solo algunas páginas alrededor de la página actual
+                                        if (
+                                            pageNumber === 1 ||
+                                            pageNumber === totalPages ||
+                                            (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                                        ) {
+                                            return (
+                                                <PaginationItem key={pageNumber}>
+                                                    <PaginationLink
+                                                        size="default"
+                                                        onClick={() => setCurrentPage(pageNumber)}
+                                                        isActive={currentPage === pageNumber}
+                                                        className="cursor-pointer"
+                                                    >
+                                                        {pageNumber}
+                                                    </PaginationLink>
+                                                </PaginationItem>
+                                            );
+                                        } else if (
+                                            pageNumber === currentPage - 2 ||
+                                            pageNumber === currentPage + 2
+                                        ) {
+                                            return (
+                                                <PaginationItem key={pageNumber}>
+                                                    <span className="px-4">...</span>
+                                                </PaginationItem>
+                                            );
+                                        }
+                                        return null;
+                                    })}
+
+                                    <PaginationItem>
+                                        <PaginationNext
+                                            size="default"
+                                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                            className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}>
+                                                Siguiente
+                                        </PaginationNext>
+
+
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
+
+                            <p className="text-sm text-gray-600">
+                                Mostrando {startIndex + 1}-{Math.min(endIndex, filteredCases.length)} de {filteredCases.length} casos
+                            </p>
                         </div>
                     )}
                 </div>
