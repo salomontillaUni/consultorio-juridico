@@ -32,6 +32,11 @@ VALUES
 ('estudiante', 'casos_asignados.update'),
 ('estudiante', 'usuarios.read'),
 ('estudiante', 'demandados.read'),
+('estudiante', 'perfiles.read'),
+('estudiante', 'asesores.read'),
+('estudiante', 'estudiantes.read'),
+('estudiante', 'estudiantes_casos.read'),
+('estudiante', 'asesores_casos.read'),
 ('estudiante', 'estudiantes.read');
 
 -- 🔹 ASESOR: puede aprobar casos, leer, actualizar y cerrar
@@ -40,7 +45,12 @@ VALUES
 ('asesor', 'casos_asignados.read'),
 ('asesor', 'casos_asignados.update'),
 ('asesor', 'casos_asignados.delete'),
-('asesor', 'demandados.read')
+('asesor', 'demandados.read'),
+('asesor', 'perfiles.read'),
+('asesor', 'asesores.read'),
+('asesor', 'estudiantes.read'),
+('asesor', 'estudiantes_casos.read'),
+('asesor', 'asesores_casos.read'),
 ('asesor', 'usuarios.read'),
 ('asesor', 'asesores.read');
 

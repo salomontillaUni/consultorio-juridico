@@ -56,7 +56,7 @@ export default function CasesPage() {
         });
     };
     const [currentPage, setCurrentPage] = useState(1);
-    const ITEMS_PER_PAGE = 2;
+    const ITEMS_PER_PAGE = 10;
     // Paginación
     const totalPages = Math.ceil(filteredCases.length / ITEMS_PER_PAGE);
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -164,7 +164,7 @@ export default function CasesPage() {
                                     <SelectValue placeholder="Tipo de caso" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value="todos">Todos los tipos</SelectItem>
+                                    <SelectItem value="todos">Todas las áreas</SelectItem>
                                     <SelectItem value="civil">Derecho Civil</SelectItem>
                                     <SelectItem value="laboral">Derecho Laboral</SelectItem>
                                     <SelectItem value="familiar">Derecho Familiar</SelectItem>
@@ -178,7 +178,7 @@ export default function CasesPage() {
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {currentCases.map((caso) => (
                             <Card key={caso.id_caso} className="p-6 hover:shadow-md transition-shadow duration-200">
-                                <div className="flex justify-between items-start mb-4">
+                                <div className="flex justify-between items-start">
                                     <div>
                                         <h3 className="text-gray-900 mb-1"> ID caso:{caso.id_caso}</h3>
                                         <p className="text-gray-600">Usuario: {caso.usuarios?.nombre_completo}</p>
@@ -192,7 +192,7 @@ export default function CasesPage() {
                                     </div>
                                 </div>
 
-                                <div className="space-y-2 mb-4">
+                                <div className="space-y-2 ">
                                     <div className="flex justify-between text-sm">
                                         <span className="text-gray-600">Area:</span>
                                         <span className="text-gray-900">{caso.area}</span>
@@ -208,10 +208,6 @@ export default function CasesPage() {
                                         </div>
                                     ) : (null)}
                                 </div>
-
-                                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                                    {caso.resumen_hechos}
-                                </p>
 
                                 <div className="flex gap-2">
                                     <Link
