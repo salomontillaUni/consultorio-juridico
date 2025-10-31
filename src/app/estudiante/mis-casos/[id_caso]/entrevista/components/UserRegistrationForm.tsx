@@ -102,7 +102,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
     correoEmpleador: '',
     fechaInicio: '',
     fechaTerminacion: '',
-    continuaContrato: '',
+    continuaContrato: false,
     salarioInicial: '',
     salarioActual: '',
 
@@ -129,13 +129,13 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
   const validateStep = (step: number): boolean => {
     switch (step) {
       case 1:
-        return !!(formData.area);
+        return true; // No required fields
       case 2:
-        return !!(formData.direccion);
+        return !!(formData.direccion && formData.edad && formData.estado_civil && formData.estrato && formData.tipo_vivienda);
       case 3:
         return !!formData.tiene_representado;
       case 4:
-        return !!formData.tipoContrato;
+        return !!formData.situacion_laboral;
       case 5:
         return true; // Optional section
       case 6:
@@ -159,21 +159,35 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
     setCurrentStep(prev => Math.max(prev - 1, 1));
   };
 
+  function cleanFormData(formData: any) {
+  const cleaned = { ...formData };
+
+  Object.keys(cleaned).forEach((key) => {
+    // Si el valor es una cadena vacía, cámbialo por null
+    if (cleaned[key] === '') {
+      cleaned[key] = null;
+    }
+  });
+
+  return cleaned;
+}
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
+    const limpio = cleanFormData(formData);
     if (!validateStep(8)) return;
 
     try {
-      console.log("🔄 Enviando formulario...", formData);
+      console.log("🔄 Enviando formulario...", limpio);
 
       //Actualizar caso
       const { error: errorCaso } = await supabase
         .from("casos")
         .update({
-          area: formData.area,
-          resumen_hechos: formData.resumen_hechos,
-          observaciones: formData.observaciones,
+          area: limpio.area,
+          resumen_hechos: limpio.resumen_hechos,
+          observaciones: limpio.observaciones,
           estado: "pendiente_aprobacion",
         })
         .eq("id_caso", idCaso);
@@ -184,18 +198,18 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
       const { error: errorUsuario } = await supabase
         .from("usuarios")
         .update({
-          edad: formData.edad,
-          contacto_familiar: formData.contacto_familiar,
-          estado_civil: formData.estado_civil,
-          estrato: formData.estrato,
-          direccion: formData.direccion,
-          tipo_vivienda: formData.tipo_vivienda,
-          situacion_laboral: formData.situacion_laboral,
-          otros_ingresos: formData.otros_ingresos,
-          valor_otros_ingresos: formData.valor_otros_ingresos,
-          concepto_otros_ingresos: formData.concepto_otros_ingresos,
-          tiene_contrato: formData.tiene_contrato,
-          tiene_representado: formData.tiene_representado,
+          edad: Number(limpio.edad  ),
+          contacto_familiar: limpio.contacto_familiar,
+          estado_civil: limpio.estado_civil,
+          estrato: Number(limpio.estrato),
+          direccion: limpio.direccion,
+          tipo_vivienda: limpio.tipo_vivienda,
+          situacion_laboral: limpio.situacion_laboral,
+          otros_ingresos: limpio.otros_ingresos,
+          valor_otros_ingresos: Number(limpio.valor_otros_ingresos),
+          concepto_otros_ingresos: limpio.concepto_otros_ingresos,
+          tiene_contrato: limpio.tiene_contrato,
+          tiene_representado: limpio.tiene_representado,
         })
         .eq("id_usuario", caso?.id_usuario);
 
@@ -204,36 +218,36 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
       //Actualizar contrato laboral
       const { error: errorContrato } = await supabase
         .from("contratos_laborales")
-        .update({
-          tipo_contrato: formData.tipoContrato,
-          representante_legal: formData.nombreRepresentanteLegal,
-          correo_patrono: formData.correoEmpleador,
-          direccion_empresa: formData.direccionEmpresa,
-          fecha_inicio: formData.fechaInicio,
-          fecha_terminacion: formData.fechaTerminacion,
-          continua_contrato: formData.continuaContrato,
-          salario_inicial: formData.salarioInicial,
-          salario_actual: formData.salarioActual,
-        })
-        .eq("id_caso", idCaso);
+        .insert({
+          id_usuario: caso?.id_usuario,
+          tipo_contrato: limpio.tipoContrato,
+          representante_legal: limpio.nombreRepresentanteLegal,
+          correo_patrono: limpio.correoEmpleador,
+          direccion_empresa: limpio.direccionEmpresa,
+          fecha_inicio: limpio.fechaInicio,
+          fecha_fin: limpio.fechaTerminacion,
+          continua: limpio.continuaContrato,
+          salario_inicial: limpio.salarioInicial,
+          salario_actual: limpio.salarioActual,
+        });
 
       if (errorContrato) throw new Error(`Error actualizando contrato: ${errorContrato.message}`);
 
       //Actualizar demandado
       const { error: errorDemandado } = await supabase
         .from("demandados")
-        .update({
-          nombre_completo: formData.nombreDemandado,
-          documento: formData.documentoDemandado,
-          celular: formData.celularDemandado,
-          lugar_residencia: formData.lugarResidenciaDemandado,
-          correo: formData.correoDemandado,
-        })
-        .eq("id_caso", idCaso);
+        .insert({
+          id_caso: idCaso,
+          nombre_completo: limpio.nombreDemandado,
+          documento: limpio.documentoDemandado,
+          celular: limpio.celularDemandado,
+          lugar_residencia: limpio.lugarResidenciaDemandado,
+          correo: limpio.correoDemandado,
+        });
 
       if (errorDemandado) throw new Error(`Error actualizando demandado: ${errorDemandado.message}`);
 
-      console.log("✅ Formulario enviado correctamente:", formData);
+      console.log("✅ Formulario enviado correctamente:", limpio);
       clearForm();
 
     } catch (err) {
@@ -326,7 +340,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Input
                   id="edad"
                   type="number"
-                  value={formData.edad}
+                  value={formData.edad || ''}
                   onChange={(e) => handleInputChange('edad', e.target.value)}
                   placeholder="Edad"
                 />
@@ -478,7 +492,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="tipoTrabajo">Situación Laboral</Label>
-                <Select value={formData.tipoContrato} onValueChange={(value: string) => handleInputChange('tipoContrato', value)}>
+                <Select value={formData.situacion_laboral} onValueChange={(value: string) => handleInputChange('situacion_laboral', value)}>
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccione situación laboral" />
                   </SelectTrigger>
@@ -707,15 +721,11 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
 
                   <div className="space-y-2">
                     <Label htmlFor="continuaContrato">¿Continúa el Contrato?</Label>
-                    <Select value={formData.continuaContrato} onValueChange={(value: string) => handleInputChange('continuaContrato', value)}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Seleccione" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="si">Sí</SelectItem>
-                        <SelectItem value="no">No</SelectItem>
-                      </SelectContent>
-                    </Select>
+                    <Checkbox
+                      id="continuaContrato"
+                      checked={formData.continuaContrato}
+                      onCheckedChange={(checked: boolean) => handleInputChange('continuaContrato', checked)}
+                    />
                   </div>
                 </div>
 
