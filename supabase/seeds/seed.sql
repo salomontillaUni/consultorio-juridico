@@ -9,10 +9,12 @@ VALUES
 ('pro_apoyo', 'usuarios.read'),
 ('pro_apoyo', 'usuarios.update'),
 ('pro_apoyo', 'perfiles.read'),
+('pro_apoyo', 'perfiles.update'),
 ('pro_apoyo', 'casos.create'),
 ('pro_apoyo', 'casos.read'),
 ('pro_apoyo', 'casos.update'),
 ('pro_apoyo', 'estudiantes.read'),
+('pro_apoyo', 'estudiantes.update'),
 ('pro_apoyo', 'estudiantes_casos.read'),
 ('pro_apoyo', 'estudiantes_casos.update'),
 ('pro_apoyo', 'estudiantes_casos.delete'),
@@ -23,7 +25,9 @@ VALUES
 ('pro_apoyo', 'asesores_casos.read'),
 ('pro_apoyo', 'asesores_casos.update'),
 ('pro_apoyo', 'asesores_casos.delete'),
-('pro_apoyo', 'demandados.read');
+('pro_apoyo', 'demandados.read'),
+('pro_apoyo', 'demandados.create'),
+('pro_apoyo', 'demandados.update');
 
 -- 🔹 ESTUDIANTE: puede leer casos asignados y actualizar observaciones
 INSERT INTO public.role_permissions (role, permission)
