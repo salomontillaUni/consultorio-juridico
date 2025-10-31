@@ -1,6 +1,14 @@
 'use client';
-
 import { useEffect, useState } from 'react';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -19,6 +27,7 @@ import { supabase } from '@/utils/supabase';
 import { Switch } from '@/components/ui/switch';
 import { Tienne } from 'next/font/google';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { useRouter } from 'next/navigation';
 
 const STEPS = [
   { id: 1, title: 'Información de la Entrevista', icon: CalendarDays },
@@ -37,6 +46,10 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
   const [error, setError] = useState<string>();
   const [caso, setCaso] = useState<Caso>();
   const [demandado, setDemandado] = useState<Demandado | null>();
+  const [open, setOpen] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const router = useRouter();
+
   async function traerDatos() {
     try {
       setLoading(true);
@@ -160,17 +173,17 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
   };
 
   function cleanFormData(formData: any) {
-  const cleaned = { ...formData };
+    const cleaned = { ...formData };
 
-  Object.keys(cleaned).forEach((key) => {
-    // Si el valor es una cadena vacía, cámbialo por null
-    if (cleaned[key] === '') {
-      cleaned[key] = null;
-    }
-  });
+    Object.keys(cleaned).forEach((key) => {
+      // Si el valor es una cadena vacía, cámbialo por null
+      if (cleaned[key] === '') {
+        cleaned[key] = null;
+      }
+    });
 
-  return cleaned;
-}
+    return cleaned;
+  }
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -198,7 +211,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
       const { error: errorUsuario } = await supabase
         .from("usuarios")
         .update({
-          edad: Number(limpio.edad  ),
+          edad: Number(limpio.edad),
           contacto_familiar: limpio.contacto_familiar,
           estado_civil: limpio.estado_civil,
           estrato: Number(limpio.estrato),
@@ -247,7 +260,8 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
 
       if (errorDemandado) throw new Error(`Error actualizando demandado: ${errorDemandado.message}`);
 
-      console.log("✅ Formulario enviado correctamente:", limpio);
+      setOpen(true);
+      router.push(`/estudiante/mis-casos`);
       clearForm();
 
     } catch (err) {
@@ -773,7 +787,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="area">Área</Label>
-                <Select value={formData.area} onValueChange={(value: string) => handleInputChange('area', value)}>
+                <Select required value={formData.area} onValueChange={(value: string) => handleInputChange('area', value)}>
                   <SelectTrigger >
                     <SelectValue placeholder="Seleccione el área" />
                   </SelectTrigger>
@@ -885,6 +899,21 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
           </div>
         )}
       </div>
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="text-xl font-semibold text-center">
+              {successMessage.includes("✅") ? "Actualización Exitosa" : "Error"}
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              {successMessage}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex justify-center">
+            <Button onClick={() => setOpen(false)}>Cerrar</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {/* Step Content */}
       <form onSubmit={handleSubmit}>
