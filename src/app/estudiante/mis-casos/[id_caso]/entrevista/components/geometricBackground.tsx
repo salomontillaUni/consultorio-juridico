@@ -4,7 +4,7 @@ interface GeometricBackgroundProps {
 
 export function GeometricBackground({ className }: GeometricBackgroundProps) {
   return (
-    <div className={`absolute inset-0 pointer-events-none ${className || ''}`}>
+    <div className={`absolute -z-10 inset-0 pointer-events-none ${className || ''}`}>
       {/* Large background shapes with gradients */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-linear-to-bl from-blue-200/20 to-transparent rounded-full blur-3xl"></div>
       <div className="absolute bottom-0 left-0 w-80 h-80 bg-linear-to-tr from-blue-200/30 to-transparent rounded-full blur-3xl"></div>
