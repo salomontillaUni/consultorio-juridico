@@ -25,13 +25,13 @@ const STEPS = [
   { id: 8, title: 'Firmas y Autorización', icon: CheckCircle }
 ];
 
-export function UserRegistrationForm() {
+export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
   const [currentStep, setCurrentStep] = useState(1);
   const initialFormData = {
     // Interview Information
     fecha: '2024-02-20',
     area: 'civil',
-    nombreEntrevistador: 'Ya definido por proapoyo',
+    nombreEntrevistador: idCaso,
     celularEntrevistador: '11111111',
     
     // Applicant Information
