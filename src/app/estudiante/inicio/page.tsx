@@ -5,7 +5,6 @@ import { FileText, Scale } from 'lucide-react';
 import {Navbar} from '../components/NavBarEstudiante';
 import { Button } from '@/components/ui/button';
 import {useRouter} from 'next/navigation';
-import { GeometricBackground } from '@/components/global/GeometricBackground';
 
 export default function PaginaPrincipal() {
   const router = useRouter();

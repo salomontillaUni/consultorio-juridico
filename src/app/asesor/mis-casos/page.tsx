@@ -1,5 +1,5 @@
 'use client';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -7,6 +7,10 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Navbar } from "../components/NavBarAsesor";
 import Link from "next/link";
+import { Caso } from "app/types/database";
+import { getCasos } from "../../../../supabase/queries/getCasos";
+import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Spinner } from "@/components/ui/spinner";
 
 interface Case {
     id: string;
@@ -23,90 +27,26 @@ interface Case {
     requiresApproval: boolean;
 }
 
-interface AdvisorCasesPageProps {
-    onBack: () => void;
-    onViewCase: (caseId: string) => void;
-}
 
-export default function AdvisorCasesPage({ onBack, onViewCase }: AdvisorCasesPageProps) {
+export default function Asesor() {
     const [searchTerm, setSearchTerm] = useState("");
     const [statusFilter, setStatusFilter] = useState("all");
     const [areaFilter, setAreaFilter] = useState("all");
+    const [loading, setLoading] = useState(false);
+    const [casos, setCasos] = useState<Caso[] | null>(null);
 
-    // Mock data - En producción vendría de la API
-    const mockCases: Case[] = [
-        {
-            id: "1",
-            caseNumber: "CJ-2024-001",
-            clientName: "María González",
-            area: "Laboral",
-            type: "Despido injustificado",
-            status: "pending_approval",
-            assignedStudent: "Andrea Vargas",
-            assignedAdvisor: "Dr. Roberto Silva",
-            createdDate: "2024-01-15",
-            lastUpdate: "2024-01-16",
-            summary: "Caso de despido sin justa causa. Cliente requiere asesoría para reclamación de indemnización.",
-            requiresApproval: true
-        },
-        {
-            id: "2",
-            caseNumber: "CJ-2024-002",
-            clientName: "Carlos Herrera",
-            area: "Laboral",
-            type: "Acoso laboral",
-            status: "approved",
-            assignedStudent: "Andrea Vargas",
-            assignedAdvisor: "Dr. Roberto Silva",
-            createdDate: "2024-01-10",
-            lastUpdate: "2024-01-14",
-            summary: "Situación de acoso laboral documentada. Seguimiento de proceso disciplinario interno.",
-            requiresApproval: false
-        },
-        {
-            id: "3",
-            caseNumber: "CJ-2024-003",
-            clientName: "Ana Jiménez",
-            area: "Laboral",
-            type: "Liquidación laboral",
-            status: "in_progress",
-            assignedStudent: "Andrea Vargas",
-            assignedAdvisor: "Dr. Roberto Silva",
-            createdDate: "2024-01-08",
-            lastUpdate: "2024-01-12",
-            summary: "Revisión de liquidación final. Verificación de prestaciones sociales.",
-            requiresApproval: false
-        },
-        {
-            id: "4",
-            caseNumber: "CJ-2024-004",
-            clientName: "Pedro Martínez",
-            area: "Laboral",
-            type: "Incapacidad laboral",
-            status: "pending_approval",
-            assignedStudent: "Miguel Torres",
-            assignedAdvisor: "Dr. Roberto Silva",
-            createdDate: "2024-01-14",
-            lastUpdate: "2024-01-15",
-            summary: "Proceso de incapacidad laboral. Cliente requiere representación ante EPS.",
-            requiresApproval: true
-        }
-    ];
+    
+    useEffect(() => {
+            async function fetchData() {
+                setLoading(true);
+                const data = await getCasos();
+                setCasos(data);
+                setLoading(false);
+            }
+            fetchData();
+        }, []);
 
-    const getStatusBadge = (status: string) => {
-        const statusConfig = {
-            pending_approval: { color: "bg-yellow-100 text-yellow-800", text: "Pendiente de aprobación" },
-            approved: { color: "bg-green-100 text-green-800", text: "Aprobado" },
-            in_progress: { color: "bg-blue-100 text-blue-800", text: "En progreso" },
-            completed: { color: "bg-gray-100 text-gray-800", text: "Completado" },
-            suspended: { color: "bg-red-100 text-red-800", text: "Suspendido" }
-        };
-
-        const config = statusConfig[status as keyof typeof statusConfig];
-        return <Badge className={config.color}>{config.text}</Badge>;
-    };
-
-    const handleApproveCase = async (caseId: string) => {
+    const handleApproveCase = async (caseId: number | undefined) => {
         try {
             // Aquí iría la llamada a la API para aprobar el caso
             console.log('Aprobando caso:', caseId);
@@ -118,19 +58,27 @@ export default function AdvisorCasesPage({ onBack, onViewCase }: AdvisorCasesPag
         }
     };
 
-    const filteredCases = mockCases.filter(caso => {
-        const matchesSearch = caso.clientName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            caso.caseNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            caso.type.toLowerCase().includes(searchTerm.toLowerCase());
+    const filteredCases = (casos ?? []).filter(caso => {
+        const matchesSearch = caso.usuarios.nombre_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            caso.usuarios.cedula.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            caso.area.toLowerCase().includes(searchTerm.toLowerCase());
 
-        const matchesStatus = statusFilter === "all" || caso.status === statusFilter;
+        const matchesStatus = statusFilter === "all" || caso.estado === statusFilter;
         const matchesArea = areaFilter === "all" || caso.area === areaFilter;
 
         return matchesSearch && matchesStatus && matchesArea;
     });
 
-    const pendingApprovalCount = mockCases.filter(c => c.status === "pending_approval").length;
-    const approvedCount = mockCases.filter(c => c.status === "approved" || c.status === "in_progress").length;
+    const pendingApprovalCount = filteredCases?.filter(c => c.estado === "pendiente_aprobacion").length;
+    const approvedCount = filteredCases?.filter(c => c.estado === "aprobado").length;
+
+    // Pagination state
+    const [currentPage, setCurrentPage] = useState(1);
+    const ITEMS_PER_PAGE = 2;
+    const totalPages = Math.ceil(filteredCases?.length / ITEMS_PER_PAGE);
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const endIndex = startIndex + ITEMS_PER_PAGE;
+    const currentCases = filteredCases.slice(startIndex, endIndex);
 
     return (
         <div>
@@ -190,35 +138,34 @@ export default function AdvisorCasesPage({ onBack, onViewCase }: AdvisorCasesPag
                             <div>
                                 <label className="text-sm text-gray-600 mb-1 block">Estado</label>
                                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                                    <SelectTrigger>
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="all">Todos los estados</SelectItem>
-                                        <SelectItem value="pending_approval">Pendiente de aprobación</SelectItem>
-                                        <SelectItem value="approved">Aprobado</SelectItem>
-                                        <SelectItem value="in_progress">En progreso</SelectItem>
-                                        <SelectItem value="completed">Completado</SelectItem>
-                                        <SelectItem value="suspended">Suspendido</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <SelectTrigger className="w-full md:w-48">
+                                    <SelectValue placeholder="Estado" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="todos">Todos los estados</SelectItem>
+                                    <SelectItem value="aprobado">Aprobado</SelectItem>
+                                    <SelectItem value="en_proceso">En Proceso</SelectItem>
+                                    <SelectItem value="pendiente_aprobacion">Pendiente de Aprobación</SelectItem>
+                                    <SelectItem value="archivado">Archivado</SelectItem>
+                                    <SelectItem value="cerrado">Cerrado</SelectItem>
+                                </SelectContent>
+                            </Select>
                             </div>
 
                             <div>
                                 <label className="text-sm text-gray-600 mb-1 block">Área</label>
                                 <Select value={areaFilter} onValueChange={setAreaFilter}>
-                                    <SelectTrigger>
-                                        <SelectValue />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="all">Todas las áreas</SelectItem>
-                                        <SelectItem value="Laboral">Laboral</SelectItem>
-                                        <SelectItem value="Civil">Civil</SelectItem>
-                                        <SelectItem value="Familia">Familia</SelectItem>
-                                        <SelectItem value="Penal">Penal</SelectItem>
-                                        <SelectItem value="Comercial">Comercial</SelectItem>
-                                    </SelectContent>
-                                </Select>
+                                <SelectTrigger className="w-full md:w-48">
+                                    <SelectValue placeholder="Área" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value="todos">Todas las áreas</SelectItem>
+                                    <SelectItem value="civil">Derecho Civil</SelectItem>
+                                    <SelectItem value="laboral">Derecho Laboral</SelectItem>
+                                    <SelectItem value="familiar">Derecho Familiar</SelectItem>
+                                    <SelectItem value="penal">Derecho Penal</SelectItem>
+                                </SelectContent>
+                            </Select>
                             </div>
 
                             <div className="flex items-end">
@@ -239,7 +186,7 @@ export default function AdvisorCasesPage({ onBack, onViewCase }: AdvisorCasesPag
 
                     {/* Cases List */}
                     <div className="space-y-4">
-                        {filteredCases.length === 0 ? (
+                        {currentCases?.length === 0 ? (
                             <Card className="p-8 text-center">
                                 <div className="text-gray-500">
                                     <svg className="w-16 h-16 mx-auto mb-4 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -250,9 +197,9 @@ export default function AdvisorCasesPage({ onBack, onViewCase }: AdvisorCasesPag
                                 </div>
                             </Card>
                         ) : (
-                            filteredCases.map((caso) => (
+                            currentCases?.map((caso) => (
                                 <Card
-                                    key={caso.id}
+                                    key={caso.id_caso}
                                     className="p-6 border border-slate-200 rounded-xl hover:shadow-lg transition-all duration-300 bg-white"
                                 >
                                     <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
@@ -262,19 +209,19 @@ export default function AdvisorCasesPage({ onBack, onViewCase }: AdvisorCasesPag
                                             {/* Encabezado */}
                                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                                                 <h3 className="text-lg font-semibold text-slate-900">
-                                                    Cliente: {caso.clientName}
+                                                    Cliente: {caso.usuarios.nombre_completo} (Documento #{caso.usuarios.cedula})
                                                 </h3>
                                                 <span
-                                                    className={`px-3 py-1 mt-2 sm:mt-0 text-xs font-medium rounded-full ${caso.status === "pending_approval"
+                                                    className={`px-3 py-1 mt-2 sm:mt-0 text-xs font-medium rounded-full ${caso.estado === "pendiente_aprobacion"
                                                             ? "bg-yellow-100 text-yellow-800"
-                                                            : caso.status === "approved"
+                                                            : caso.estado === "aprobado"
                                                                 ? "bg-green-100 text-green-800"
                                                                 : "bg-gray-100 text-gray-700"
                                                         }`}
                                                 >
-                                                    {caso.status === "pending_approval"
+                                                    {caso.estado === "pendiente_aprobacion"
                                                         ? "Pendiente"
-                                                        : caso.status === "approved"
+                                                        : caso.estado === "aprobado"
                                                             ? "Aprobado"
                                                             : "En revisión"}
                                                 </span>
@@ -292,20 +239,20 @@ export default function AdvisorCasesPage({ onBack, onViewCase }: AdvisorCasesPag
                                                     <span className="text-xs uppercase text-slate-500 font-medium">
                                                         Tipo
                                                     </span>
-                                                    <p className="text-sm text-slate-900">{caso.type}</p>
+                                                    <p className="text-sm text-slate-900">{caso.tipo_proceso}</p>
                                                 </div>
                                                 <div>
                                                     <span className="text-xs uppercase text-slate-500 font-medium">
                                                         Estudiante
                                                     </span>
-                                                    <p className="text-sm text-slate-900">{caso.assignedStudent}</p>
+                                                    <p className="text-sm text-slate-900">{caso.estudiantes_casos[caso.estudiantes_casos.length - 1]?.estudiante.perfil.nombre_completo}</p>
                                                 </div>
                                                 <div>
                                                     <span className="text-xs uppercase text-slate-500 font-medium">
-                                                        Última actualización
+                                                        Asesor
                                                     </span>
                                                     <p className="text-sm text-slate-900">
-                                                        {new Date(caso.lastUpdate).toLocaleDateString()}
+                                                        {caso.asesores_casos[caso.asesores_casos.length - 1]?.asesor.perfil.nombre_completo}
                                                     </p>
                                                 </div>
                                             </div>
@@ -316,7 +263,7 @@ export default function AdvisorCasesPage({ onBack, onViewCase }: AdvisorCasesPag
                                                     Resumen
                                                 </span>
                                                 <p className="text-sm text-slate-900 mt-1 leading-relaxed">
-                                                    {caso.summary}
+                                                    {caso.resumen_hechos || "No hay resumen disponible para este caso."}
                                                 </p>
                                             </div>
                                         </div>
@@ -324,15 +271,15 @@ export default function AdvisorCasesPage({ onBack, onViewCase }: AdvisorCasesPag
                                         {/* Acciones */}
                                         <div className="flex flex-col sm:flex-row lg:flex-col gap-2 lg:ml-6">
                                             <Link
-                                                href={`/asesor/mis-casos/${caso.id}`}
+                                                href={`/asesor/mis-casos/${caso.id_caso}`}
                                                 className="w-full sm:w-auto lg:w-32 border-slate-300 hover:bg-blue-600 transition-colors bg-blue-500 text-white px-4 py-2 rounded-md flex items-center justify-center"
                                             >
                                                 Ver detalles
                                             </Link>
 
-                                            {caso.status === "pending_approval" && (
+                                            {caso.estado === "pendiente_aprobacion" && (
                                                 <Button
-                                                    onClick={() => handleApproveCase(caso.id)}
+                                                    onClick={() => handleApproveCase(caso.id_caso)}
                                                     className="w-full sm:w-auto lg:w-32 bg-green-600 hover:bg-green-700 text-white transition-colors flex items-center justify-center"
                                                 >
                                                     <svg
@@ -359,10 +306,67 @@ export default function AdvisorCasesPage({ onBack, onViewCase }: AdvisorCasesPag
                         )}
                     </div>
 
-                    {/* Summary */}
-                    {filteredCases.length > 0 && (
-                        <div className="mt-8 text-center text-gray-600">
-                            <p>Mostrando {filteredCases.length} de {mockCases.length} casos asignados</p>
+                    {filteredCases.length > 0 && totalPages > 1 && (
+                        <div className="mt-8 flex flex-col items-center gap-4">
+                            <Pagination>
+                                <PaginationContent>
+                                    <PaginationItem>
+                                        <PaginationPrevious
+                                            size="default"
+                                            onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                                            className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                                        />
+                                    </PaginationItem>
+
+                                    {[...Array(totalPages)].map((_, i) => {
+                                        const pageNumber = i + 1;
+                                        // Mostrar solo algunas páginas alrededor de la página actual
+                                        if (
+                                            pageNumber === 1 ||
+                                            pageNumber === totalPages ||
+                                            (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
+                                        ) {
+                                            return (
+                                                <PaginationItem key={pageNumber}>
+                                                    <PaginationLink
+                                                        size="default"
+                                                        onClick={() => setCurrentPage(pageNumber)}
+                                                        isActive={currentPage === pageNumber}
+                                                        className="cursor-pointer"
+                                                    >
+                                                        {pageNumber}
+                                                    </PaginationLink>
+                                                </PaginationItem>
+                                            );
+                                        } else if (
+                                            pageNumber === currentPage - 2 ||
+                                            pageNumber === currentPage + 2
+                                        ) {
+                                            return (
+                                                <PaginationItem key={pageNumber}>
+                                                    <span className="px-4">...</span>
+                                                </PaginationItem>
+                                            );
+                                        }
+                                        return null;
+                                    })}
+
+                                    <PaginationItem>
+                                        <PaginationNext
+                                            size="default"
+                                            onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                                            className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}>
+                                                Siguiente
+                                        </PaginationNext>
+
+
+                                    </PaginationItem>
+                                </PaginationContent>
+                            </Pagination>
+
+                            <p className="text-sm text-gray-600">
+                                Mostrando {startIndex + 1}-{Math.min(endIndex, filteredCases.length)} de {filteredCases.length} casos
+                            </p>
                         </div>
                     )}
                 </div>

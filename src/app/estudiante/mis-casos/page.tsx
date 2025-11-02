@@ -153,9 +153,10 @@ export default function CasesPage() {
                                 </SelectTrigger>
                                 <SelectContent>
                                     <SelectItem value="todos">Todos los estados</SelectItem>
-                                    <SelectItem value="activo">Activo</SelectItem>
-                                    <SelectItem value="pendiente">Pendiente</SelectItem>
-                                    <SelectItem value="revision">En revisión</SelectItem>
+                                    <SelectItem value="aprobado">Aprobado</SelectItem>
+                                    <SelectItem value="en_proceso">En Proceso</SelectItem>
+                                    <SelectItem value="pendiente_aprobacion">Pendiente de Aprobación</SelectItem>
+                                    <SelectItem value="archivado">Archivado</SelectItem>
                                     <SelectItem value="cerrado">Cerrado</SelectItem>
                                 </SelectContent>
                             </Select>
