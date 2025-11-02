@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -16,6 +16,7 @@ import { getCasoById } from "../../../../../supabase/queries/getCasoById";
 import { getDemandadoByCasoId } from "../../../../../supabase/queries/getDemandadoByCasoId";
 import { formatDate, getStatusColor } from "app/pro-apoyo/gestionar-caso/page";
 import { CassetteTapeIcon } from "lucide-react";
+import { supabase } from "@/utils/supabase";
 
 
 export default function Page({ params }: { params: Promise<{ id_caso: string }> }) {
@@ -24,15 +25,13 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
   const [newNote, setNewNote] = useState("");
   const [caso, setCaso] = useState<Caso>();
   const [demandado, setDemandado] = useState<Demandado | null>(null);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [newTask, setNewTask] = useState("");
-  const [newTaskDate, setNewTaskDate] = useState("");
-
+  const [guardando, setGuardando] = useState(false);
+  const [editando, setEditando] = useState(false);
+  const [observaciones, setObservaciones] = useState("");
 
   async function traerDatos() {
     try {
-      setLoading(true);
       setError(null);
 
       const [casoFetch, demandadoFetch] = await Promise.all([
@@ -52,13 +51,28 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
       console.error(err);
       setError("Error al obtener los datos del caso");
     } finally {
-      setLoading(false);
     }
   }
 
   useEffect(() => {
     traerDatos();
   }, []);
+
+  useEffect(() => {
+    if (caso) {
+      setObservaciones(caso.observaciones || "");
+    }
+  }, [caso]);
+
+  const handleGuardar = async () => {
+    try{
+      setGuardando(true);
+      await supabase.from('casos').update({ observaciones }).eq('id_caso', id_caso);
+      setEditando(false);
+    }catch (err){
+      console.error(err);
+    }
+  };
 
   return (
     <div>
@@ -165,23 +179,50 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                       </div>
                       <h3 className="text-gray-900">Observaciones</h3>
                     </div>
-                    <div className="space-y-3 mb-4">
-                      {caso?.observaciones != null ? (
-                        caso?.observaciones
+                    <div className="space-y-3 mt-4">
+                      <div className="flex justify-between items-center">
+                        <h3 className="text-lg font-semibold">Observaciones</h3>
+                        {!editando ? (
+                          <Button
+                            onClick={() => setEditando(true)}
+                            variant="outline"
+                            className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                          >
+                            Editar
+                          </Button>
+                        ) : (
+                          <div className="space-x-2">
+                            <Button
+                              onClick={handleGuardar}
+                              disabled={guardando}
+                              className="bg-blue-600 hover:bg-blue-700 text-white"
+                            >
+                              {guardando ? "Guardando..." : "Guardar"}
+                            </Button>
+                            <Button
+                              onClick={() => {
+                                setEditando(false);
+                                setObservaciones(caso?.observaciones || ""); // restaurar valor original
+                              }}
+                              variant="outline"
+                            >
+                              Cancelar
+                            </Button>
+                          </div>
+                        )}
+                      </div>
+
+                      {!editando ? (
+                        <p className="text-gray-700 bg-gray-50 p-3 rounded-md min-h-[80px]">
+                          {observaciones || "No hay observaciones registradas para este caso."}
+                        </p>
                       ) : (
-                        <p className="text-gray-600">No hay notas disponibles para este caso.</p>
+                        <Textarea
+                          value={observaciones}
+                          onChange={(e) => setObservaciones(e.target.value)}
+                          className="min-h-28"
+                        />
                       )}
-                    </div>
-                    <div className="space-y-3">
-                      <Textarea
-                        placeholder="Añadir nueva observación..."
-                        value={newNote}
-                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setNewNote(e.target.value)}
-                        className="min-h-20"
-                      />
-                      <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
-                        Añadir observación
-                      </Button>
                     </div>
                   </Card>
                 </div>
@@ -205,12 +246,12 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                             <p className="text-gray-900">{formatDate(caso.fecha_creacion)}</p>
                           </div>
                         )}
-                        {caso?.fecha_cierre && (
-                          <div>
-                            <Label className="text-gray-600">Fecha de cierre</Label>
-                            <p className="text-gray-900">{formatDate(caso.fecha_cierre)}</p>
-                          </div>
-                        )}
+                      {caso?.fecha_cierre && (
+                        <div>
+                          <Label className="text-gray-600">Fecha de cierre</Label>
+                          <p className="text-gray-900">{formatDate(caso.fecha_cierre)}</p>
+                        </div>
+                      )}
                     </div>
                   </Card>
                 </div>
@@ -316,10 +357,10 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                   {caso?.usuarios.otros_ingresos && (
                     <div>
                       <Label className="text-gray-600">Valor de otros ingresos</Label>
-                    <p className="text-gray-900 mb-4">{caso?.usuarios.valor_otros_ingresos}</p>
+                      <p className="text-gray-900 mb-4">{caso?.usuarios.valor_otros_ingresos}</p>
 
-                    <Label className="text-gray-600">Concepto de otros ingresos</Label>
-                    <p className="text-gray-900">{caso?.usuarios.concepto_otros_ingresos}</p>
+                      <Label className="text-gray-600">Concepto de otros ingresos</Label>
+                      <p className="text-gray-900">{caso?.usuarios.concepto_otros_ingresos}</p>
                     </div>
                   )}
 

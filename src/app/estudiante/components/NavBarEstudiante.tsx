@@ -14,11 +14,10 @@ export function Navbar() {
   const links = [
     { href: "/estudiante/inicio", label: "Inicio" },
     { href: "/estudiante/mis-casos", label: "Mis Casos" },
-    { href: "/estudiante/entrevista", label: "Entrevista" },
   ];
 
   return (
-    <nav className="bg-white border-b shadow-sm">
+    <nav className="bg-white border-b shadow-sm z-10 relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}

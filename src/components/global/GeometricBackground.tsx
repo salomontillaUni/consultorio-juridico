@@ -5,11 +5,11 @@ interface GeometricBackgroundProps {
 
 export function GeometricBackground({ className }: GeometricBackgroundProps) {
   return (
-    <div className={`absolute inset-0 ${className || ''}`}>
+    <div className={`absolute z-0 inset-0 ${className || ''}`}>
       {/* Large background shapes with gradients */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-gradient-to-bl from-blue-200/30 to-transparent rounded-full blur-3xl"></div>
-      <div className="absolute bottom-0 left-0 w-80 h-80 bg-gradient-to-tr from-blue-200/40 to-transparent rounded-full blur-3xl"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-r from-purple-200/20 to-blue-200/20 rounded-full blur-2xl"></div>
+      <div className="absolute top-0 right-0 w-96 h-96 bg-linear-to-bl from-blue-200/30 to-transparent rounded-full blur-3xl"></div>
+      <div className="absolute bottom-0 left-0 w-80 h-80 bg-linear-to-tr from-blue-200/40 to-transparent rounded-full blur-3xl"></div>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-linear-to-r from-purple-200/20 to-blue-200/20 rounded-full blur-2xl"></div>
       
       {/* Geometric pattern overlay */}
       <div className="absolute inset-0 opacity-[0.03]">
