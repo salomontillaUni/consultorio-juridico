@@ -171,7 +171,7 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                   </Card>
 
                   <Card className="p-6">
-                    <div className="flex items-center mb-4">
+                    <div className="flex items-center">
                       <div className="p-2 bg-yellow-100 rounded-lg mr-3">
                         <svg className="w-5 h-5 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -179,7 +179,7 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                       </div>
                       <h3 className="text-gray-900">Observaciones</h3>
                     </div>
-                    <div className="space-y-3 mt-4">
+                    <div className="space-y-3 ">
                       <div className="flex justify-between items-center">
                         <h3 className="text-lg font-semibold">Observaciones</h3>
                         {!editando ? (
