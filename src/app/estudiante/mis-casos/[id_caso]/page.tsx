@@ -150,16 +150,16 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                       </div>
                       <div>
                         <Label className="text-gray-600">Estudiante asignado</Label>
-                        <p className="text-gray-900 mb-4">{caso?.estudiantes_casos.map((estudiante) => estudiante.estudiante.perfil.nombre_completo).join(", ")}</p>
+                        <p className="text-gray-900 mb-4">{caso?.estudiantes_casos.map((estudiante) => estudiante.estudiante.perfil.nombre_completo).join(", ") || "No asignado"}</p>
 
                         <Label className="text-gray-600">Asesor asignado</Label>
-                        <p className="text-gray-900">{caso?.asesores_casos.map((asesor) => asesor.asesor.perfil.nombre_completo).join(", ")}</p>
+                        <p className="text-gray-900">{caso?.asesores_casos.map((asesor) => asesor.asesor.perfil.nombre_completo).join(", ") || "No asignado"}</p>
                       </div>
                     </div>
                   </Card>
 
                   <Card className="p-6">
-                    <div className="flex items-center mb-4">
+                    <div className="flex items-center">
                       <div className="p-2 bg-green-100 rounded-lg mr-3">
                         <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
@@ -167,7 +167,7 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                       </div>
                       <h3 className="text-gray-900">Resumen de los hechos</h3>
                     </div>
-                    <p className="text-gray-600 leading-relaxed">{caso?.resumen_hechos}</p>
+                    <p className="text-gray-600 leading-relaxed">{caso?.resumen_hechos || "No hay resumen de los hechos."}</p>
                   </Card>
 
                   <Card className="p-6">
@@ -213,7 +213,7 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                       </div>
 
                       {!editando ? (
-                        <p className="text-gray-700 bg-gray-50 p-3 rounded-md min-h-[80px]">
+                        <p className="text-gray-700 bg-gray-50 p-3 rounded-md min-h-20">
                           {observaciones || "No hay observaciones registradas para este caso."}
                         </p>
                       ) : (

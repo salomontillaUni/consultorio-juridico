@@ -57,8 +57,6 @@ export default function PaginaPrincipal() {
 
           </div>
 
-
-
         </div>
       </div>
     </div>
