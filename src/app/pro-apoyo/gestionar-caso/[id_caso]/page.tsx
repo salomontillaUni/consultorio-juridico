@@ -16,6 +16,9 @@ import { Caso, Demandado, Estudiante, Usuario } from "app/types/database";
 import { getCasoById } from "../../../../../supabase/queries/getCasoById";
 import { getDemandadoByCasoId } from "../../../../../supabase/queries/getDemandadoByCasoId";
 import { formatDate, getStatusColor } from "../page";
+import { cleanData } from "@/utils/utils";
+import { supabase } from "@/utils/supabase";
+import { Notebook } from "lucide-react";
 
 
 export default function Page({ params }: { params: Promise<{ id_caso: string }> }) {
@@ -67,7 +70,7 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
 
   useEffect(() => {
     traerDatos();
-  }, []);
+  }, [caso]);
 
 
   const handleEditStudent = () => {
@@ -187,10 +190,37 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
     setIsEditingCaseInfo(true);
   };
 
-  const handleSaveCaseInfo = () => {
+
+
+  const handleSaveCaseInfo = async () => {
     if (editedCaseData) {
       setIsEditingCaseInfo(false);
       setEditedCaseData(null);
+      const limpio = cleanData(editedCaseData);
+      try {
+        const { error: errorCaso } = await supabase
+          .from('casos')
+          .update(
+            {
+              area: limpio.area,
+              aprobacion_asesor: limpio.aprobacion_asesor,
+              tipo_proceso: limpio.tipo_proceso,
+              resumen_hechos: limpio.resumen_hechos,
+              estado: limpio.estado,
+              observaciones: limpio.observaciones,
+            }
+          )
+          .eq('id_caso', id_caso);
+        console.log("🔄 Actualizando caso...", limpio);
+        if (errorCaso) {
+          setError(errorCaso.message);
+          throw errorCaso;
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Error al guardar los datos del caso");
+      }
+
     }
   };
 
@@ -396,11 +426,11 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                                 <SelectValue placeholder="Seleccionar tipo de caso" />
                               </SelectTrigger>
                               <SelectContent>
-                                <SelectItem value="Laboral">Laboral</SelectItem>
-                                <SelectItem value="Civil">Civil</SelectItem>
-                                <SelectItem value="Penal">Penal</SelectItem>
-                                <SelectItem value="Familia">Familia</SelectItem>
-                                <SelectItem value="Administrativo">Administrativo</SelectItem>
+                                <SelectItem value="laboral">Laboral</SelectItem>
+                                <SelectItem value="civil">Civil</SelectItem>
+                                <SelectItem value="penal">Penal</SelectItem>
+                                <SelectItem value="familia">Familia</SelectItem>
+                                <SelectItem value="otros">Otros</SelectItem>
                               </SelectContent>
                             </Select>
                           </div>
@@ -432,21 +462,20 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                         </div>
                         <div className="space-y-4">
                           <div>
-                            <Label className="text-gray-600">Estudiante asignado</Label>
-                            <Input
-                              value={editedCaseData?.estudiantes_casos.map((es) => es.estudiante.perfil.nombre_completo).join(', ') || ''}
-                              onChange={(e) => handleCaseDataChange('estudianteAsignado', e.target.value)}
-                              placeholder="Nombre del estudiante asignado"
-                            />
+                            <Label className="text-gray-600">Estudiantes asignados</Label>
+                            {displayCaseData?.estudiantes_casos.length ? (
+                              <p className="text-blue-600">{displayCaseData?.estudiantes_casos.map(estudiante => estudiante.estudiante.perfil.nombre_completo).join(', ')}</p>
+                            ) : (
+                              <p className="text-gray-600 mb-4">No hay estudiantes asignados</p>
+                            )}
                           </div>
-
                           <div>
-                            <Label className="text-gray-600">Asesor asignado</Label>
-                            <Input
-                              value={editedCaseData?.asesores_casos.map((as) => as.asesor.perfil.nombre_completo).join(', ') || ''}
-                              onChange={(e) => handleCaseDataChange('asesorAsignado', e.target.value)}
-                              placeholder="Nombre del asesor asignado"
-                            />
+                            <Label className="text-gray-600">Asesores asignados</Label>
+                            {displayCaseData?.asesores_casos.length ? (
+                              <p className="text-gray-900">{displayCaseData?.asesores_casos.map(asesor => asesor.asesor.perfil.nombre_completo).join(',  ')}</p>
+                            ) : (
+                              <p className="text-gray-600 mb-4">No hay asesores asignados</p>
+                            )}
                           </div>
                         </div>
                       </div>
@@ -485,43 +514,9 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                         </div>
                         <h3 className="text-gray-900">Observaciones</h3>
                       </div>
-                      {!isEditingNotes ? (
-                        <Button
-                          onClick={handleEditNotes}
-                          size="sm"
-                          variant="outline"
-                          className="text-blue-600 border-blue-600 hover:bg-blue-50"
-                        >
-                          <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                          </svg>
-                          Editar observaciones
-                        </Button>
-                      ) : (
-                        <div className="flex gap-2">
-                          <Button
-                            onClick={handleSaveNotes}
-                            size="sm"
-                            className="bg-green-600 hover:bg-green-700 text-white"
-                          >
-                            <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                            </svg>
-                            Guardar
-                          </Button>
-                          <Button
-                            onClick={handleCancelNotesEdit}
-                            size="sm"
-                            variant="outline"
-                            className="text-gray-600 border-gray-300 hover:bg-gray-50"
-                          >
-                            Cancelar
-                          </Button>
-                        </div>
-                      )}
                     </div>
 
-                    {!isEditingNotes ? (
+                    {!isEditingCaseInfo ? (
                       <div className="space-y-3">
                         {displayNotes ? (
                           displayNotes.split('\n').map((note: string, index: number) => (
@@ -539,49 +534,13 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                       <div className="space-y-4">
                         {/* Existing notes editing */}
                         <div className="space-y-3">
-                          {editedNotes.split('\n').map((note, index) => (
-                            <div key={index} className="flex gap-2 items-start">
-                              <Textarea
-                                value={note}
-                                onChange={(e) => handleEditNote(index, e.target.value)}
-                                className="flex-1 min-h-16"
-                                placeholder="Escribir observación..."
-                              />
-                              <Button
-                                onClick={() => handleDeleteNote(index)}
-                                size="sm"
-                                variant="outline"
-                                className="text-red-600 border-red-600 hover:bg-red-50 mt-1"
-                              >
-                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                                </svg>
-                              </Button>
-                            </div>
-                          ))}
-                        </div>
-
-                        {/* Add new note */}
-                        <div className="border-t pt-4">
-                          <Label className="text-gray-600 mb-2 block">Agregar nueva observación</Label>
-                          <div className="flex gap-2">
+                          <div className="flex gap-2 items-start">
                             <Textarea
-                              value={newNote}
-                              onChange={(e) => setNewNote(e.target.value)}
-                              placeholder="Escribir nueva observación..."
-                              className="flex-1 min-h-16"
+                              value={editedCaseData?.observaciones || ''}
+                              onChange={(e) => handleCaseDataChange('observaciones', e.target.value)}
+                              placeholder="Escribir observación..."
+                              className="min-h-32"
                             />
-                            <Button
-                              onClick={handleAddNote}
-                              disabled={!newNote.trim()}
-                              size="sm"
-                              className="bg-blue-600 hover:bg-blue-700 text-white mt-1"
-                            >
-                              <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                              </svg>
-                              Agregar
-                            </Button>
                           </div>
                         </div>
                       </div>

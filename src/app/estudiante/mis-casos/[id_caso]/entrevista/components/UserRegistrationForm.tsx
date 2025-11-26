@@ -28,6 +28,7 @@ import { Switch } from '@/components/ui/switch';
 import { Tienne } from 'next/font/google';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { useRouter } from 'next/navigation';
+import { cleanData } from '@/utils/utils';
 
 const STEPS = [
   { id: 1, title: 'Información de la Entrevista', icon: CalendarDays },
@@ -172,27 +173,13 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
     setCurrentStep(prev => Math.max(prev - 1, 1));
   };
 
-  function cleanFormData(formData: any) {
-    const cleaned = { ...formData };
-
-    Object.keys(cleaned).forEach((key) => {
-      // Si el valor es una cadena vacía, cámbialo por null
-      if (cleaned[key] === '') {
-        cleaned[key] = null;
-      }
-    });
-
-    return cleaned;
-  }
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const limpio = cleanFormData(formData);
+    const limpio = cleanData(formData);
     if (!validateStep(8)) return;
 
     try {
-      console.log("🔄 Enviando formulario...", limpio);
 
       //Actualizar caso
       const { error: errorCaso } = await supabase
