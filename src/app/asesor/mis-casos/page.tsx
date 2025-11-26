@@ -11,6 +11,7 @@ import { Caso } from "app/types/database";
 import { getCasos } from "../../../../supabase/queries/getCasos";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Spinner } from "@/components/ui/spinner";
+import { supabase } from "@/utils/supabase";
 
 interface Case {
     id: string;
@@ -35,26 +36,41 @@ export default function Asesor() {
     const [loading, setLoading] = useState(false);
     const [casos, setCasos] = useState<Caso[] | null>(null);
 
-    
+
     useEffect(() => {
-            async function fetchData() {
-                setLoading(true);
-                const data = await getCasos();
-                setCasos(data);
-                setLoading(false);
-            }
-            fetchData();
-        }, []);
+        async function fetchData() {
+            setLoading(true);
+            const data = await getCasos();
+            setCasos(data);
+            setLoading(false);
+        }
+        fetchData();
+    }, []);
 
     const handleApproveCase = async (caseId: number | undefined) => {
         try {
-            // Aquí iría la llamada a la API para aprobar el caso
-            console.log('Aprobando caso:', caseId);
-            alert('Caso aprobado exitosamente');
-            // En una implementación real, actualizaríamos el estado o recargaríamos los datos
+            const { data, error } = await supabase
+                .from('casos')
+                .update({ estado: 'aprobado' })
+                .eq('id_caso', caseId);
+
+            if (error) {
+                throw error;
+            }
+
+            setCasos(prevCasos =>
+                prevCasos?.map(caso =>
+                    caso.id_caso === caseId
+                        ? { ...caso, estado: 'aprobado' }
+                        : caso
+                ) || null
+            );
+
+            console.log('Caso aprobado exitosamente');
+
         } catch (error) {
             console.error('Error aprobando caso:', error);
-            alert('Error al aprobar el caso');
+
         }
     };
 
@@ -74,7 +90,7 @@ export default function Asesor() {
 
     // Pagination state
     const [currentPage, setCurrentPage] = useState(1);
-    const ITEMS_PER_PAGE = 2;
+    const ITEMS_PER_PAGE = 10;
     const totalPages = Math.ceil(filteredCases?.length / ITEMS_PER_PAGE);
     const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
     const endIndex = startIndex + ITEMS_PER_PAGE;
@@ -138,34 +154,34 @@ export default function Asesor() {
                             <div>
                                 <label className="text-sm text-gray-600 mb-1 block">Estado</label>
                                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                                <SelectTrigger className="w-full md:w-48">
-                                    <SelectValue placeholder="Estado" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="todos">Todos los estados</SelectItem>
-                                    <SelectItem value="aprobado">Aprobado</SelectItem>
-                                    <SelectItem value="en_proceso">En Proceso</SelectItem>
-                                    <SelectItem value="pendiente_aprobacion">Pendiente de Aprobación</SelectItem>
-                                    <SelectItem value="archivado">Archivado</SelectItem>
-                                    <SelectItem value="cerrado">Cerrado</SelectItem>
-                                </SelectContent>
-                            </Select>
+                                    <SelectTrigger className="w-full md:w-48">
+                                        <SelectValue placeholder="Estado" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="todos">Todos los estados</SelectItem>
+                                        <SelectItem value="aprobado">Aprobado</SelectItem>
+                                        <SelectItem value="en_proceso">En Proceso</SelectItem>
+                                        <SelectItem value="pendiente_aprobacion">Pendiente de Aprobación</SelectItem>
+                                        <SelectItem value="archivado">Archivado</SelectItem>
+                                        <SelectItem value="cerrado">Cerrado</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             <div>
                                 <label className="text-sm text-gray-600 mb-1 block">Área</label>
                                 <Select value={areaFilter} onValueChange={setAreaFilter}>
-                                <SelectTrigger className="w-full md:w-48">
-                                    <SelectValue placeholder="Área" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="todos">Todas las áreas</SelectItem>
-                                    <SelectItem value="civil">Derecho Civil</SelectItem>
-                                    <SelectItem value="laboral">Derecho Laboral</SelectItem>
-                                    <SelectItem value="familiar">Derecho Familiar</SelectItem>
-                                    <SelectItem value="penal">Derecho Penal</SelectItem>
-                                </SelectContent>
-                            </Select>
+                                    <SelectTrigger className="w-full md:w-48">
+                                        <SelectValue placeholder="Área" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="todos">Todas las áreas</SelectItem>
+                                        <SelectItem value="civil">Derecho Civil</SelectItem>
+                                        <SelectItem value="laboral">Derecho Laboral</SelectItem>
+                                        <SelectItem value="familiar">Derecho Familiar</SelectItem>
+                                        <SelectItem value="penal">Derecho Penal</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
 
                             <div className="flex items-end">
@@ -209,14 +225,14 @@ export default function Asesor() {
                                             {/* Encabezado */}
                                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                                                 <h3 className="text-lg font-semibold text-slate-900">
-                                                    Cliente: {caso.usuarios.nombre_completo} (Documento #{caso.usuarios.cedula})
+                                                    Cliente: <span className="font-normal">{caso.usuarios.nombre_completo}</span> | Documento: <span className="font-normal">{caso.usuarios.cedula}</span>
                                                 </h3>
                                                 <span
                                                     className={`px-3 py-1 mt-2 sm:mt-0 text-xs font-medium rounded-full ${caso.estado === "pendiente_aprobacion"
-                                                            ? "bg-yellow-100 text-yellow-800"
-                                                            : caso.estado === "aprobado"
-                                                                ? "bg-green-100 text-green-800"
-                                                                : "bg-gray-100 text-gray-700"
+                                                        ? "bg-yellow-100 text-yellow-800"
+                                                        : caso.estado === "aprobado"
+                                                            ? "bg-green-100 text-green-800"
+                                                            : "bg-gray-100 text-gray-700"
                                                         }`}
                                                 >
                                                     {caso.estado === "pendiente_aprobacion"
@@ -356,7 +372,7 @@ export default function Asesor() {
                                             size="default"
                                             onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
                                             className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}>
-                                                Siguiente
+                                            Siguiente
                                         </PaginationNext>
 
 
