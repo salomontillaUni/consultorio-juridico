@@ -40,7 +40,6 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
   const [demandado, setDemandado] = useState<Demandado | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const router = useRouter();
 
 
   async function traerDatos() {
