@@ -73,19 +73,6 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
   }, [caso]);
 
 
-  const handleEditStudent = () => {
-    const studentData: Estudiante[] = caso?.estudiantes_casos.map(ec => ec.estudiante) || [];
-    setEditedStudentData(studentData);
-    setIsEditingStudent(true);
-  };
-
-  const handleSaveStudent = () => {
-    if (editedStudentData) {
-      setIsEditingStudent(false);
-      setEditedStudentData(null);
-    }
-  };
-
   const handleCancelEdit = () => {
     setIsEditingStudent(false);
     setEditedStudentData(null);
@@ -121,10 +108,45 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
     setIsEditingClient(true);
   };
 
-  const handleSaveClient = () => {
+
+
+  const handleSaveClient = async () => {
     if (editedClientData) {
       setIsEditingClient(false);
       setEditedClientData(null);
+      const limpio = cleanData(editedClientData);
+      try {
+        const { error: errorCaso } = await supabase
+          .from('usuarios')
+          .update(
+            {
+              nombre_completo: limpio.nombre_completo,
+              sexo: limpio.sexo,
+              cedula: limpio.cedula,
+              edad: limpio.edad,
+              estado_civil: limpio.estado_civil,
+              estrato: limpio.estrato,
+              telefono: limpio.telefono,
+              contacto_familiar: limpio.contacto_familiar,
+              correo: limpio.correo,
+              tipo_vivienda: limpio.tipo_vivienda,
+              direccion: limpio.direccion,
+              situacion_laboral: limpio.situacion_laboral,
+              valor_otros_ingresos: limpio.valor_otros_ingresos,
+              otros_ingresos: limpio.otros_ingresos,
+              concepto_otros_ingresos: limpio.concepto_otros_ingresos,
+            }
+          )
+          .eq('id_usuario', caso?.id_usuario);
+        console.log("🔄 Actualizando usuario...", limpio);
+        if (errorCaso) {
+          setError(errorCaso.message);
+          throw errorCaso;
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Error al guardar los datos del usuario");
+      }
     }
   };
 
@@ -612,40 +634,8 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                     </div>
                     <h3 className="text-gray-900">Información del estudiante</h3>
                   </div>
-                  {!isEditingStudent ? (
-                    <Button
-                      onClick={handleEditStudent}
-                      size="sm"
-                      variant="outline"
-                      className="text-blue-600 border-blue-600 hover:bg-blue-50"
-                    >
-                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
-                      </svg>
-                      Modificar información
-                    </Button>
-                  ) : (
-                    <div className="flex gap-2">
-                      <Button
-                        onClick={handleSaveStudent}
-                        size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white"
-                      >
-                        <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                        </svg>
-                        Guardar
-                      </Button>
-                      <Button
-                        onClick={handleCancelEdit}
-                        size="sm"
-                        variant="outline"
-                        className="text-gray-600 border-gray-300 hover:bg-gray-50"
-                      >
-                        Cancelar
-                      </Button>
-                    </div>
-                  )}
+                  
+                    
                 </div>
 
                 {!isEditingStudent ? (
