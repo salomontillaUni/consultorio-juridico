@@ -70,13 +70,8 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
 
   useEffect(() => {
     traerDatos();
-  }, [caso]);
+  }, [caso, demandado]);
 
-
-  const handleCancelEdit = () => {
-    setIsEditingStudent(false);
-    setEditedStudentData(null);
-  };
 
   const handleStudentDataChange = (index: number, field: string, value: string) => {
     if (editedStudentData) {
@@ -107,8 +102,6 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
     setEditedClientData(caso?.usuarios || null);
     setIsEditingClient(true);
   };
-
-
 
   const handleSaveClient = async () => {
     if (editedClientData) {
@@ -170,10 +163,36 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
     setIsEditingDefendant(true);
   };
 
-  const handleSaveDefendant = () => {
+  const handleSaveDefendant = async () => {
     if (editedDefendantData) {
       setIsEditingDefendant(false);
       setEditedDefendantData(null);
+      const limpio = cleanData(editedDefendantData);
+      console.log("ID_CASO ENVIADO AL UPDATE:", id_caso, typeof id_caso);
+
+      try {
+        const { data, error } = await supabase
+          .from('demandados')
+          .update({
+            nombre_completo: limpio.nombre_completo,
+            lugar_residencia: limpio.lugar_residencia,
+            documento: limpio.documento,
+            correo: limpio.correo,
+            celular: limpio.celular,
+          })
+          .eq('id_caso', id_caso)
+          .select();
+
+        console.log("DATA:", data);
+        console.log("ERROR:", error);
+        if (error) {
+          setError(error.message);
+          throw error;
+        }
+      } catch (err) {
+        console.error(err);
+        setError("Error al guardar los datos del demandado");
+      }
     }
   };
 
@@ -325,7 +344,11 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                 <p className="text-gray-600">{caso?.usuarios.nombre_completo}</p>
                 <div className="flex items-center mt-2">
                   <span className="text-sm text-gray-500 mr-2">Estudiante asignado:</span>
-                  <span className="text-sm text-blue-600">{caso?.estudiantes_casos.map(ec => ec.estudiante.perfil.nombre_completo).join(", ")}</span>
+                  <span className="text-sm text-blue-600">
+                    {caso?.estudiantes_casos && caso.estudiantes_casos.length > 0
+                      ? caso.estudiantes_casos[caso.estudiantes_casos.length - 1].estudiante.perfil.nombre_completo
+                      : 'No hay estudiante asignado'}
+                  </span>
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
@@ -634,8 +657,8 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                     </div>
                     <h3 className="text-gray-900">Información del estudiante</h3>
                   </div>
-                  
-                    
+
+
                 </div>
 
                 {!isEditingStudent ? (
