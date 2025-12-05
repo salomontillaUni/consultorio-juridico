@@ -19,33 +19,6 @@ export default function Footer() {
                         </p>
                     </div>
 
-                    {/* Quick Links */}
-                    <div>
-                        <h3 className="text-gray-900 font-medium mb-4">Enlaces rápidos</h3>
-                        <ul className="space-y-2">
-                            <li>
-                                <a href="#mis-casos" className="text-gray-600 hover:text-blue-600 text-sm transition-colors duration-200">
-                                    Mis casos
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#entrevista" className="text-gray-600 hover:text-blue-600 text-sm transition-colors duration-200">
-                                    Entrevista
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#documentos" className="text-gray-600 hover:text-blue-600 text-sm transition-colors duration-200">
-                                    Documentos
-                                </a>
-                            </li>
-                            <li>
-                                <a href="#configuracion" className="text-gray-600 hover:text-blue-600 text-sm transition-colors duration-200">
-                                    Configuración
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-
                     {/* Support */}
                     <div>
                         <h3 className="text-gray-900 font-medium mb-4">Soporte</h3>

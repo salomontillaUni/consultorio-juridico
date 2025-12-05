@@ -25,11 +25,17 @@ export function LoginForm() {
     e.preventDefault();
     try {
       setIsLoading(true);
+      const response = await supabase.auth.refreshSession();
+      console.log("Refresh session response:", response);
       const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+
       if (error) setError(error.message);
       const session = data.session;
+      console.log("Login session data:", session);
+
       if (session) {
         const jwt = jwtDecode<CustomJwtPayload>(session.access_token);
+        console.log("Decoded JWT:", jwt);
         const role = jwt.user_role;
         switch (role) {
           case "admin":
@@ -50,6 +56,7 @@ export function LoginForm() {
       }
     } catch (error) {
       setError("Error al iniciar sesión. " + error);
+      setIsLoading(false);
     } finally {
       setIsLoading(false);
     }
