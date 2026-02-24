@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Consultorio Jurídico - UAC
 
-## Getting Started
+Este es un proyecto dedicado a la gestión de un Consultorio Jurídico, construido con un stack moderno y eficiente.
 
-First, run the development server:
+## Stack Tecnológico
+
+- **Framework:** [Next.js 15](https://nextjs.org/) (App Router, Turbopack)
+- **Base de Datos & Auth:** [Supabase](https://supabase.com/)
+- **Gestor de Paquetes:** [pnpm](https://pnpm.io/)
+- **Estilos:** [Tailwind CSS](https://tailwindcss.com/)
+- **Lenguaje:** [TypeScript](https://www.typescriptlang.org/)
+
+## Requisitos Previos
+
+Asegúrate de tener instalado:
+
+- Node.js (versión recomendada v20+)
+- pnpm (`npm install -g pnpm`)
+- Docker (necesario para correr Supabase localmente)
+
+## Configuración Local
+
+Sigue estos pasos para iniciar el proyecto en tu máquina local:
+
+### 1. Instalar dependencias
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+pnpm install
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Iniciar Supabase
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Este comando iniciará los contenedores de Docker necesarios para la base de datos, auth, y demás servicios de Supabase.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm supabase start
+```
 
-## Learn More
+### 3. Ejecutar Migraciones
 
-To learn more about Next.js, take a look at the following resources:
+Para asegurar que tu base de datos local tenga la estructura correcta (tablas, enums, políticas de seguridad), ejecuta:
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+```bash
+pnpm supabase db reset
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+_Nota: Este comando borra los datos existentes y vuelve a aplicar todas las migraciones._
 
-## Deploy on Vercel
+### 4. Ejecutar el Seed
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Para poblar la base de datos con datos de prueba iniciales:
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+npx tsx seed.ts
+```
+
+### 5. Iniciar el Servidor de Desarrollo
+
+```bash
+pnpm dev
+```
+
+El servidor estará disponible en [http://localhost:3000](http://localhost:3000).
+
+## Estructura del Proyecto
+
+- `app/`: Contiene las rutas y componentes de Next.js.
+- `supabase/migrations/`: Scripts SQL para la estructura de la base de datos.
+- `seed.ts`: Script para cargar datos iniciales.
+
+## Notas Adicionales
+
+- Si realizas cambios en la estructura de la base de datos, recuerda crear una nueva migración:
+  ```bash
+  pnpm supabase migration new nombre_de_la_migracion
+  ```
+- Para ver el Dashboard de Supabase local: [http://localhost:54323](http://localhost:54323)
