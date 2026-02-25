@@ -1,4 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 /**
  * Admin Supabase client — uses the service role key.

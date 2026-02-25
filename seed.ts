@@ -5,7 +5,7 @@
  */
 import { createSeedClient } from "@snaplet/seed";
 import { copycat } from '@snaplet/copycat';
-import { supabase } from "./src/utils/supabase/supabase";
+import { supabaseAdmin } from "./src/utils/supabase/supabase-admin";
 
 const main = async () => {
   const seed = await createSeedClient({
@@ -22,7 +22,7 @@ const main = async () => {
     const nombre_completo: string = nombres[i];
     const cedula: string = copycat.int(i, {min: 1000000, max: 9999999}).toString();
     const telefono: string = copycat.phoneNumber(i,  {prefixes: ['+57'], length: {min: 10, max: 10}}).toString();
-    await supabase.auth.signUp({
+    await supabaseAdmin.auth.signUp({
         email,
         password: PASSWORD,
         options: {
