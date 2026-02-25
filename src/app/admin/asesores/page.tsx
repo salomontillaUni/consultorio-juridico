@@ -20,63 +20,54 @@ import {
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Navbar } from "../components/NavbarAdmin";
-import { registerEstudiante } from "../actions/registerUser";
-import type { JornadaEnum, TurnoEnum } from "../../types/database";
-import { GraduationCap, Loader2 } from "lucide-react";
+import { registerAsesor } from "../actions/registerUser";
+import type { AreaEnum, TurnoEnum } from "../../types/database";
+import { Users, Loader2 } from "lucide-react";
 
-interface StudentForm {
+interface AsesorForm {
   nombre: string;
   correo: string;
   cedula: string;
   telefono: string;
-  semestre: string;
-  jornada: JornadaEnum | "";
   turno: TurnoEnum | "";
+  area: AreaEnum | "";
 }
 
-const EMPTY_FORM: StudentForm = {
+const EMPTY_FORM: AsesorForm = {
   nombre: "",
   correo: "",
   cedula: "",
   telefono: "",
-  semestre: "",
-  jornada: "",
   turno: "",
+  area: "",
 };
 
-export default function EstudiantesPage() {
-  const [form, setForm] = useState<StudentForm>(EMPTY_FORM);
+export default function AsesoresPage() {
+  const [form, setForm] = useState<AsesorForm>(EMPTY_FORM);
   const [isPending, startTransition] = useTransition();
 
-  const set = (field: keyof StudentForm) => (value: string) =>
+  const set = (field: keyof AsesorForm) => (value: string) =>
     setForm((prev) => ({ ...prev, [field]: value }));
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
     if (
-      !form.nombre || !form.correo || !form.cedula || !form.telefono ||
-      !form.semestre || !form.jornada || !form.turno
+      !form.nombre || !form.correo || !form.cedula ||
+      !form.telefono || !form.turno || !form.area
     ) {
       toast.error("Por favor complete todos los campos obligatorios.");
       return;
     }
 
-    const semestre = parseInt(form.semestre, 10);
-    if (isNaN(semestre) || semestre < 1 || semestre > 10) {
-      toast.error("El semestre debe ser un número entre 1 y 10.");
-      return;
-    }
-
     startTransition(async () => {
-      const result = await registerEstudiante({
+      const result = await registerAsesor({
         nombre_completo: form.nombre,
         correo: form.correo,
         cedula: form.cedula,
         telefono: form.telefono,
-        semestre,
-        jornada: form.jornada as JornadaEnum,
         turno: form.turno as TurnoEnum,
+        area: form.area as AreaEnum,
       });
 
       if (result.success) {
@@ -93,26 +84,26 @@ export default function EstudiantesPage() {
       <Navbar />
       <main className="grow container mx-auto px-4 py-8 max-w-4xl">
         <div className="mb-8 flex items-center gap-3">
-          <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center shrink-0">
-            <GraduationCap className="w-6 h-6 text-blue-600" />
+          <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center shrink-0">
+            <Users className="w-6 h-6 text-purple-600" />
           </div>
           <div>
             <h1 className="text-2xl font-bold text-gray-900">
-              Registrar Estudiante
+              Registrar Asesor
             </h1>
             <p className="text-gray-500 text-sm mt-0.5">
-              Crea una nueva cuenta de estudiante en el sistema del consultorio
-              jurídico.
+              Crea una nueva cuenta de docente asesor en el sistema del
+              consultorio jurídico.
             </p>
           </div>
         </div>
 
         <Card className="shadow-sm">
           <CardHeader className="border-b">
-            <CardTitle className="text-lg">Información del Estudiante</CardTitle>
+            <CardTitle className="text-lg">Información del Asesor</CardTitle>
             <CardDescription>
-              Todos los campos son obligatorios. Se enviará una contraseña
-              temporal al correo del estudiante.
+              Todos los campos son obligatorios. Se generará una contraseña
+              temporal que deberá cambiarse en el primer inicio de sesión.
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
@@ -124,10 +115,10 @@ export default function EstudiantesPage() {
                 </h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <Label htmlFor="student-nombre">Nombre Completo</Label>
+                    <Label htmlFor="asesor-nombre">Nombre Completo</Label>
                     <Input
-                      id="student-nombre"
-                      placeholder="Ej: María García López"
+                      id="asesor-nombre"
+                      placeholder="Ej: Carlos Ramírez Torres"
                       value={form.nombre}
                       onChange={(e) => set("nombre")(e.target.value)}
                       disabled={isPending}
@@ -135,11 +126,11 @@ export default function EstudiantesPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label htmlFor="student-correo">Correo Electrónico</Label>
+                    <Label htmlFor="asesor-correo">Correo Electrónico</Label>
                     <Input
-                      id="student-correo"
+                      id="asesor-correo"
                       type="email"
-                      placeholder="estudiante@uac.edu.co"
+                      placeholder="asesor@uac.edu.co"
                       value={form.correo}
                       onChange={(e) => set("correo")(e.target.value)}
                       disabled={isPending}
@@ -147,9 +138,9 @@ export default function EstudiantesPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label htmlFor="student-cedula">Cédula</Label>
+                    <Label htmlFor="asesor-cedula">Cédula</Label>
                     <Input
-                      id="student-cedula"
+                      id="asesor-cedula"
                       placeholder="Número de cédula"
                       value={form.cedula}
                       onChange={(e) => set("cedula")(e.target.value)}
@@ -158,9 +149,9 @@ export default function EstudiantesPage() {
                   </div>
 
                   <div className="space-y-1.5">
-                    <Label htmlFor="student-telefono">Teléfono</Label>
+                    <Label htmlFor="asesor-telefono">Teléfono</Label>
                     <Input
-                      id="student-telefono"
+                      id="asesor-telefono"
                       placeholder="Ej: 3001234567"
                       value={form.telefono}
                       onChange={(e) => set("telefono")(e.target.value)}
@@ -170,58 +161,46 @@ export default function EstudiantesPage() {
                 </div>
               </div>
 
-              {/* Academic Info */}
+              {/* Role-specific Info */}
               <div>
                 <h3 className="text-sm font-semibold text-gray-700 uppercase tracking-wide mb-4">
-                  Datos académicos
+                  Asignación académica
                 </h3>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-1.5">
-                    <Label htmlFor="student-semestre">Semestre</Label>
-                    <Input
-                      id="student-semestre"
-                      type="number"
-                      min={1}
-                      max={10}
-                      placeholder="1 – 10"
-                      value={form.semestre}
-                      onChange={(e) => set("semestre")(e.target.value)}
-                      disabled={isPending}
-                    />
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <Label htmlFor="student-jornada">Jornada</Label>
-                    <Select
-                      value={form.jornada}
-                      onValueChange={set("jornada")}
-                      disabled={isPending}
-                    >
-                      <SelectTrigger id="student-jornada">
-                        <SelectValue placeholder="Seleccione" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="diurna">Diurna</SelectItem>
-                        <SelectItem value="nocturna">Nocturna</SelectItem>
-                        <SelectItem value="mixto">Mixto</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  <div className="space-y-1.5">
-                    <Label htmlFor="student-turno">Turno</Label>
+                    <Label htmlFor="asesor-turno">Turno</Label>
                     <Select
                       value={form.turno}
                       onValueChange={set("turno")}
                       disabled={isPending}
                     >
-                      <SelectTrigger id="student-turno">
-                        <SelectValue placeholder="Seleccione" />
+                      <SelectTrigger id="asesor-turno">
+                        <SelectValue placeholder="Seleccione un turno" />
                       </SelectTrigger>
                       <SelectContent>
                         <SelectItem value="9-11">9–11 am</SelectItem>
                         <SelectItem value="2-4">2–4 pm</SelectItem>
                         <SelectItem value="4-6">4–6 pm</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+
+                  <div className="space-y-1.5">
+                    <Label htmlFor="asesor-area">Área de Derecho</Label>
+                    <Select
+                      value={form.area}
+                      onValueChange={set("area")}
+                      disabled={isPending}
+                    >
+                      <SelectTrigger id="asesor-area">
+                        <SelectValue placeholder="Seleccione un área" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="laboral">Laboral</SelectItem>
+                        <SelectItem value="familia">Familia</SelectItem>
+                        <SelectItem value="penal">Penal</SelectItem>
+                        <SelectItem value="civil">Civil</SelectItem>
+                        <SelectItem value="otros">Otros</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
@@ -231,7 +210,7 @@ export default function EstudiantesPage() {
               <div className="flex justify-end pt-2 border-t">
                 <Button
                   type="submit"
-                  className="bg-blue-600 hover:bg-blue-700 text-white px-8"
+                  className="bg-purple-600 hover:bg-purple-700 text-white px-8"
                   disabled={isPending}
                 >
                   {isPending ? (
@@ -240,7 +219,7 @@ export default function EstudiantesPage() {
                       Registrando...
                     </>
                   ) : (
-                    "Registrar Estudiante"
+                    "Registrar Asesor"
                   )}
                 </Button>
               </div>
