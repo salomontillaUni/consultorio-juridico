@@ -23,7 +23,7 @@ import { ProgressIndicator } from '@radix-ui/react-progress';
 import { Caso, Demandado } from 'app/types/database';
 import { getCasoById } from '../../../../../../../supabase/queries/getCasoById';
 import { getDemandadoByCasoId } from '../../../../../../../supabase/queries/getDemandadoByCasoId';
-import { supabase } from '@/utils/supabase';
+import { supabase } from '@/utils/supabase/supabase';
 import { Switch } from '@/components/ui/switch';
 import { Tienne } from 'next/font/google';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';

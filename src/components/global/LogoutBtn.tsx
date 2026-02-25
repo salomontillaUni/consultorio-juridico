@@ -1,7 +1,7 @@
 'use client';
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {supabase} from "utils/supabase";
+import {supabase} from "@/utils/supabase/supabase";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -22,6 +22,7 @@ export default function LogoutButton() {
   const handleLogOut = async () => {
     await supabase.auth.signOut();
     setOpen(false);
+    router.refresh();
     router.push("/");
   };
 

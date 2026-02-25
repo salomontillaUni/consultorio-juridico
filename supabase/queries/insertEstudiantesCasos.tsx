@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase/supabase";
 
 export async function insertEstudiantesCasos( id_caso:string, id_estudiante:string) {
 

@@ -7,7 +7,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { AlertCircleIcon, EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
-import { supabase } from "../../utils/supabase";
+import { supabase } from "../../utils/supabase/supabase";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { CustomJwtPayload } from "app/types/jwt";
@@ -39,15 +39,19 @@ export function LoginForm() {
         const role = jwt.user_role;
         switch (role) {
           case "admin":
+            router.refresh();
             router.push("/admin/inicio");
             break;
           case "estudiante":
+            router.refresh();
             router.push("/estudiante/inicio");
             break;
           case "asesor":
+            router.refresh();
             router.push("/asesor/inicio");
             break;
           case "pro_apoyo":
+            router.refresh();
             router.push("/pro-apoyo/inicio");
             break;
           default:

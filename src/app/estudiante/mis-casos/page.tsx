@@ -10,7 +10,7 @@ import { Navbar } from "../components/NavBarEstudiante";
 import { getStatusColor } from "app/pro-apoyo/gestionar-caso/page";
 import { Caso } from "app/types/database";
 import { getCasos } from "../../../../supabase/queries/getCasos";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase/supabase";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 
 export default function CasesPage() {

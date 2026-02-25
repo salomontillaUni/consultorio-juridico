@@ -5,7 +5,7 @@
  */
 import { createSeedClient } from "@snaplet/seed";
 import { copycat } from '@snaplet/copycat';
-import { supabase } from "./src/utils/supabase";
+import { supabase } from "./src/utils/supabase/supabase";
 
 const main = async () => {
   const seed = await createSeedClient({

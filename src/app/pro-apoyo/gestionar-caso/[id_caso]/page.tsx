@@ -17,7 +17,7 @@ import { getCasoById } from "../../../../../supabase/queries/getCasoById";
 import { getDemandadoByCasoId } from "../../../../../supabase/queries/getDemandadoByCasoId";
 import { formatDate, getStatusColor } from "../page";
 import { cleanData } from "@/utils/utils";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase/supabase";
 import { Notebook } from "lucide-react";
 
 

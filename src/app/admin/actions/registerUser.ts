@@ -1,6 +1,6 @@
 'use server';
 
-import { supabaseAdmin } from '@/utils/supabase-admin';
+import { supabaseAdmin } from '@/utils/supabase/supabase-admin';
 
 // ─── Shared types ────────────────────────────────────────────────────────────
 

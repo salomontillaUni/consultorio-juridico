@@ -16,7 +16,7 @@ import { getCasoById } from "../../../../../supabase/queries/getCasoById";
 import { getDemandadoByCasoId } from "../../../../../supabase/queries/getDemandadoByCasoId";
 import { formatDate, getStatusColor } from "app/pro-apoyo/gestionar-caso/page";
 import { CassetteTapeIcon } from "lucide-react";
-import { supabase } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase/supabase";
 
 
 export default function Page({ params }: { params: Promise<{ id_caso: string }> }) {

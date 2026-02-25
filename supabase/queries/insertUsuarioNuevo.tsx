@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase/supabase";
 import type {Usuario } from "../../src/app/types/database";
 
 export async function insertUsuarioNuevo(usuario: Omit<Usuario, "id_usuario">): Promise<Usuario[]> {

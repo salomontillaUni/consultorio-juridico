@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase/supabase";
 import type { Demandado } from "../../src/app/types/database";
 
 export async function getDemandadoByCasoId(id_caso: string | number): Promise<Demandado | null> {

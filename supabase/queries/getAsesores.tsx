@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase";
+import { supabase } from "@/utils/supabase/supabase";
 import type {Asesor } from "../../src/app/types/database";
 
 export async function getAsesores(): Promise<Asesor[]> {

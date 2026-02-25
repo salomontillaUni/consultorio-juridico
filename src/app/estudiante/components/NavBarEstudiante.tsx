@@ -4,7 +4,7 @@ import { Menu, X } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/global/LogoUac";
-import { supabase } from "utils/supabase";
+import { supabase } from "@/utils/supabase/supabase";
 import LogoutButton from "@/components/global/LogoutBtn";
 
 export function Navbar() {
