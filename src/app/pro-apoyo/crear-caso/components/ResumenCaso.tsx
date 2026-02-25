@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
-import { FileText, CheckCircle2 } from 'lucide-react';
+import { FileText, CheckCircle2, AlertCircle } from 'lucide-react';
 import { toast } from 'sonner';
 import {
   Dialog,
@@ -27,12 +27,13 @@ interface ResumenCasoProps {
 
 export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [errorDialogOpen, setErrorDialogOpen] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [casoInsertar, setCasoInsertar] = useState<Caso>(caso);
   const [usuarioInsertar, setUsuarioInsertar] = useState<Usuario>(usuario);
 
   const handleConfirmacion = () => {
-    setDialogOpen(true);
     window.scrollTo({ top: 0, behavior: "smooth" });
     console.log("Caso a insertar:", caso);
     console.log("Usuario a insertar:", usuario);
@@ -62,8 +63,25 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
     } else {
       console.error("Faltan IDs para vincular estudiante o asesor al caso.");
     }
-  } catch (error) {
+    setDialogOpen(true);
+    toast.success("Caso creado exitosamente");
+  } catch (error: any) {
     console.error("Error al insertar el usuario:", error);
+    let msg = "Ocurrió un error inesperado al registrar el caso.";
+    
+    if (error.code === '23505') {
+       if (error.message.includes('usuarios_cedula_key')) {
+         msg = "Error: Ya existe un usuario registrado con esta cédula.";
+       } else {
+         msg = "Error: Ya existe un registro con estos datos únicos.";
+       }
+    } else if (error.message) {
+      msg = error.message;
+    }
+    
+    setErrorMessage(msg);
+    setErrorDialogOpen(true);
+    toast.error(msg);
   } finally {
     setIsLoading(false);
   }
@@ -212,11 +230,21 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
       <div className="flex justify-center">
         <Button
           onClick={handleConfirmacion}
+          disabled={isLoading}
           className="bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
           size="lg"
         >
-          <CheckCircle2 className="mr-2 h-5 w-5" />
-          Crear Caso
+          {isLoading ? (
+            <div className="flex items-center">
+              <div className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full" />
+              Procesando...
+            </div>
+          ) : (
+            <>
+              <CheckCircle2 className="mr-2 h-5 w-5" />
+              Crear Caso
+            </>
+          )}
         </Button>
       </div>
 
@@ -235,6 +263,29 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
           <DialogFooter className="flex justify-center items-center">
             <Button onClick={handleNuevoCaso} className="w-full bg-blue-600 hover:bg-blue-700">
               OK
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Modal de error */}
+      <Dialog open={errorDialogOpen} onOpenChange={setErrorDialogOpen}>
+        <DialogContent className="sm:max-w-md border-red-100">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-red-700">
+              <AlertCircle className="h-6 w-6 text-red-600" />
+              Error al crear el caso
+            </DialogTitle>
+            <DialogDescription className="text-slate-700 font-medium py-2">
+              {errorMessage}
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="flex justify-center items-center">
+            <Button 
+              onClick={() => setErrorDialogOpen(false)} 
+              className="w-full bg-red-600 hover:bg-red-700 text-white"
+            >
+              Entendido
             </Button>
           </DialogFooter>
         </DialogContent>

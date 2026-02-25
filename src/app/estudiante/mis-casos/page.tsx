@@ -23,9 +23,15 @@ export default function CasesPage() {
     useEffect(() => {
         async function fetchData() {
             setLoading(true);
-            const data = await getCasos();
-            setCasos(data);
-            setLoading(false);
+            try {
+                const data = await getCasos();
+                setCasos(data || []);
+            } catch (error) {
+                console.error("Error fetching cases:", error);
+                setCasos([]);
+            } finally {
+                setLoading(false);
+            }
         }
         fetchData();
     }, []);
@@ -171,7 +177,14 @@ export default function CasesPage() {
                     </div>
 
                     {/* Cases Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                    {loading ? (
+                        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-slate-100 shadow-sm">
+                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+                            <p className="mt-4 text-slate-500 font-medium">Cargando tus casos...</p>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         {currentCases.map((caso) => (
                             <Card key={caso.id_caso} className="p-6 hover:shadow-md transition-shadow duration-200">
                                 <div className="flex justify-between items-start">
@@ -311,9 +324,11 @@ export default function CasesPage() {
                             <p className="text-sm text-gray-600">
                                 Mostrando {startIndex + 1}-{Math.min(endIndex, filteredCases.length)} de {filteredCases.length} casos
                             </p>
-                        </div>
-                    )}
-                </div>
+                            </div>
+                        )}
+                    </>
+                )}
+            </div>
             </main>
         </div>
 

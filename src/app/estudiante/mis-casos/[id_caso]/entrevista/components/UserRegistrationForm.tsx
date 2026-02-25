@@ -49,16 +49,19 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
   const [demandado, setDemandado] = useState<Demandado | null>();
   const [open, setOpen] = useState(false);
   const [successMessage, setSuccessMessage] = useState("");
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const router = useRouter();
 
   async function traerDatos() {
     try {
       setLoading(true);
       setError('');
-      const [casoFetch, demandadoFetch] = await Promise.all([
+      const [casoFetch, demandadoFetch, { data: { user } }] = await Promise.all([
         getCasoById(idCaso),
         getDemandadoByCasoId(idCaso),
+        supabase.auth.getUser(),
       ]);
+      setCurrentUserId(user?.id || null);
       if (!casoFetch) {
         setError("Caso no encontrado");
         return;
@@ -281,7 +284,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Input
                   id="fecha"
                   type="date"
-                  value={caso?.fecha_creacion || 'No hay fecha asignada'}
+                  value={caso?.fecha_creacion ? new Date(caso.fecha_creacion).toISOString().split('T')[0] : 'No hay fecha asignada'}
                   disabled
                 />
               </div>
@@ -292,7 +295,11 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Label htmlFor="nombreEntrevistador">Nombre del Entrevistador</Label>
                 <Input
                   id="nombreEntrevistador"
-                  value={caso?.estudiantes_casos[caso.estudiantes_casos.length - 1]?.estudiante.perfil.nombre_completo || 'No hay entrevistador asignado'}
+                  value={
+                    caso?.estudiantes_casos?.find(ec => ec.estudiante?.id_perfil === currentUserId)?.estudiante?.perfil?.nombre_completo || 
+                    caso?.estudiantes_casos?.[0]?.estudiante?.perfil?.nombre_completo || 
+                    'No hay entrevistador asignado'
+                  }
                   placeholder="Nombre completo del entrevistador"
                   required
                   disabled
@@ -304,7 +311,11 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Input
                   id="celularEntrevistador"
                   type="tel"
-                  value={caso?.estudiantes_casos[0]?.estudiante.perfil.telefono || 'No hay celular asignado'}
+                  value={
+                    caso?.estudiantes_casos?.find(ec => ec.estudiante?.id_perfil === currentUserId)?.estudiante?.perfil?.telefono || 
+                    caso?.estudiantes_casos?.[0]?.estudiante?.perfil?.telefono || 
+                    'No hay celular asignado'
+                  }
                   placeholder="Número de celular"
                   disabled
                 />
@@ -859,6 +870,26 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
         return null;
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex flex-col items-center justify-center py-20">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <p className="mt-4 text-slate-500 font-medium">Cargando formulario...</p>
+      </div>
+    );
+  }
+
+  if (error && !caso) {
+    return (
+      <Card className="p-8 text-center border-red-200 bg-red-50">
+        <p className="text-red-600 font-medium">{error}</p>
+        <Button onClick={() => router.back()} variant="outline" className="mt-4">
+          Volver
+        </Button>
+      </Card>
+    );
+  }
 
   return (
     <div className="space-y-6">

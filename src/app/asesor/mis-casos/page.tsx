@@ -40,9 +40,15 @@ export default function Asesor() {
     useEffect(() => {
         async function fetchData() {
             setLoading(true);
-            const data = await getCasos();
-            setCasos(data);
-            setLoading(false);
+            try {
+                const data = await getCasos();
+                setCasos(data || []);
+            } catch (error) {
+                console.error("Error fetching cases:", error);
+                setCasos([]);
+            } finally {
+                setLoading(false);
+            }
         }
         fetchData();
     }, []);
@@ -75,12 +81,13 @@ export default function Asesor() {
     };
 
     const filteredCases = (casos ?? []).filter(caso => {
-        const matchesSearch = caso.usuarios.nombre_completo.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            caso.usuarios.cedula.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            caso.area.toLowerCase().includes(searchTerm.toLowerCase());
+        const matchesSearch = 
+            (caso.usuarios?.nombre_completo?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
+            (caso.usuarios?.cedula?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
+            (caso.area?.toLowerCase().includes(searchTerm.toLowerCase()) || false);
 
-        const matchesStatus = statusFilter === "all" || caso.estado === statusFilter;
-        const matchesArea = areaFilter === "all" || caso.area === areaFilter;
+        const matchesStatus = statusFilter === "all" || statusFilter === "todos" || caso.estado === statusFilter;
+        const matchesArea = areaFilter === "all" || areaFilter === "todos" || caso.area === areaFilter;
 
         return matchesSearch && matchesStatus && matchesArea;
     });
@@ -121,21 +128,6 @@ export default function Asesor() {
                                 </p>
                             </div>
 
-                            {/* Stats */}
-                            <div className="mt-4 sm:mt-0 flex space-x-4">
-                                <div className="text-center">
-                                    <div className="bg-yellow-100 text-yellow-800 rounded-lg p-3">
-                                        <div className="text-2xl">{pendingApprovalCount}</div>
-                                        <div className="text-sm">Pendientes</div>
-                                    </div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="bg-green-100 text-green-800 rounded-lg p-3">
-                                        <div className="text-2xl">{approvedCount}</div>
-                                        <div className="text-sm">Activos</div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
 
@@ -143,22 +135,23 @@ export default function Asesor() {
                     <Card className="p-6 mb-6 shadow-sm">
                         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
                             <div>
-                                <label className="text-sm text-gray-600 mb-1 block">Buscar</label>
+                                <label className="text-sm text-gray-600 mb-1 block font-medium">Buscar</label>
                                 <Input
-                                    placeholder="Cliente, número o tipo de caso..."
+                                    placeholder="Cliente, cédula o área..."
                                     value={searchTerm}
                                     onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearchTerm(e.target.value)}
+                                    disabled={loading}
                                 />
                             </div>
 
                             <div>
-                                <label className="text-sm text-gray-600 mb-1 block">Estado</label>
-                                <Select value={statusFilter} onValueChange={setStatusFilter}>
-                                    <SelectTrigger className="w-full md:w-48">
+                                <label className="text-sm text-gray-600 mb-1 block font-medium">Estado</label>
+                                <Select value={statusFilter} onValueChange={setStatusFilter} disabled={loading}>
+                                    <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Estado" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="todos">Todos los estados</SelectItem>
+                                        <SelectItem value="all">Todos los estados</SelectItem>
                                         <SelectItem value="aprobado">Aprobado</SelectItem>
                                         <SelectItem value="en_proceso">En Proceso</SelectItem>
                                         <SelectItem value="pendiente_aprobacion">Pendiente de Aprobación</SelectItem>
@@ -169,13 +162,13 @@ export default function Asesor() {
                             </div>
 
                             <div>
-                                <label className="text-sm text-gray-600 mb-1 block">Área</label>
-                                <Select value={areaFilter} onValueChange={setAreaFilter}>
-                                    <SelectTrigger className="w-full md:w-48">
+                                <label className="text-sm text-gray-600 mb-1 block font-medium">Área</label>
+                                <Select value={areaFilter} onValueChange={setAreaFilter} disabled={loading}>
+                                    <SelectTrigger className="w-full">
                                         <SelectValue placeholder="Área" />
                                     </SelectTrigger>
                                     <SelectContent>
-                                        <SelectItem value="todos">Todas las áreas</SelectItem>
+                                        <SelectItem value="all">Todas las áreas</SelectItem>
                                         <SelectItem value="civil">Derecho Civil</SelectItem>
                                         <SelectItem value="laboral">Derecho Laboral</SelectItem>
                                         <SelectItem value="familiar">Derecho Familiar</SelectItem>
@@ -193,6 +186,7 @@ export default function Asesor() {
                                     }}
                                     variant="outline"
                                     className="w-full"
+                                    disabled={loading}
                                 >
                                     Limpiar filtros
                                 </Button>
@@ -200,8 +194,14 @@ export default function Asesor() {
                         </div>
                     </Card>
 
-                    {/* Cases List */}
-                    <div className="space-y-4">
+                    {loading ? (
+                        <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-slate-100 shadow-sm">
+                            <Spinner className="w-8 h-8 text-blue-600" />
+                            <p className="mt-4 text-slate-500 font-medium tracking-tight">Cargando tus casos...</p>
+                        </div>
+                    ) : (
+                        <>
+                            <div className="space-y-4">
                         {currentCases?.length === 0 ? (
                             <Card className="p-8 text-center">
                                 <div className="text-gray-500">
@@ -225,7 +225,7 @@ export default function Asesor() {
                                             {/* Encabezado */}
                                             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
                                                 <h3 className="text-lg font-semibold text-slate-900">
-                                                    Cliente: <span className="font-normal">{caso.usuarios.nombre_completo}</span> | Documento: <span className="font-normal">{caso.usuarios.cedula}</span>
+                                                    Cliente: <span className="font-normal">{caso.usuarios?.nombre_completo || 'N/A'}</span> | Documento: <span className="font-normal">{caso.usuarios?.cedula || 'N/A'}</span>
                                                 </h3>
                                                 <span
                                                     className={`px-3 py-1 mt-2 sm:mt-0 text-xs font-medium rounded-full ${caso.estado === "pendiente_aprobacion"
@@ -239,7 +239,7 @@ export default function Asesor() {
                                                         ? "Pendiente"
                                                         : caso.estado === "aprobado"
                                                             ? "Aprobado"
-                                                            : "En revisión"}
+                                                            : "En Proceso"}
                                                 </span>
                                             </div>
 
@@ -261,14 +261,16 @@ export default function Asesor() {
                                                     <span className="text-xs uppercase text-slate-500 font-medium">
                                                         Estudiante
                                                     </span>
-                                                    <p className="text-sm text-slate-900">{caso.estudiantes_casos[caso.estudiantes_casos.length - 1]?.estudiante.perfil.nombre_completo}</p>
+                                                    <p className="text-sm text-slate-900">
+                                                        {caso.estudiantes_casos?.[caso.estudiantes_casos.length - 1]?.estudiante?.perfil?.nombre_completo || 'Sin asignar'}
+                                                    </p>
                                                 </div>
                                                 <div>
                                                     <span className="text-xs uppercase text-slate-500 font-medium">
                                                         Asesor
                                                     </span>
                                                     <p className="text-sm text-slate-900">
-                                                        {caso.asesores_casos[caso.asesores_casos.length - 1]?.asesor.perfil.nombre_completo}
+                                                        {caso.asesores_casos?.[caso.asesores_casos.length - 1]?.asesor?.perfil?.nombre_completo || 'Sin asignar'}
                                                     </p>
                                                 </div>
                                             </div>
@@ -384,6 +386,8 @@ export default function Asesor() {
                                 Mostrando {startIndex + 1}-{Math.min(endIndex, filteredCases.length)} de {filteredCases.length} casos
                             </p>
                         </div>
+                            )}
+                        </>
                     )}
                 </div>
             </main>

@@ -29,6 +29,7 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
   const [guardando, setGuardando] = useState(false);
   const [editando, setEditando] = useState(false);
   const [observaciones, setObservaciones] = useState("");
+  const [loading, setLoading] = useState(true);
 
   async function traerDatos() {
     try {
@@ -51,6 +52,7 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
       console.error(err);
       setError("Error al obtener los datos del caso");
     } finally {
+      setLoading(false);
     }
   }
 
@@ -74,6 +76,18 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
     }
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Navbar />
+        <div className="flex-1 flex flex-col items-center justify-center p-4">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <p className="mt-4 text-slate-500 font-medium">Cargando detalles del caso...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div>
       <Navbar />
@@ -96,17 +110,24 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                   {error}
                 </div>) : null
             }
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
-              <div className="mb-4 lg:mb-0">
-                <h1 className="text-gray-900 mb-2">{id_caso}</h1>
-                <p className="text-gray-600">{caso?.usuarios.nombre_completo}</p>
+            <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+              <div className="space-y-1">
+                <div className="flex items-center gap-3">
+                  <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Caso #{id_caso.slice(0, 8)}</h1>
+                  {caso && (
+                    <Badge className={`${getStatusColor(caso.estado)} font-semibold`}>
+                      {caso.estado}
+                    </Badge>
+                  )}
+                </div>
+                <p className="text-lg text-gray-600 flex items-center gap-2">
+                  <span className="text-gray-400 font-medium">Cliente:</span>
+                  <span className="font-semibold">{caso?.usuarios?.nombre_completo || 'N/A'}</span>
+                </p>
               </div>
-              <div className="flex flex-col sm:flex-row gap-3">
-                {caso && (
-                  <Badge className={`text-sm ${getStatusColor(caso?.estado)} justify-center sm:justify-start`}>
-                    {caso?.estado}
-                  </Badge>
-                )}
+              <div className="flex flex-col md:items-end gap-1">
+                <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">ID del Proceso</span>
+                <code className="text-xs bg-gray-100 px-2 py-1 rounded text-gray-500 font-mono">{id_caso}</code>
               </div>
             </div>
           </div>
@@ -149,11 +170,8 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                         <p className="text-gray-900">{caso?.tipo_proceso}</p>
                       </div>
                       <div>
-                        <Label className="text-gray-600">Estudiante asignado</Label>
-                        <p className="text-gray-900 mb-4">{caso?.estudiantes_casos.map((estudiante) => estudiante.estudiante.perfil.nombre_completo).join(", ") || "No asignado"}</p>
-
                         <Label className="text-gray-600">Asesor asignado</Label>
-                        <p className="text-gray-900">{caso?.asesores_casos.map((asesor) => asesor.asesor.perfil.nombre_completo).join(", ") || "No asignado"}</p>
+                        <p className="text-gray-900">{caso?.asesores_casos?.map((ac) => ac.asesor?.perfil?.nombre_completo).filter(Boolean).join(", ") || "No asignado"}</p>
                       </div>
                     </div>
                   </Card>
@@ -273,27 +291,27 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                   <div>
                     <Label className="text-gray-600">Nombre completo</Label>
-                    <p className="text-gray-900">{caso?.usuarios.nombre_completo}</p>
+                    <p className="text-gray-900">{caso?.usuarios?.nombre_completo || 'N/A'}</p>
                   </div>
                   <div>
                     <Label className="text-gray-600">Sexo</Label>
-                    <p className="text-gray-900">{caso?.usuarios.sexo}</p>
+                    <p className="text-gray-900">{caso?.usuarios?.sexo || 'N/A'}</p>
                   </div>
                   <div>
                     <Label className="text-gray-600">Cédula</Label>
-                    <p className="text-gray-900">{caso?.usuarios.cedula}</p>
+                    <p className="text-gray-900">{caso?.usuarios?.cedula || 'N/A'}</p>
                   </div>
                   <div>
                     <Label className="text-gray-600">Edad</Label>
-                    <p className="text-gray-900">{caso?.usuarios.edad} años</p>
+                    <p className="text-gray-900">{caso?.usuarios?.edad || 'N/A'} años</p>
                   </div>
                   <div>
                     <Label className="text-gray-600">Estado civil</Label>
-                    <p className="text-gray-900">{caso?.usuarios.estado_civil}</p>
+                    <p className="text-gray-900">{caso?.usuarios?.estado_civil || 'N/A'}</p>
                   </div>
                   <div>
                     <Label className="text-gray-600">Estrato</Label>
-                    <p className="text-gray-900">{caso?.usuarios.estrato}</p>
+                    <p className="text-gray-900">{caso?.usuarios?.estrato || 'N/A'}</p>
                   </div>
                 </div>
               </Card>
@@ -311,22 +329,20 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <Label className="text-gray-600">Teléfono</Label>
-                    <p className="text-gray-900 mb-4">{caso?.usuarios.telefono}</p>
+                    <p className="text-gray-900 mb-4">{caso?.usuarios?.telefono || 'N/A'}</p>
 
                     <Label className="text-gray-600">Correo electrónico</Label>
-                    <p className="text-gray-900 mb-4">{caso?.usuarios.correo}</p>
+                    <p className="text-gray-900 mb-4">{caso?.usuarios?.correo || 'N/A'}</p>
 
                     <Label className="text-gray-600">Dirección</Label>
-                    <p className="text-gray-900">{caso?.usuarios.direccion}</p>
+                    <p className="text-gray-900">{caso?.usuarios?.direccion || 'N/A'}</p>
                   </div>
                   <div>
                     <Label className="text-gray-600">Contacto de familiar</Label>
-                    <p className="text-gray-900 mb-4">{caso?.usuarios.contacto_familiar}</p>
+                    <p className="text-gray-900 mb-4">{caso?.usuarios?.contacto_familiar || 'N/A'}</p>
 
                     <Label className="text-gray-600">Tipo de vivienda</Label>
-                    <p className="text-gray-900 mb-4">{caso?.usuarios.tipo_vivienda}</p>
-
-
+                    <p className="text-gray-900 mb-4">{caso?.usuarios?.tipo_vivienda || 'N/A'}</p>
                   </div>
                 </div>
               </Card>
@@ -344,23 +360,23 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div>
                     <Label className="text-gray-600">Situación laboral</Label>
-                    <p className="text-gray-900 mb-4">{caso?.usuarios.situacion_laboral}</p>
+                    <p className="text-gray-900 mb-4">{caso?.usuarios?.situacion_laboral || 'N/A'}</p>
 
                     <Label className="text-gray-600">Otros ingresos</Label>
-                    {caso?.usuarios.otros_ingresos ? (
+                    {caso?.usuarios?.otros_ingresos ? (
                       <p className="text-gray-900 mb-4">Sí</p>
                     ) : (
                       <p className="text-gray-900 mb-4">No</p>
                     )}
                   </div>
 
-                  {caso?.usuarios.otros_ingresos && (
+                  {caso?.usuarios?.otros_ingresos && (
                     <div>
                       <Label className="text-gray-600">Valor de otros ingresos</Label>
-                      <p className="text-gray-900 mb-4">{caso?.usuarios.valor_otros_ingresos}</p>
+                      <p className="text-gray-900 mb-4">{caso?.usuarios?.valor_otros_ingresos || 'N/A'}</p>
 
                       <Label className="text-gray-600">Concepto de otros ingresos</Label>
-                      <p className="text-gray-900">{caso?.usuarios.concepto_otros_ingresos}</p>
+                      <p className="text-gray-900">{caso?.usuarios?.concepto_otros_ingresos || 'N/A'}</p>
                     </div>
                   )}
 

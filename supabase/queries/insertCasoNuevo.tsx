@@ -15,7 +15,7 @@ export async function insertCasoNuevo(caso: Caso, id_usuario: string): Promise<C
 
   if (error) {
     console.error("Error al insertar el caso:", error);
-    return [];
+    throw error;
   }
 
   return data ?? [];

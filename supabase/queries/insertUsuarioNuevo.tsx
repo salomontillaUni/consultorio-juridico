@@ -15,7 +15,7 @@ export async function insertUsuarioNuevo(usuario: Omit<Usuario, "id_usuario">): 
 
   if (error) {
     console.error("Error al insertar el usuario:", error);
-    return [];
+    throw error;
   }
   return data ?? [];
 }

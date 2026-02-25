@@ -45,9 +45,15 @@ export default function SupportCasesPage() {
   useEffect(() => {
     async function fetchData() {
       setLoading(true);
-      const data = await getCasos();
-      setCasos(data);
-      setLoading(false);
+      try {
+        const data = await getCasos();
+        setCasos(data || []);
+      } catch (error) {
+        console.error("Error fetching cases:", error);
+        setCasos([]);
+      } finally {
+        setLoading(false);
+      }
     }
     fetchData();
   }, []);
@@ -86,14 +92,7 @@ export default function SupportCasesPage() {
     });
   };
 
-  const uniqueStudents = [...new Set(casos?.map(c => c.estudiantes_casos?.map(ec => ec.estudiante.perfil.nombre_completo)).flat())];
-  if (loading) {
-    return (
-      <div className="flex justify-center items-center h-full">
-        <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
-      </div>
-    );
-  }
+  const uniqueStudents = [...new Set((casos ?? []).flatMap(c => c.estudiantes_casos?.map(ec => ec.estudiante?.perfil?.nombre_completo).filter(Boolean) || []))];
   // Paginación
   const totalPages = Math.ceil(filteredCases.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -225,7 +224,14 @@ export default function SupportCasesPage() {
           </div>
 
           {/* Cases Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-20 bg-white rounded-xl border border-slate-100 shadow-sm">
+                <Loader2 className="h-8 w-8 text-blue-600 animate-spin" />
+                <p className="mt-4 text-slate-500 font-medium">Cargando supervisión de casos...</p>
+            </div>
+          ) : (
+            <>
+              <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
             {currentCases?.map((caso) => (
               <Card key={caso.id_caso} className="p-6 hover:shadow-md max-w-2xl transition-shadow duration-200">
                 <div className="flex justify-between items-start mb-4">
@@ -250,21 +256,20 @@ export default function SupportCasesPage() {
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Estudiante:</span>
                     <span className="text-blue-600">
-                      {caso?.estudiantes_casos.length ? (
-                        <p className="text-blue-600">{caso?.estudiantes_casos.map(estudiante => estudiante.estudiante.perfil.nombre_completo).join(', ')}</p>
+                      {caso.estudiantes_casos?.length ? (
+                        <p className="text-blue-600">{caso.estudiantes_casos.map(ec => ec.estudiante?.perfil?.nombre_completo).filter(Boolean).join(', ')}</p>
                       ) : (
-                        <p className="text-gray-600">No hay estudiantes asignados</p>
+                        <p className="text-gray-600 italic">Sin estudiante asignado</p>
                       )}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Asesor:</span>
-
                     <span className="text-gray-900">
-                      {caso?.asesores_casos.length ? (
-                        <p className="text-blue-600">{caso?.asesores_casos.map(asesor => asesor.asesor.perfil.nombre_completo).join(', ')}</p>
+                      {caso.asesores_casos?.length ? (
+                        <p className="text-green-600">{caso.asesores_casos.map(ac => ac.asesor?.perfil?.nombre_completo).filter(Boolean).join(', ')}</p>
                       ) : (
-                        <p className="text-gray-600">No hay asesores asignados</p>
+                        <p className="text-gray-600 italic">Sin asesor asignado</p>
                       )}</span>
                   </div>
 
@@ -370,9 +375,11 @@ export default function SupportCasesPage() {
               </p>
             </div>
           )}
-        </div>
-      </main>
+        </>
+      )}
     </div>
+  </main>
+</div>
 
   );
 }

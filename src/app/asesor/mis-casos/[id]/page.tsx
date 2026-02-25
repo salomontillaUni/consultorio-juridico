@@ -3,10 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
 import { Navbar } from "app/asesor/components/NavBarAsesor";
 import { getCasoById } from "../../../../../supabase/queries/getCasoById";
@@ -16,9 +12,6 @@ import { Asesor, Caso, Demandado, Estudiante } from "app/types/database";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params)
-  const [approvalNotes, setApprovalNotes] = useState("");
-  const [caseStatus, setCaseStatus] = useState("pending_approval");
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const [demandado, setDemandado] = useState<Demandado>();
   const [caso, setCaso] = useState<Caso>();
   const [error, setError] = useState('');
@@ -43,14 +36,16 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
       }
 
       setCaso(casoFetch);
-      setUltimoEstudiante(casoFetch.estudiantes_casos[casoFetch.estudiantes_casos.length - 1].estudiante);
-      setUltimoAsesor(casoFetch.asesores_casos[casoFetch.asesores_casos.length - 1].asesor);
-      console.log(casoFetch);
-      if (!demandadoFetch) {
-        console.log("Demandado no encontrado");
-        return;
+      
+      const lastEstudiante = casoFetch.estudiantes_casos?.[casoFetch.estudiantes_casos.length - 1]?.estudiante;
+      if (lastEstudiante) setUltimoEstudiante(lastEstudiante);
+
+      const lastAsesor = casoFetch.asesores_casos?.[casoFetch.asesores_casos.length - 1]?.asesor;
+      if (lastAsesor) setUltimoAsesor(lastAsesor);
+
+      if (demandadoFetch) {
+        setDemandado(demandadoFetch);
       }
-      setDemandado(demandadoFetch);
     } catch (err) {
       console.error(err);
       setError("Error al obtener los datos del caso");
@@ -67,7 +62,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     const statusConfig = {
       pendiente_aprobacion: { color: "bg-yellow-100 text-yellow-800", text: "Pendiente de aprobación" },
       aprobado: { color: "bg-green-100 text-green-800", text: "Aprobado" },
-      en_progreso: { color: "bg-blue-100 text-blue-800", text: "En progreso" },
+      en_proceso: { color: "bg-blue-100 text-blue-800", text: "En proceso" },
       cerrado: { color: "bg-gray-100 text-gray-800", text: "Cerrado" },
       archivado: { color: "bg-red-100 text-red-800", text: "Archivado" }
     };
@@ -78,22 +73,19 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-900"></div>
+      <div className="flex flex-col justify-center items-center h-screen bg-slate-50/50">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <p className="mt-4 text-slate-500 font-medium">Cargando detalles del caso...</p>
       </div>
     );
   }
   if (!caso) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-gray-600 mt-5">Caso no encontrado</p>
-      </div>
-    );
-  }
-  if (!demandado) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <p className="text-gray-600 mt-5">Demandado no encontrado</p>
+      <div className="flex flex-col justify-center items-center h-screen space-y-4">
+        <p className="text-gray-600 font-medium">El caso no pudo ser encontrado.</p>
+        <Link href="/asesor/mis-casos">
+            <Button variant="outline">Volver a mis casos</Button>
+        </Link>
       </div>
     );
   }
@@ -120,8 +112,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   <h1 className="text-gray-900">{caso.id_caso}</h1>
                   {getStatusBadge(caso.estado)}
                 </div>
-                <p className="text-gray-600">Cliente: {caso.usuarios.nombre_completo}</p>
-                <p className="text-gray-600">Cedula: {caso.usuarios.cedula}</p>
+                <p className="text-gray-600">Cliente: {caso.usuarios?.nombre_completo || 'N/A'}</p>
+                <p className="text-gray-600">Cedula: {caso.usuarios?.cedula || 'N/A'}</p>
               </div>
 
             </div>
@@ -172,19 +164,19 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <span className="text-sm text-gray-600">Nombre completo:</span>
-                    <p className="text-gray-900">{caso.usuarios.nombre_completo}</p>
+                    <p className="text-gray-900">{caso.usuarios?.nombre_completo || 'N/A'}</p>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600">Documento:</span>
-                    <p className="text-gray-900">{caso.usuarios.cedula}</p>
+                    <p className="text-gray-900">{caso.usuarios?.cedula || 'N/A'}</p>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600">Teléfono:</span>
-                    <p className="text-gray-900">{caso.usuarios.telefono}</p>
+                    <p className="text-gray-900">{caso.usuarios?.telefono || 'N/A'}</p>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600">Correo:</span>
-                    <p className="text-gray-900">{caso.usuarios.correo}</p>
+                    <p className="text-gray-900">{caso.usuarios?.correo || 'N/A'}</p>
                   </div>
                 </div>
               </Card>
@@ -196,19 +188,19 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <span className="text-sm text-gray-600">Nombre/Razón social:</span>
-                    <p className="text-gray-900">{demandado.nombre_completo}</p>
+                    <p className="text-gray-900">{demandado?.nombre_completo || 'N/A'}</p>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600">NIT/Documento:</span>
-                    <p className="text-gray-900">{demandado.documento}</p>
+                    <p className="text-gray-900">{demandado?.documento || 'N/A'}</p>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600">Teléfono:</span>
-                    <p className="text-gray-900">{demandado.celular}</p>
+                    <p className="text-gray-900">{demandado?.celular || 'N/A'}</p>
                   </div>
                   <div>
                     <span className="text-sm text-gray-600">Correo:</span>
-                    <p className="text-gray-900">{demandado.correo}</p>
+                    <p className="text-gray-900">{demandado?.correo || 'N/A'}</p>
                   </div>
                 </div>
               </Card>
@@ -224,8 +216,8 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   <div>
                     <span className="text-sm text-gray-600">Estudiante asignado:</span>
                     <div className="mt-1 p-3 bg-blue-50 rounded-lg">
-                      <p className="text-blue-900">{ultimoEstudiante?.perfil.nombre_completo}</p>
-                      <p className="text-blue-700 text-sm">{ultimoEstudiante?.perfil.correo}</p>
+                      <p className="text-blue-900">{ultimoEstudiante?.perfil?.nombre_completo || 'N/A'}</p>
+                      <p className="text-blue-700 text-sm">{ultimoEstudiante?.perfil?.correo || 'N/A'}</p>
                       <div className="flex flex-wrap gap-1 mt-1">
                         <Badge variant="outline" className="text-xs text-blue-700">
                           Semestre: {ultimoEstudiante?.semestre}
@@ -235,18 +227,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     </div>
                   </div>
 
-                  <div>
-                    <span className="text-sm text-gray-600">Asesor asignado:</span>
-                    <div className="mt-1 p-3 bg-green-50 rounded-lg">
-                      <p className="text-green-900">{ultimoAsesor?.perfil.nombre_completo}</p>
-                      <p className="text-green-700 text-sm">{ultimoAsesor?.perfil.correo}</p>
-                      <div className="flex flex-wrap gap-1 mt-1">
-                          <Badge variant="outline" className="text-xs text-green-700">
-                            Area: {ultimoAsesor?.area}
-                          </Badge>
-                      </div>
-                    </div>
-                  </div>
+                  
                 </div>
               </Card>
 

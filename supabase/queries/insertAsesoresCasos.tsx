@@ -12,7 +12,7 @@ export async function insertAsesoresCasos( id_caso:string, id_asesor:string) {
 
   if (error) {
     console.error("Error al insertar el asesor:", error);
-    return [];
+    throw error;
   }
   return data;
 }
