@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -18,6 +18,19 @@ export default function CambiarContrasenaPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [isRecovery, setIsRecovery] = useState(false);
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange(async (event) => {
+      if (event === "PASSWORD_RECOVERY") {
+        setIsRecovery(true);
+      }
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
   
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,6 +52,7 @@ export default function CambiarContrasenaPage() {
       const { error } = await supabase.auth.updateUser({
         password: newPassword,
       });
+      console.log("ERROR", error);
 
       if (error) {
         setError(error.message);
@@ -46,9 +60,13 @@ export default function CambiarContrasenaPage() {
       }
 
       setSuccess(true);
+      console.log("SUCCESS", success);
       setTimeout(() => {
-        router.refresh();
-        router.push('/');
+        if (!error) {
+
+          supabase.auth.signOut();
+          router.push("/");
+        }
       }, 2000);
     } catch (err) {
       setError('Error de red. Inténtalo de nuevo.');

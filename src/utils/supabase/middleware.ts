@@ -98,7 +98,6 @@ export async function updateSession(request: NextRequest) {
   // 5️⃣ Si está autenticado, aplicar reglas de rol
   // ─────────────────────────────────────────────────────────────────────
   if (session) {
-    // 🔥 IMPORTANTÍSIMO:
     // Permitir cambiar contraseña aunque tenga sesión temporal
     if (pathname.startsWith("/cambiar-contrasena")) {
       return supabaseResponse;

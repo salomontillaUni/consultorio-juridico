@@ -22,10 +22,11 @@ export default function RecuperarContrasenaPage() {
 
     setIsLoading(true);
     try {
-      const redirectTo = "/cambiar-contrasena";
+      const redirectTo = "http://localhost:3000/cambiar-contrasena";
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo,
       });
+      console.log("ERROR", error);
 
       if (error) {
         setError(error.message);
