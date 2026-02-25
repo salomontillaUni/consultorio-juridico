@@ -1,5 +1,5 @@
-'use client';
-import { useEffect, useState } from 'react';
+"use client";
+import { useEffect, useState } from "react";
 import {
   Dialog,
   DialogContent,
@@ -9,36 +9,58 @@ import {
   DialogFooter,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Separator } from '@/components/ui/separator';
-import { Progress } from '@/components/ui/progress';
-import { CalendarDays, User, MapPin, Briefcase, FileText, Scale, ChevronLeft, ChevronRight, CheckCircle } from 'lucide-react';
-import { ProgressIndicator } from '@radix-ui/react-progress';
-import { Caso, Demandado } from 'app/types/database';
-import { getCasoById } from '../../../../../../../supabase/queries/getCasoById';
-import { getDemandadoByCasoId } from '../../../../../../../supabase/queries/getDemandadoByCasoId';
-import { supabase } from '@/utils/supabase/supabase';
-import { Switch } from '@/components/ui/switch';
-import { Tienne } from 'next/font/google';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { useRouter } from 'next/navigation';
-import { cleanData } from '@/utils/utils';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Separator } from "@/components/ui/separator";
+import { Progress } from "@/components/ui/progress";
+import {
+  CalendarDays,
+  User,
+  MapPin,
+  Briefcase,
+  FileText,
+  Scale,
+  ChevronLeft,
+  ChevronRight,
+  CheckCircle,
+} from "lucide-react";
+import { ProgressIndicator } from "@radix-ui/react-progress";
+import { Caso, Demandado } from "app/types/database";
+import { getCasoById } from "../../../../../../../supabase/queries/getCasoById";
+import { getDemandadoByCasoId } from "../../../../../../../supabase/queries/getDemandadoByCasoId";
+import { supabase } from "@/utils/supabase/supabase";
+import { Switch } from "@/components/ui/switch";
+import { Tienne } from "next/font/google";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { useRouter } from "next/navigation";
+import { cleanData } from "@/utils/utils";
 
 const STEPS = [
-  { id: 1, title: 'Información de la Entrevista', icon: CalendarDays },
-  { id: 2, title: 'Información del Solicitante', icon: User },
-  { id: 3, title: '¿Quién solicita el servicio?', icon: Scale },
-  { id: 4, title: 'Información Laboral y Financiera', icon: Briefcase },
-  { id: 5, title: 'Datos del Demandado', icon: MapPin },
-  { id: 6, title: 'Información del Contrato Laboral', icon: FileText },
-  { id: 7, title: 'Detalles del Caso', icon: FileText },
-  { id: 8, title: 'Firmas y Autorización', icon: CheckCircle }
+  { id: 1, title: "Información de la Entrevista", icon: CalendarDays },
+  { id: 2, title: "Información del Solicitante", icon: User },
+  { id: 3, title: "¿Quién solicita el servicio?", icon: Scale },
+  { id: 4, title: "Información Laboral y Financiera", icon: Briefcase },
+  { id: 5, title: "Datos del Demandado", icon: MapPin },
+  { id: 6, title: "Información del Contrato Laboral", icon: FileText },
+  { id: 7, title: "Detalles del Caso", icon: FileText },
+  { id: 8, title: "Firmas y Autorización", icon: CheckCircle },
 ];
 
 export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
@@ -55,8 +77,14 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
   async function traerDatos() {
     try {
       setLoading(true);
-      setError('');
-      const [casoFetch, demandadoFetch, { data: { user } }] = await Promise.all([
+      setError("");
+      const [
+        casoFetch,
+        demandadoFetch,
+        {
+          data: { user },
+        },
+      ] = await Promise.all([
         getCasoById(idCaso),
         getDemandadoByCasoId(idCaso),
         supabase.auth.getUser(),
@@ -87,59 +115,62 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
 
   const initialFormData = {
     // Interview Information
-    area: '',
+    area: "",
 
     // Informacion Solicitante
-    edad: '',
-    contacto_familiar: '',
-    estado_civil: '',
-    estrato: '',
-    direccion: '',
-    tipo_vivienda: '',
+    edad: "",
+    contacto_familiar: "",
+    estado_civil: "",
+    estrato: "",
+    direccion: "",
+    tipo_vivienda: "",
     tiene_representado: "",
 
     // Informacion Financiera
-    situacion_laboral: '',
+    situacion_laboral: "",
     otros_ingresos: false,
-    valor_otros_ingresos: '',
-    concepto_otros_ingresos: '',
+    valor_otros_ingresos: "",
+    concepto_otros_ingresos: "",
     tiene_contrato: false,
 
     // Defendant Information
-    nombreDemandado: '',
-    documentoDemandado: '',
-    celularDemandado: '',
-    lugarResidenciaDemandado: '',
-    correoDemandado: '',
+    nombreDemandado: "",
+    documentoDemandado: "",
+    celularDemandado: "",
+    lugarResidenciaDemandado: "",
+    correoDemandado: "",
 
     // Employment Contract Information
-    tipoContrato: '',
-    nombreRepresentanteLegal: '',
-    direccionEmpresa: '',
-    correoEmpleador: '',
-    fechaInicio: '',
-    fechaTerminacion: '',
+    tipoContrato: "",
+    nombreRepresentanteLegal: "",
+    direccionEmpresa: "",
+    correoEmpleador: "",
+    fechaInicio: "",
+    fechaTerminacion: "",
     continuaContrato: false,
-    salarioInicial: '',
-    salarioActual: '',
+    salarioInicial: "",
+    salarioActual: "",
 
     // Case Information
-    resumen_hechos: '',
-    observaciones: '',
+    resumen_hechos: "",
+    observaciones: "",
 
     // Signatures
     firmasSolicitante: false,
-    cedulaSolicitante: ''
+    cedulaSolicitante: "",
   };
 
   type FormData = typeof initialFormData;
 
   const [formData, setFormData] = useState<FormData>(initialFormData);
 
-  const handleInputChange = <K extends keyof FormData>(field: K, value: FormData[K]) => {
-    setFormData(prev => ({
+  const handleInputChange = <K extends keyof FormData>(
+    field: K,
+    value: FormData[K],
+  ) => {
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
   };
 
@@ -148,7 +179,13 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
       case 1:
         return true; // No required fields
       case 2:
-        return !!(formData.direccion && formData.edad && formData.estado_civil && formData.estrato && formData.tipo_vivienda);
+        return !!(
+          formData.direccion &&
+          formData.edad &&
+          formData.estado_civil &&
+          formData.estrato &&
+          formData.tipo_vivienda
+        );
       case 3:
         return !!formData.tiene_representado;
       case 4:
@@ -168,14 +205,13 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
 
   const handleNext = () => {
     if (validateStep(currentStep)) {
-      setCurrentStep(prev => Math.min(prev + 1, STEPS.length));
+      setCurrentStep((prev) => Math.min(prev + 1, STEPS.length));
     }
   };
 
   const handlePrevious = () => {
-    setCurrentStep(prev => Math.max(prev - 1, 1));
+    setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -183,7 +219,6 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
     if (!validateStep(8)) return;
 
     try {
-
       //Actualizar caso
       const { error: errorCaso } = await supabase
         .from("casos")
@@ -195,7 +230,8 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
         })
         .eq("id_caso", idCaso);
 
-      if (errorCaso) throw new Error(`Error actualizando caso: ${errorCaso.message}`);
+      if (errorCaso)
+        throw new Error(`Error actualizando caso: ${errorCaso.message}`);
 
       //Actualizar usuario
       const { error: errorUsuario } = await supabase
@@ -216,7 +252,8 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
         })
         .eq("id_usuario", caso?.id_usuario);
 
-      if (errorUsuario) throw new Error(`Error actualizando usuario: ${errorUsuario.message}`);
+      if (errorUsuario)
+        throw new Error(`Error actualizando usuario: ${errorUsuario.message}`);
 
       //Actualizar contrato laboral
       const { error: errorContrato } = await supabase
@@ -234,7 +271,10 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
           salario_actual: limpio.salarioActual,
         });
 
-      if (errorContrato) throw new Error(`Error actualizando contrato: ${errorContrato.message}`);
+      if (errorContrato)
+        throw new Error(
+          `Error actualizando contrato: ${errorContrato.message}`,
+        );
 
       //Actualizar demandado
       const { error: errorDemandado } = await supabase
@@ -248,21 +288,22 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
           correo: limpio.correoDemandado,
         });
 
-      if (errorDemandado) throw new Error(`Error actualizando demandado: ${errorDemandado.message}`);
+      if (errorDemandado)
+        throw new Error(
+          `Error actualizando demandado: ${errorDemandado.message}`,
+        );
 
       setOpen(true);
       router.push(`/estudiante/mis-casos`);
       clearForm();
-
     } catch (err) {
       console.error("❌ Error durante la actualización:", err);
       alert(`Ocurrió un error: ${(err as Error).message}`);
     }
   };
 
-
   const progress = (currentStep / STEPS.length) * 100;
-  const currentStepData = STEPS.find(step => step.id === currentStep);
+  const currentStepData = STEPS.find((step) => step.id === currentStep);
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -284,21 +325,26 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Input
                   id="fecha"
                   type="date"
-                  value={caso?.fecha_creacion ? new Date(caso.fecha_creacion).toISOString().split('T')[0] : 'No hay fecha asignada'}
+                  value={
+                    caso?.fecha_creacion
+                      ? new Date(caso.fecha_creacion)
+                          .toISOString()
+                          .split("T")[0]
+                      : "No hay fecha asignada"
+                  }
                   disabled
                 />
               </div>
 
-
-
               <div className="space-y-2">
-                <Label htmlFor="nombreEntrevistador">Nombre del Entrevistador</Label>
+                <Label htmlFor="nombreEntrevistador">
+                  Nombre del Entrevistador
+                </Label>
                 <Input
                   id="nombreEntrevistador"
                   value={
-                    caso?.estudiantes_casos?.find(ec => ec.estudiante?.id_perfil === currentUserId)?.estudiante?.perfil?.nombre_completo || 
-                    caso?.estudiantes_casos?.[0]?.estudiante?.perfil?.nombre_completo || 
-                    'No hay entrevistador asignado'
+                    caso?.estudiantes_casos?.[0]?.estudiante?.perfil
+                      ?.nombre_completo || "No hay entrevistador asignado"
                   }
                   placeholder="Nombre completo del entrevistador"
                   required
@@ -307,14 +353,19 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="celularEntrevistador">Número de Celular Entrevistador</Label>
+                <Label htmlFor="celularEntrevistador">
+                  Número de Celular Entrevistador
+                </Label>
                 <Input
                   id="celularEntrevistador"
                   type="tel"
                   value={
-                    caso?.estudiantes_casos?.find(ec => ec.estudiante?.id_perfil === currentUserId)?.estudiante?.perfil?.telefono || 
-                    caso?.estudiantes_casos?.[0]?.estudiante?.perfil?.telefono || 
-                    'No hay celular asignado'
+                    caso?.estudiantes_casos?.find(
+                      (ec) => ec.estudiante?.id_perfil === currentUserId,
+                    )?.estudiante?.perfil?.telefono ||
+                    caso?.estudiantes_casos?.[0]?.estudiante?.perfil
+                      ?.telefono ||
+                    "No hay celular asignado"
                   }
                   placeholder="Número de celular"
                   disabled
@@ -338,10 +389,12 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="nombreCompleto">Nombre Completo del Solicitante</Label>
+                <Label htmlFor="nombreCompleto">
+                  Nombre Completo del Solicitante
+                </Label>
                 <Input
                   id="nombreCompleto"
-                  value={caso?.usuarios.nombre_completo || ''}
+                  value={caso?.usuarios.nombre_completo || ""}
                   placeholder="Nombre completo"
                   disabled
                 />
@@ -352,8 +405,8 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Input
                   id="edad"
                   type="number"
-                  value={formData.edad || ''}
-                  onChange={(e) => handleInputChange('edad', e.target.value)}
+                  value={formData.edad || ""}
+                  onChange={(e) => handleInputChange("edad", e.target.value)}
                   placeholder="Edad"
                 />
               </div>
@@ -362,7 +415,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Label htmlFor="cedula">C.C. No.</Label>
                 <Input
                   id="cedula"
-                  value={caso?.usuarios.cedula || ''}
+                  value={caso?.usuarios.cedula || ""}
                   placeholder="Número de cédula"
                   disabled
                 />
@@ -373,25 +426,34 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Input
                   id="celular"
                   type="tel"
-                  value={caso?.usuarios.telefono || ''}
+                  value={caso?.usuarios.telefono || ""}
                   disabled
                   placeholder="Número de contacto"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="contactoFamiliar">Contacto de un Familiar</Label>
+                <Label htmlFor="contactoFamiliar">
+                  Contacto de un Familiar
+                </Label>
                 <Input
                   id="contactoFamiliar"
                   value={formData.contacto_familiar}
-                  onChange={(e) => handleInputChange('contacto_familiar', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("contacto_familiar", e.target.value)
+                  }
                   placeholder="Contacto familiar"
                 />
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="estadoCivil">Estado Civil</Label>
-                <Select value={formData.estado_civil} onValueChange={(value: string) => handleInputChange('estado_civil', value)}>
+                <Select
+                  value={formData.estado_civil}
+                  onValueChange={(value: string) =>
+                    handleInputChange("estado_civil", value)
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccione estado civil" />
                   </SelectTrigger>
@@ -405,8 +467,15 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="estratoSocioeconomico">Estrato Socioeconómico</Label>
-                <Select value={formData.estrato} onValueChange={(value: string) => handleInputChange('estrato', value)}>
+                <Label htmlFor="estratoSocioeconomico">
+                  Estrato Socioeconómico
+                </Label>
+                <Select
+                  value={formData.estrato}
+                  onValueChange={(value: string) =>
+                    handleInputChange("estrato", value)
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccione estrato" />
                   </SelectTrigger>
@@ -426,7 +495,9 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Input
                   id="direccion"
                   value={formData.direccion}
-                  onChange={(e) => handleInputChange('direccion', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("direccion", e.target.value)
+                  }
                   placeholder="Dirección completa"
                 />
               </div>
@@ -436,7 +507,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Input
                   id="correo"
                   type="email"
-                  value={caso?.usuarios.correo || ''}
+                  value={caso?.usuarios.correo || ""}
                   placeholder="correo@ejemplo.com"
                   disabled
                 />
@@ -444,7 +515,12 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
 
               <div className="space-y-2">
                 <Label htmlFor="vivienda">Vivienda</Label>
-                <Select value={formData.tipo_vivienda} onValueChange={(value: string) => handleInputChange('tipo_vivienda', value)}>
+                <Select
+                  value={formData.tipo_vivienda}
+                  onValueChange={(value: string) =>
+                    handleInputChange("tipo_vivienda", value)
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Tipo de vivienda" />
                   </SelectTrigger>
@@ -474,7 +550,12 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="servicioSolicita">Seleccione una opción</Label>
-                <Select value={formData.tiene_representado} onValueChange={(value: string) => handleInputChange('tiene_representado', value)}>
+                <Select
+                  value={formData.tiene_representado}
+                  onValueChange={(value: string) =>
+                    handleInputChange("tiene_representado", value)
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccione quién lo solicita" />
                   </SelectTrigger>
@@ -484,7 +565,6 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                   </SelectContent>
                 </Select>
               </div>
-
             </CardContent>
           </Card>
         );
@@ -504,13 +584,22 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="tipoTrabajo">Situación Laboral</Label>
-                <Select value={formData.situacion_laboral} onValueChange={(value: string) => handleInputChange('situacion_laboral', value)}>
+                <Select
+                  value={formData.situacion_laboral}
+                  onValueChange={(value: string) =>
+                    handleInputChange("situacion_laboral", value)
+                  }
+                >
                   <SelectTrigger>
                     <SelectValue placeholder="Seleccione situación laboral" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="dependiente">Trabajador Dependiente</SelectItem>
-                    <SelectItem value="independiente">Trabajador Independiente</SelectItem>
+                    <SelectItem value="dependiente">
+                      Trabajador Dependiente
+                    </SelectItem>
+                    <SelectItem value="independiente">
+                      Trabajador Independiente
+                    </SelectItem>
                     <SelectItem value="desempleado">No tiene empleo</SelectItem>
                     <SelectItem value="otro">Otro</SelectItem>
                   </SelectContent>
@@ -521,33 +610,47 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Checkbox
                   id="tieneOtrosIngresos"
                   checked={formData.otros_ingresos}
-                  onCheckedChange={(checked: boolean) => handleInputChange('otros_ingresos', checked)}
+                  onCheckedChange={(checked: boolean) =>
+                    handleInputChange("otros_ingresos", checked)
+                  }
                 />
-                <Label htmlFor="tieneOtrosIngresos">
-                  Tiene otros ingresos
-                </Label>
+                <Label htmlFor="tieneOtrosIngresos">Tiene otros ingresos</Label>
               </div>
 
               {formData.otros_ingresos && (
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="valorOtrosIngresos">Valor de Otros Ingresos</Label>
+                    <Label htmlFor="valorOtrosIngresos">
+                      Valor de Otros Ingresos
+                    </Label>
                     <Input
                       id="valorOtrosIngresos"
                       type="number"
                       value={formData.valor_otros_ingresos}
-                      onChange={(e) => handleInputChange('valor_otros_ingresos', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "valor_otros_ingresos",
+                          e.target.value,
+                        )
+                      }
                       placeholder="Valor mensual"
                       required
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="conceptoOtrosIngresos">Por Concepto de</Label>
+                    <Label htmlFor="conceptoOtrosIngresos">
+                      Por Concepto de
+                    </Label>
                     <Input
                       id="conceptoOtrosIngresos"
                       value={formData.concepto_otros_ingresos}
-                      onChange={(e) => handleInputChange('concepto_otros_ingresos', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "concepto_otros_ingresos",
+                          e.target.value,
+                        )
+                      }
                       placeholder="Concepto de los ingresos"
                       required
                     />
@@ -572,53 +675,77 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
             </CardHeader>
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="nombresDemandado">Nombres Completos del Demandado</Label>
+                <Label htmlFor="nombresDemandado">
+                  Nombres Completos del Demandado
+                </Label>
                 <Input
                   id="nombresDemandado"
+                  required
                   value={formData.nombreDemandado}
-                  onChange={(e) => handleInputChange('nombreDemandado', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("nombreDemandado", e.target.value)
+                  }
                   placeholder="Nombre completo del demandado"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="identificacionDemandado">Identificación del Demandado</Label>
+                <Label htmlFor="identificacionDemandado">
+                  Identificación del Demandado
+                </Label>
                 <Input
                   id="identificacionDemandado"
                   value={formData.documentoDemandado}
-                  onChange={(e) => handleInputChange('documentoDemandado', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("documentoDemandado", e.target.value)
+                  }
                   placeholder="Número de identificación"
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="celularDemandado">Número Celular del Demandado</Label>
+                <Label htmlFor="celularDemandado">
+                  Número Celular del Demandado
+                </Label>
                 <Input
                   id="celularDemandado"
                   type="tel"
                   value={formData.celularDemandado}
-                  onChange={(e) => handleInputChange('celularDemandado', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("celularDemandado", e.target.value)
+                  }
                   placeholder="Número de celular"
                 />
               </div>
 
               <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="lugarResidenciaDemandado">Lugar de Residencia o Notificación del Demandado</Label>
+                <Label htmlFor="lugarResidenciaDemandado">
+                  Lugar de Residencia o Notificación del Demandado
+                </Label>
                 <Input
                   id="lugarResidenciaDemandado"
                   value={formData.lugarResidenciaDemandado}
-                  onChange={(e) => handleInputChange('lugarResidenciaDemandado', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange(
+                      "lugarResidenciaDemandado",
+                      e.target.value,
+                    )
+                  }
                   placeholder="Dirección de residencia"
                 />
               </div>
 
               <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="correoDemandado">Correo Electrónico del Demandado</Label>
+                <Label htmlFor="correoDemandado">
+                  Correo Electrónico del Demandado
+                </Label>
                 <Input
                   id="correoDemandado"
                   type="email"
                   value={formData.correoDemandado}
-                  onChange={(e) => handleInputChange('correoDemandado', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("correoDemandado", e.target.value)
+                  }
                   placeholder="correo@ejemplo.com"
                 />
               </div>
@@ -644,7 +771,9 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Label>¿Tiene Contrato Laboral?</Label>
                 <RadioGroup
                   value={formData.tiene_contrato ? "si" : "no"}
-                  onValueChange={(value) => handleInputChange('tiene_contrato', value === "si")}
+                  onValueChange={(value) =>
+                    handleInputChange("tiene_contrato", value === "si")
+                  }
                   className="flex space-x-6 mt-2"
                 >
                   <div className="flex items-center space-x-2">
@@ -664,14 +793,21 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
               <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="tipoContrato">Tipo de Contrato Laboral</Label>
-                  <Select value={formData.tipoContrato} onValueChange={(value: string) => handleInputChange('tipoContrato', value)}>
+                  <Select
+                    value={formData.tipoContrato}
+                    onValueChange={(value: string) =>
+                      handleInputChange("tipoContrato", value)
+                    }
+                  >
                     <SelectTrigger>
                       <SelectValue placeholder="Seleccione tipo de contrato" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="escrito">Escrito</SelectItem>
                       <SelectItem value="verbal">Verbal</SelectItem>
-                      <SelectItem value="prestacion_servicios">Prestación de Servicios</SelectItem>
+                      <SelectItem value="prestacion_servicios">
+                        Prestación de Servicios
+                      </SelectItem>
                       <SelectItem value="otro">Otro</SelectItem>
                     </SelectContent>
                   </Select>
@@ -679,64 +815,91 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="nombreRepresentanteLegal">Nombre del Representante Legal o Patrono</Label>
+                    <Label htmlFor="nombreRepresentanteLegal">
+                      Nombre del Representante Legal o Patrono
+                    </Label>
                     <Input
                       id="nombreRepresentanteLegal"
                       value={formData.nombreRepresentanteLegal}
-                      onChange={(e) => handleInputChange('nombreRepresentanteLegal', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange(
+                          "nombreRepresentanteLegal",
+                          e.target.value,
+                        )
+                      }
                       placeholder="Nombre del empleador"
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="correoEmpleador">Correo Electrónico del Empleador</Label>
+                    <Label htmlFor="correoEmpleador">
+                      Correo Electrónico del Empleador
+                    </Label>
                     <Input
                       id="correoEmpleador"
                       type="email"
                       value={formData.correoEmpleador}
-                      onChange={(e) => handleInputChange('correoEmpleador', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("correoEmpleador", e.target.value)
+                      }
                       placeholder="correo@empresa.com"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="direccionEmpresa">Dirección de la Empresa o Patrono</Label>
+                  <Label htmlFor="direccionEmpresa">
+                    Dirección de la Empresa o Patrono
+                  </Label>
                   <Input
                     id="direccionEmpresa"
                     value={formData.direccionEmpresa}
-                    onChange={(e) => handleInputChange('direccionEmpresa', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("direccionEmpresa", e.target.value)
+                    }
                     placeholder="Dirección de la empresa"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="space-y-2">
-                    <Label htmlFor="fechaInicio">Fecha de Iniciación del Contrato</Label>
+                    <Label htmlFor="fechaInicio">
+                      Fecha de Iniciación del Contrato
+                    </Label>
                     <Input
                       id="fechaInicio"
                       type="date"
                       value={formData.fechaInicio}
-                      onChange={(e) => handleInputChange('fechaInicio', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("fechaInicio", e.target.value)
+                      }
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="fechaTerminacion">Fecha de Terminación del Contrato</Label>
+                    <Label htmlFor="fechaTerminacion">
+                      Fecha de Terminación del Contrato
+                    </Label>
                     <Input
                       id="fechaTerminacion"
                       type="date"
                       value={formData.fechaTerminacion}
-                      onChange={(e) => handleInputChange('fechaTerminacion', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("fechaTerminacion", e.target.value)
+                      }
                     />
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="continuaContrato">¿Continúa el Contrato?</Label>
+                    <Label htmlFor="continuaContrato">
+                      ¿Continúa el Contrato?
+                    </Label>
                     <Checkbox
                       id="continuaContrato"
                       checked={formData.continuaContrato}
-                      onCheckedChange={(checked: boolean) => handleInputChange('continuaContrato', checked)}
+                      onCheckedChange={(checked: boolean) =>
+                        handleInputChange("continuaContrato", checked)
+                      }
                     />
                   </div>
                 </div>
@@ -748,7 +911,9 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                       id="salarioInicial"
                       type="number"
                       value={formData.salarioInicial}
-                      onChange={(e) => handleInputChange('salarioInicial', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("salarioInicial", e.target.value)
+                      }
                       placeholder="Salario al iniciar"
                     />
                   </div>
@@ -759,14 +924,15 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                       id="salarioActual"
                       type="number"
                       value={formData.salarioActual}
-                      onChange={(e) => handleInputChange('salarioActual', e.target.value)}
+                      onChange={(e) =>
+                        handleInputChange("salarioActual", e.target.value)
+                      }
                       placeholder="Salario actual"
                     />
                   </div>
                 </div>
               </CardContent>
             )}
-
           </Card>
         );
 
@@ -785,11 +951,17 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="area">Área</Label>
-                <Select required value={formData.area} onValueChange={(value: string) => handleInputChange('area', value)}>
-                  <SelectTrigger >
+                <Select
+                  required
+                  value={formData.area}
+                  onValueChange={(value: string) =>
+                    handleInputChange("area", value)
+                  }
+                >
+                  <SelectTrigger>
                     <SelectValue placeholder="Seleccione el área" />
                   </SelectTrigger>
-                  <SelectContent >
+                  <SelectContent>
                     <SelectItem value="laboral">Laboral</SelectItem>
                     <SelectItem value="familia">Familia</SelectItem>
                     <SelectItem value="penal">Penal</SelectItem>
@@ -799,11 +971,15 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 </Select>
               </div>
               <div className="space-y-2">
-                <Label htmlFor="resumen_hechos">Hechos Jurídicamente Relevantes para el Caso</Label>
+                <Label htmlFor="resumen_hechos">
+                  Hechos Jurídicamente Relevantes para el Caso
+                </Label>
                 <Textarea
                   id="resumen_hechos"
                   value={formData.resumen_hechos}
-                  onChange={(e) => handleInputChange('resumen_hechos', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("resumen_hechos", e.target.value)
+                  }
                   placeholder="Describa los hechos relevantes del caso..."
                   rows={4}
                 />
@@ -814,13 +990,13 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Textarea
                   id="observaciones"
                   value={formData.observaciones}
-                  onChange={(e) => handleInputChange('observaciones', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("observaciones", e.target.value)
+                  }
                   placeholder="Describa el servicio legal que solicita..."
                   rows={3}
                 />
               </div>
-
-
             </CardContent>
           </Card>
         );
@@ -839,11 +1015,15 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
-                <Label htmlFor="cedulaSolicitante">C.C. del Solicitante para Firma *</Label>
+                <Label htmlFor="cedulaSolicitante">
+                  C.C. del Solicitante para Firma *
+                </Label>
                 <Input
                   id="cedulaSolicitante"
                   value={formData.cedulaSolicitante}
-                  onChange={(e) => handleInputChange('cedulaSolicitante', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("cedulaSolicitante", e.target.value)
+                  }
                   placeholder="Número de cédula para confirmación"
                   required
                 />
@@ -855,11 +1035,15 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                 <Checkbox
                   id="firmasSolicitante"
                   checked={formData.firmasSolicitante}
-                  onCheckedChange={(checked: boolean) => handleInputChange('firmasSolicitante', checked)}
+                  onCheckedChange={(checked: boolean) =>
+                    handleInputChange("firmasSolicitante", checked)
+                  }
                   required
                 />
                 <Label htmlFor="firmasSolicitante" className="text-sm">
-                  Confirmo que toda la información proporcionada es veraz y autorizo el procesamiento de estos datos para los fines legales correspondientes *
+                  Confirmo que toda la información proporcionada es veraz y
+                  autorizo el procesamiento de estos datos para los fines
+                  legales correspondientes *
                 </Label>
               </div>
             </CardContent>
@@ -875,7 +1059,9 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
     return (
       <div className="flex flex-col items-center justify-center py-20">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-        <p className="mt-4 text-slate-500 font-medium">Cargando formulario...</p>
+        <p className="mt-4 text-slate-500 font-medium">
+          Cargando formulario...
+        </p>
       </div>
     );
   }
@@ -884,7 +1070,11 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
     return (
       <Card className="p-8 text-center border-red-200 bg-red-50">
         <p className="text-red-600 font-medium">{error}</p>
-        <Button onClick={() => router.back()} variant="outline" className="mt-4">
+        <Button
+          onClick={() => router.back()}
+          variant="outline"
+          className="mt-4"
+        >
           Volver
         </Button>
       </Card>
@@ -921,7 +1111,9 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="text-xl font-semibold text-center">
-              {successMessage.includes("✅") ? "Actualización Exitosa" : "Error"}
+              {successMessage.includes("✅")
+                ? "Actualización Exitosa"
+                : "Error"}
             </DialogTitle>
             <DialogDescription className="text-center">
               {successMessage}
@@ -939,7 +1131,6 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
 
         {/* Navigation Buttons */}
         <div className="flex justify-between mt-6">
-
           {currentStep > 1 && (
             <Button
               type="button"
@@ -952,8 +1143,6 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
               Anterior
             </Button>
           )}
-
-
 
           {currentStep < STEPS.length ? (
             <Button
@@ -988,12 +1177,13 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
               type="button"
               onClick={() => setCurrentStep(step.id)}
               //disabled={step.id > currentStep}
-              className={`w-3 h-3 rounded-full transition-colors ${step.id === currentStep
-                ? 'bg-blue-600'
-                : step.id < currentStep
-                  ? 'bg-green-500'
-                  : 'bg-gray-300'
-                }`}
+              className={`w-3 h-3 rounded-full transition-colors ${
+                step.id === currentStep
+                  ? "bg-blue-600"
+                  : step.id < currentStep
+                    ? "bg-green-500"
+                    : "bg-gray-300"
+              }`}
               aria-label={`Ir al paso ${step.id}: ${step.title}`}
             />
           ))}
