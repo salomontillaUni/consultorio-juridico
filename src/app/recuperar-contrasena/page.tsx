@@ -1,19 +1,33 @@
-'use client';
-import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Spinner } from '@/components/ui/spinner';
-import { AlertCircleIcon, MailIcon } from 'lucide-react';
-import { supabase } from '@/utils/supabase/supabase';
+"use client";
+import { useState, useEffect } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Spinner } from "@/components/ui/spinner";
+import { AlertCircleIcon, MailIcon } from "lucide-react";
+import { supabase } from "@/utils/supabase/supabase";
 
 export default function RecuperarContrasenaPage() {
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+  const [cooldown, setCooldown] = useState(0);
+
+  useEffect(() => {
+    if (cooldown > 0) {
+      const timer = setTimeout(() => setCooldown(cooldown - 1), 1000);
+      return () => clearTimeout(timer);
+    }
+  }, [cooldown]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,11 +36,10 @@ export default function RecuperarContrasenaPage() {
 
     setIsLoading(true);
     try {
-      const redirectTo = "http://localhost:3000/cambiar-contrasena";
+      const redirectTo = `${process.env.NEXT_PUBLIC_SITE_URL}/cambiar-contrasena`;
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo,
       });
-      console.log("ERROR", error);
 
       if (error) {
         setError(error.message);
@@ -34,8 +47,9 @@ export default function RecuperarContrasenaPage() {
       }
 
       setSuccess(true);
+      setCooldown(120); // 2 minutos de espera
     } catch (err) {
-      setError('Error de red. Inténtalo de nuevo.');
+      setError("Error de red. Inténtalo de nuevo.");
     } finally {
       setIsLoading(false);
     }
@@ -68,16 +82,23 @@ export default function RecuperarContrasenaPage() {
               </div>
             </div>
 
-            <Button type="submit" disabled={isLoading} className="w-full bg-blue-500 hover:bg-blue-600">
+            <Button
+              type="submit"
+              disabled={isLoading || cooldown > 0}
+              className="w-full bg-blue-500 hover:bg-blue-600"
+            >
               {isLoading ? <Spinner className="mr-2" /> : null}
-              Enviar enlace
+              {cooldown > 0
+                ? `Reintentar en ${Math.floor(cooldown / 60)}:${(cooldown % 60).toString().padStart(2, "0")}`
+                : "Enviar enlace"}
             </Button>
 
             {success ? (
               <Alert>
                 <AlertTitle>Revisa tu correo</AlertTitle>
                 <AlertDescription>
-                  Si el correo existe, recibirás un enlace para establecer tu contraseña.
+                  Si el correo existe, recibirás un enlace para establecer tu
+                  contraseña.
                 </AlertDescription>
               </Alert>
             ) : null}

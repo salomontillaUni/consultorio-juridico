@@ -1,12 +1,24 @@
-'use client';
+"use client";
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Spinner } from "@/components/ui/spinner";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { AlertCircleIcon, EyeIcon, EyeOffIcon, LockIcon, MailIcon } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import {
+  AlertCircleIcon,
+  EyeIcon,
+  EyeOffIcon,
+  LockIcon,
+  MailIcon,
+} from "lucide-react";
 import { supabase } from "../../utils/supabase/supabase";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
@@ -20,22 +32,29 @@ export function LoginForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
       setIsLoading(true);
       const response = await supabase.auth.refreshSession();
-      console.log("Refresh session response:", response);
-      const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-      if (error) setError(error.message);
+      if (error) {
+        if (error.message === "Invalid login credentials") {
+          setError("Correo o contraseña incorrectos.");
+        } else {
+          setError(error.message);
+        }
+        setIsLoading(false);
+        return;
+      }
       const session = data.session;
-      console.log("Login session data:", session);
 
       if (session) {
         const jwt = jwtDecode<CustomJwtPayload>(session.access_token);
-        console.log("Decoded JWT:", jwt);
         const role = jwt.user_role;
         switch (role) {
           case "admin":
@@ -115,22 +134,34 @@ export function LoginForm() {
                 onClick={() => setShowPassword(!showPassword)}
                 className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
               >
-                {showPassword ? <EyeOffIcon className="h-4 w-4" /> : <EyeIcon className="h-4 w-4" />}
+                {showPassword ? (
+                  <EyeOffIcon className="h-4 w-4" />
+                ) : (
+                  <EyeIcon className="h-4 w-4" />
+                )}
               </button>
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex flex-col space-y-2">
             <button
               type="button"
-              className="text-sm text-primary underline hover:cursor-pointer hover:opacity-80"
+              className="text-sm text-primary underline hover:cursor-pointer hover:opacity-80 text-left"
               onClick={() => handleRedirectToPasswordReset()}
             >
               Reestablece tu contraseña
             </button>
+            <p className="text-sm text-muted-foreground italic">
+              * Si eres un usuario nuevo o has olvidado tu contraseña, debes
+              reestablecerla haciendo clic en el enlace superior.
+            </p>
           </div>
 
-          <Button type="submit" disabled={isLoading} className="w-full bg-blue-500 hover:bg-blue-600">
+          <Button
+            type="submit"
+            disabled={isLoading}
+            className="w-full bg-blue-500 hover:bg-blue-600"
+          >
             {isLoading ? <Spinner className="mr-2" /> : null}
             Iniciar sesión
           </Button>
@@ -138,15 +169,11 @@ export function LoginForm() {
             <Alert variant="destructive" className="">
               <AlertCircleIcon />
               <AlertTitle>Error</AlertTitle>
-              <AlertDescription>
-                {error}
-              </AlertDescription>
+              <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
         </form>
-
       </CardContent>
     </Card>
   );
-
 }
