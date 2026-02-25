@@ -22,8 +22,7 @@ export default function RecuperarContrasenaPage() {
 
     setIsLoading(true);
     try {
-      const redirectTo = `${window.location.origin}/auth/callback?next=/cambiar-contrasena`;
-
+      const redirectTo = "/cambiar-contrasena";
       const { error } = await supabase.auth.resetPasswordForEmail(email, {
         redirectTo,
       });

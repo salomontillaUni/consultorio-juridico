@@ -66,9 +66,10 @@ export function LoginForm() {
     }
   };
 
-  function handleOlvidasteContraseña(): void {
-    console.log("Redirigiendo a la página de recuperación de contraseña...");
-  }
+  const handleRedirectToPasswordReset = () => {
+    router.refresh();
+    router.push("/recuperar-contrasena");
+  };
 
   return (
     <Card className="w-full max-w-md mx-auto">
@@ -122,10 +123,10 @@ export function LoginForm() {
           <div className="flex items-center justify-between">
             <button
               type="button"
-              className="text-sm text-primary hover:underline hover:cursor-pointer"
-              onClick={() => handleOlvidasteContraseña()}
+              className="text-sm text-primary underline hover:cursor-pointer hover:opacity-80"
+              onClick={() => handleRedirectToPasswordReset()}
             >
-              Olvidaste tu contraseña?
+              Reestablece tu contraseña
             </button>
           </div>
 

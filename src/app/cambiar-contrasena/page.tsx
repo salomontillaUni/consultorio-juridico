@@ -8,6 +8,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Spinner } from '@/components/ui/spinner';
 import { AlertCircleIcon, EyeIcon, EyeOffIcon, LockIcon } from 'lucide-react';
+import { supabase } from "../../utils/supabase/supabase";
 
 export default function CambiarContrasenaPage() {
   const router = useRouter();
@@ -17,7 +18,7 @@ export default function CambiarContrasenaPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
-
+  
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -35,16 +36,12 @@ export default function CambiarContrasenaPage() {
     setIsLoading(true);
 
     try {
-      const res = await fetch('/api/auth/finish-onboarding', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ newPassword }),
+      const { error } = await supabase.auth.updateUser({
+        password: newPassword,
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        setError(data.error || 'Error al cambiar la contraseña');
+      if (error) {
+        setError(error.message);
         return;
       }
 
@@ -79,7 +76,7 @@ export default function CambiarContrasenaPage() {
         <CardHeader className="space-y-1">
           <CardTitle className="text-center">Cambia tu contraseña</CardTitle>
           <CardDescription className="text-center">
-            Es tu primer inicio de sesión. Por seguridad, establece una nueva contraseña.
+            Por seguridad, establece una nueva contraseña.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
