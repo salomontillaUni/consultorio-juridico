@@ -26,6 +26,7 @@ import { cleanData } from "@/utils/utils";
 import { supabase } from "@/utils/supabase/supabase";
 import { Notebook } from "lucide-react";
 import { getStatusBadge } from "app/asesor/mis-casos/page";
+import { ReasignarEquipo } from "./components/ReasignarEquipo";
 
 export default function Page({
   params,
@@ -385,9 +386,7 @@ export default function Page({
                 </div>
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
-                {caso && (
-                  getStatusBadge(caso?.estado)
-                )}
+                {caso && getStatusBadge(caso?.estado)}
               </div>
             </div>
           </div>
@@ -497,8 +496,6 @@ export default function Page({
                           <p className="text-gray-900 mb-4">
                             {displayCaseData?.area}
                           </p>
-
-                          
 
                           <Label className="text-gray-600">
                             Tipo de proceso
@@ -826,40 +823,20 @@ export default function Page({
                       </div>
                       <h3 className="text-gray-900">Equipo asignado</h3>
                     </div>
-                    <div className="space-y-3">
-                      <div>
-                        <Label className="text-gray-600">Estudiante</Label>
-                        {displayCaseData?.estudiantes_casos.length ? (
-                          <p className="text-blue-600">
-                            {displayCaseData?.estudiantes_casos
-                              .map(
-                                (estudiante) =>
-                                  estudiante.estudiante.perfil.nombre_completo,
-                              )
-                              .join(", ")}
-                          </p>
-                        ) : (
-                          <p className="text-gray-600 mb-4">
-                            No hay estudiantes asignados
-                          </p>
-                        )}
-                      </div>
-                      <div>
-                        <Label className="text-gray-600">Asesor</Label>
-                        {displayCaseData?.asesores_casos.length ? (
-                          <p className="text-gray-900">
-                            {displayCaseData?.asesores_casos
-                              .map(
-                                (asesor) =>
-                                  asesor.asesor.perfil.nombre_completo,
-                              )
-                              .join(",  ")}
-                          </p>
-                        ) : (
-                          <p className="text-gray-600 mb-4">
-                            No hay asesores asignados
-                          </p>
-                        )}
+                    <div className="space-y-6">
+                      <ReasignarEquipo
+                        idCaso={id_caso}
+                        type="estudiante"
+                        casosData={displayCaseData?.estudiantes_casos || []}
+                        onRefresh={traerDatos}
+                      />
+                      <div className="border-t border-gray-100 pt-6">
+                        <ReasignarEquipo
+                          idCaso={id_caso}
+                          type="asesor"
+                          casosData={displayCaseData?.asesores_casos || []}
+                          onRefresh={traerDatos}
+                        />
                       </div>
                     </div>
                   </Card>
