@@ -45,7 +45,7 @@ export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: Registr
   };
 
   return (
-    <Card className="w-full md:min-w-3xl mx-auto shadow-lg">
+    <Card className="w-full md:max-w-3xl mx-auto shadow-lg">
       <CardHeader className="space-y-1 pb-6">
         <div className="flex items-center gap-2">
           <Link
