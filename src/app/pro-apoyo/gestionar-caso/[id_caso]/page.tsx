@@ -27,6 +27,7 @@ import { supabase } from "@/utils/supabase/supabase";
 import { Notebook } from "lucide-react";
 import { getStatusBadge } from "app/asesor/mis-casos/page";
 import { ReasignarEquipo } from "./components/ReasignarEquipo";
+import { toast } from "sonner";
 
 export default function Page({
   params,
@@ -84,7 +85,7 @@ export default function Page({
 
   useEffect(() => {
     traerDatos();
-  }, [caso, demandado]);
+  }, [id_caso]);
 
   const handleStudentDataChange = (
     index: number,
@@ -151,6 +152,8 @@ export default function Page({
           setError(errorCaso.message);
           throw errorCaso;
         }
+        await traerDatos();
+        toast.success("Información del cliente actualizada");
       } catch (err) {
         console.error(err);
         setError("Error al guardar los datos del usuario");
@@ -207,6 +210,8 @@ export default function Page({
           setError(error.message);
           throw error;
         }
+        await traerDatos();
+        toast.success("Información del demandado actualizada");
       } catch (err) {
         console.error(err);
         setError("Error al guardar los datos del demandado");
@@ -271,6 +276,8 @@ export default function Page({
           setError(errorCaso.message);
           throw errorCaso;
         }
+        await traerDatos();
+        toast.success("Información del caso actualizada");
       } catch (err) {
         console.error(err);
         setError("Error al guardar los datos del caso");
@@ -365,28 +372,32 @@ export default function Page({
               Volver a supervisión de casos
             </Link>
 
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between bg-white p-8 rounded-2xl shadow-sm border border-slate-100">
               <div className="mb-4 lg:mb-0">
-                <h1 className="text-gray-900 mb-2">{caso?.id_caso}</h1>
-                <p className="text-gray-600">
+                <div className="flex items-center gap-3 mb-2">
+                  <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+                    {caso?.id_caso}
+                  </h1>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    {caso && getStatusBadge(caso?.estado)}
+                  </div>
+                </div>
+                <p className="text-lg text-slate-500 font-medium">
                   {caso?.usuarios.nombre_completo}
                 </p>
-                <div className="flex items-center mt-2">
-                  <span className="text-sm text-gray-500 mr-2">
+                <div className="flex items-center mt-4 p-2 px-3 bg-blue-50/50 rounded-lg w-fit">
+                  <span className="text-xs font-bold text-blue-400 uppercase tracking-widest mr-3">
                     Estudiante asignado:
                   </span>
-                  <span className="text-sm text-blue-600">
+                  <span className="text-sm font-semibold text-blue-700">
                     {caso?.estudiantes_casos &&
                     caso.estudiantes_casos.length > 0
                       ? caso.estudiantes_casos[
                           caso.estudiantes_casos.length - 1
                         ].estudiante.perfil.nombre_completo
-                      : "No hay estudiante asignado"}
+                      : "Sin asignar"}
                   </span>
                 </div>
-              </div>
-              <div className="flex flex-col sm:flex-row gap-3">
-                {caso && getStatusBadge(caso?.estado)}
               </div>
             </div>
           </div>
@@ -498,6 +509,13 @@ export default function Page({
                           </p>
 
                           <Label className="text-gray-600">
+                            Estado del caso
+                          </Label>
+                          <div className="mb-4 mt-1">
+                            {caso && getStatusBadge(caso.estado)}
+                          </div>
+
+                          <Label className="text-gray-600">
                             Tipo de proceso
                           </Label>
                           <p className="text-gray-900">
@@ -602,6 +620,37 @@ export default function Page({
 
                           <div>
                             <Label className="text-gray-600">
+                              Estado del caso
+                            </Label>
+                            <Select
+                              value={editedCaseData?.estado || ""}
+                              onValueChange={(value) =>
+                                handleCaseDataChange("estado", value)
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Cambiar estado" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="pendiente_aprobacion">
+                                  Pendiente de aprobación
+                                </SelectItem>
+                                <SelectItem value="aprobado">
+                                  Aprobado
+                                </SelectItem>
+                                <SelectItem value="en_proceso">
+                                  En proceso
+                                </SelectItem>
+                                <SelectItem value="cerrado">Cerrado</SelectItem>
+                                <SelectItem value="archivado">
+                                  Archivado
+                                </SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          <div>
+                            <Label className="text-gray-600">
                               Tipo de proceso
                             </Label>
                             <Input
@@ -682,13 +731,14 @@ export default function Page({
                     </div>
 
                     {!isEditingCaseInfo ? (
-                      <div className="p-4 bg-gray-50 rounded-lg border border-gray-200">
+                      <div className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm relative overflow-hidden">
+                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-500 opacity-70" />
                         {displayCaseData?.resumen_hechos ? (
-                          <p className="text-gray-700 leading-relaxed">
+                          <p className="text-slate-700 leading-relaxed pl-2">
                             {displayCaseData?.resumen_hechos}
                           </p>
                         ) : (
-                          <p className="text-sm text-center text-gray-500">
+                          <p className="text-sm text-center text-slate-500 italic pl-2">
                             No hay resumen de los hechos registrado
                           </p>
                         )}
@@ -735,9 +785,12 @@ export default function Page({
                             .map((note: string, index: number) => (
                               <div
                                 key={index}
-                                className="p-4 bg-gray-50 rounded-lg border border-gray-200"
+                                className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm relative overflow-hidden group"
                               >
-                                <p className="text-gray-700">{note}</p>
+                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-yellow-400 opacity-70" />
+                                <p className="text-slate-700 leading-relaxed pl-2">
+                                  {note}
+                                </p>
                               </div>
                             ))
                         ) : (
