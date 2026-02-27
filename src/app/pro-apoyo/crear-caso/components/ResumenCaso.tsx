@@ -70,6 +70,7 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
     let msg = "Ocurrió un error inesperado al registrar el caso.";
     
     if (error.code === '23505') {
+      console.log("Error al insertar el usuario:", error);
        if (error.message.includes('usuarios_cedula_key')) {
          msg = "Error: Ya existe un usuario registrado con esta cédula.";
        } else {

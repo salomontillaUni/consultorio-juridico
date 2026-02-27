@@ -41,15 +41,15 @@ VALUES
 
 -- CASOS 
 INSERT INTO public.casos (
-  id_caso, id_usuario, resumen_hechos, observaciones, estado, aprobacion_asesor, area, tipo_proceso
+   id_usuario, resumen_hechos, observaciones, estado, aprobacion_asesor, area, tipo_proceso
 )
 VALUES
-(1, (SELECT id_usuario FROM usuarios WHERE nombre_completo = 'Juan Pérez'),
+((SELECT id_usuario FROM usuarios WHERE nombre_completo = 'Juan Pérez'),
  'El usuario fue despedido sin justa causa y busca conciliación laboral.',
  'Pendiente de documentos adicionales.', 'en_proceso', false, 'laboral', 'despido injustificado'),
-(2,(SELECT id_usuario FROM usuarios WHERE nombre_completo = 'Luisa Gómez'),
+((SELECT id_usuario FROM usuarios WHERE nombre_completo = 'Luisa Gómez'),
  'Conflicto por cuota alimentaria con su expareja.', 'Esperando citación.', 'pendiente_aprobacion', false, 'familia', 'cuota alimentaria'),
-(3, (SELECT id_usuario FROM usuarios WHERE nombre_completo = 'Pedro Torres'),
+((SELECT id_usuario FROM usuarios WHERE nombre_completo = 'Pedro Torres'),
  'Demanda civil por incumplimiento de contrato.', 'Caso revisado por asesor.', 'aprobado', true, 'civil', 'incumplimiento de contrato');
 
 -- DEMANDADOS
@@ -78,3 +78,8 @@ INSERT INTO public.contratos_laborales (
 VALUES
 ((SELECT id_usuario FROM usuarios WHERE nombre_completo = 'Juan Pérez'),
  'escrito', 'Carlos Mendoza', 'empresa@ejemplo.com', 'Calle 123 #45-67', '2023-01-10', NULL, true, 2500000, 3000000);
+
+-- RESET SEQUENCES
+SELECT setval(pg_get_serial_sequence('public.casos', 'id_caso'), (SELECT MAX(id_caso) FROM public.casos));
+SELECT setval(pg_get_serial_sequence('public.demandados', 'id_demandado'), (SELECT MAX(id_demandado) FROM public.demandados));
+SELECT setval(pg_get_serial_sequence('public.contratos_laborales', 'id_contrato'), (SELECT MAX(id_contrato) FROM public.contratos_laborales));

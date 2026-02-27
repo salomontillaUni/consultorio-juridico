@@ -148,13 +148,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                     <pre className="text-sm text-gray-900 whitespace-pre-wrap">{caso.observaciones}</pre>
                   </div>
                 </div>
-
-                <div>
-                  <span className="text-sm text-gray-600">Observaciones:</span>
-                  <div className="mt-2 p-3 bg-gray-50 rounded-lg">
-                    <pre className="text-sm text-gray-900 whitespace-pre-wrap">{caso.observaciones}</pre>
-                  </div>
-                </div>
               </Card>
 
               {/* Información del Cliente */}

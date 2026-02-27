@@ -1,11 +1,8 @@
 import { supabase } from "@/utils/supabase/supabase";
-import type {Asesor } from "../../src/app/types/database";
+import type { Asesor } from "../../src/app/types/database";
 
 export async function getAsesores(): Promise<Asesor[]> {
-
-  const { data, error } = await supabase
-  .from('asesores')
-  .select(`
+  const { data, error } = await supabase.from("asesores").select(`
     id_perfil,
     turno,
     area,
@@ -13,14 +10,19 @@ export async function getAsesores(): Promise<Asesor[]> {
       nombre_completo,
       correo,
       telefono
-    )
+    ),
+    asesores_casos(count)
   `);
-
 
   if (error) {
     console.error("Error al traer los asesores:", error);
     return [];
   }
 
-  return data as unknown as Asesor[];
+  const formattedData = data?.map((ase) => ({
+    ...ase,
+    total_casos: ase.asesores_casos?.[0]?.count || 0,
+  }));
+
+  return formattedData as unknown as Asesor[];
 }

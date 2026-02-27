@@ -1,14 +1,28 @@
-import { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { CheckCircle2, Users, UserCheck } from 'lucide-react';
-import { toast } from 'sonner';
-import { Asesor, Caso, Estudiante, Usuario } from 'app/types/database';
-import { getEstudiantes } from '../../../../../supabase/queries/getEstudiantes';
-import { getAsesores } from '../../../../../supabase/queries/getAsesores';
+import { useState, useEffect } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { CheckCircle2, Users, UserCheck } from "lucide-react";
+import { toast } from "sonner";
+import { Badge } from "@/components/ui/badge";
+import { cn } from "@/components/ui/utils";
+import { Asesor, Caso, Estudiante, Usuario } from "app/types/database";
+import { getEstudiantes } from "../../../../../supabase/queries/getEstudiantes";
+import { getAsesores } from "../../../../../supabase/queries/getAsesores";
 
 interface AsignacionCasoProps {
   usuario: Usuario;
@@ -18,31 +32,43 @@ interface AsignacionCasoProps {
 
 const casosMaximos = 5;
 
-
-export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: AsignacionCasoProps) {
-  const [estudianteId, setEstudianteId] = useState<string>('');
-  const [asesorId, setAsesorId] = useState<string>('');
-  const [observaciones, setObservaciones] = useState('');
-  const [estudiantesDisponibles, setEstudiantesDisponibles] = useState<Estudiante[]>([]);
+export function AsignacionCaso({
+  usuario,
+  onCasoRegistrado,
+  datosIniciales,
+}: AsignacionCasoProps) {
+  const [estudianteId, setEstudianteId] = useState<string>("");
+  const [asesorId, setAsesorId] = useState<string>("");
+  const [observaciones, setObservaciones] = useState("");
+  const [estudiantesDisponibles, setEstudiantesDisponibles] = useState<
+    Estudiante[]
+  >([]);
   const [asesoresDisponibles, setAsesoresDisponibles] = useState<Asesor[]>([]);
-  const [estudianteSeleccionado, setEstudianteSeleccionado] = useState<Estudiante | null>(null);
-  const [asesorSeleccionado, setAsesorSeleccionado] = useState<Asesor | null>(null);
+  const [estudianteSeleccionado, setEstudianteSeleccionado] =
+    useState<Estudiante | null>(null);
+  const [asesorSeleccionado, setAsesorSeleccionado] = useState<Asesor | null>(
+    null,
+  );
 
   // Si vienen datos iniciales (por ejemplo al editar un caso)
   useEffect(() => {
     if (!datosIniciales) return;
 
-    const estudianteAsignado = Array.isArray(datosIniciales.estudiantes_casos) && datosIniciales.estudiantes_casos.length > 0
-      ? datosIniciales.estudiantes_casos[0].estudiante
-      : null;
+    const estudianteAsignado =
+      Array.isArray(datosIniciales.estudiantes_casos) &&
+      datosIniciales.estudiantes_casos.length > 0
+        ? datosIniciales.estudiantes_casos[0].estudiante
+        : null;
 
-    const asesorAsignado = Array.isArray(datosIniciales.asesores_casos) && datosIniciales.asesores_casos.length > 0
-      ? datosIniciales.asesores_casos[0].asesor
-      : null;
+    const asesorAsignado =
+      Array.isArray(datosIniciales.asesores_casos) &&
+      datosIniciales.asesores_casos.length > 0
+        ? datosIniciales.asesores_casos[0].asesor
+        : null;
 
-    setEstudianteId(estudianteAsignado?.id_perfil?.toString() || '');
-    setAsesorId(asesorAsignado?.id_perfil?.toString() || '');
-    setObservaciones(datosIniciales.observaciones || '');
+    setEstudianteId(estudianteAsignado?.id_perfil?.toString() || "");
+    setAsesorId(asesorAsignado?.id_perfil?.toString() || "");
+    setObservaciones(datosIniciales.observaciones || "");
   }, [datosIniciales]);
 
   // Cargar estudiantes y asesores disponibles al montar
@@ -56,7 +82,7 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
         setAsesoresDisponibles(asesores);
       } catch (error) {
         console.error("Error al obtener estudiantes o asesores:", error);
-        toast.error('Error al obtener estudiantes o asesores');
+        toast.error("Error al obtener estudiantes o asesores");
       }
     };
 
@@ -65,22 +91,27 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
 
   const handleRegistrarCaso = () => {
     if (!estudianteId || !asesorId) {
-      console.error('Por favor complete todos los campos requeridos');
+      console.error("Por favor complete todos los campos requeridos");
       return;
     }
 
-    const estudiante = estudiantesDisponibles.find(e => e.id_perfil.toString() === estudianteId);
-    const asesor = asesoresDisponibles.find(a => a.id_perfil.toString() === asesorId);
+    const estudiante = estudiantesDisponibles.find(
+      (e) => e.id_perfil.toString() === estudianteId,
+    );
+    const asesor = asesoresDisponibles.find(
+      (a) => a.id_perfil.toString() === asesorId,
+    );
 
     if (!estudiante || !asesor) {
       console.error("No se pudo encontrar el estudiante o asesor seleccionado");
       return;
     }
-    console.log(datosIniciales)
+    console.log(datosIniciales);
     const datosCaso: Caso = {
-      area: datosIniciales?.area || 'otros',
-      fecha_creacion: datosIniciales?.fecha_creacion || new Date().toISOString(),
-      estado: datosIniciales?.estado || 'en_proceso',
+      area: datosIniciales?.area || "otros",
+      fecha_creacion:
+        datosIniciales?.fecha_creacion || new Date().toISOString(),
+      estado: datosIniciales?.estado || "en_proceso",
       usuarios: usuario,
       estudiantes_casos: [{ estudiante }],
       asesores_casos: [{ asesor }],
@@ -90,7 +121,6 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
     onCasoRegistrado(datosCaso);
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
-
 
   return (
     <div className="space-y-6 md:min-w-3xl">
@@ -130,7 +160,9 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
             </div>
             <div>
               <CardTitle>Asignación de Caso</CardTitle>
-              <CardDescription>Complete la información para registrar el nuevo caso</CardDescription>
+              <CardDescription>
+                Complete la información para registrar el nuevo caso
+              </CardDescription>
             </div>
           </div>
         </CardHeader>
@@ -151,12 +183,41 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
                 </SelectTrigger>
                 <SelectContent>
                   {estudiantesDisponibles.map((estudiante) => (
-                    <SelectItem key={estudiante.id_perfil} value={estudiante.id_perfil.toString()}>
-                      <div className="flex flex-col">
-                        <span>{estudiante.perfil.nombre_completo}</span>
-                        <span className="text-xs text-muted-foreground">
-                          Semestre {estudiante.semestre} • n/{casosMaximos} casos
-                        </span>
+                    <SelectItem
+                      key={estudiante.id_perfil}
+                      value={estudiante.id_perfil.toString()}
+                    >
+                      <div className="flex items-center justify-between w-full min-w-[300px] py-1">
+                        <div className="flex flex-col">
+                          <span className="font-semibold">
+                            {estudiante.perfil.nombre_completo}
+                          </span>
+                          <span className="text-xs text-muted-foreground flex items-center gap-1">
+                            Semestre: {estudiante.semestre} Turno:{" "}
+                            {estudiante.turno}
+                          </span>
+                        </div>
+                        <Badge
+                          variant={
+                            estudiante.total_casos! >= casosMaximos
+                              ? "destructive"
+                              : "secondary"
+                          }
+                          className={cn(
+                            "ml-4 transition-colors",
+                            estudiante.total_casos! === 0 &&
+                              "bg-green-100 text-green-700 hover:bg-green-100",
+                            estudiante.total_casos! > 0 &&
+                              estudiante.total_casos! < casosMaximos &&
+                              "bg-blue-100 text-blue-700 hover:bg-blue-100",
+                          )}
+                        >
+                          {estudiante.total_casos === 1
+                            ? `${estudiante.total_casos} Caso asignado`
+                            : estudiante.total_casos === 0
+                              ? "Sin casos asignados"
+                              : `${estudiante.total_casos} Casos asignados`}
+                        </Badge>
                       </div>
                     </SelectItem>
                   ))}
@@ -164,20 +225,85 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
               </Select>
             </div>
 
-            {estudianteSeleccionado && (
-              <div className="grid grid-cols-3 gap-4 p-3 bg-white rounded border border-slate-200 text-sm">
-                <div>
-                  <span className="text-muted-foreground">Semestre:</span>
-                  <p>{estudianteSeleccionado.semestre}</p>
+            {(estudianteSeleccionado ||
+              (estudianteId &&
+                estudiantesDisponibles.find(
+                  (e) => e.id_perfil.toString() === estudianteId,
+                ))) && (
+              <div className="mt-4 p-4 bg-white rounded-xl border border-slate-200 shadow-sm space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-semibold text-slate-800 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                    Detalles del Estudiante
+                  </h4>
                 </div>
-                <div>
-                  <span className="text-muted-foreground">Turno:</span>
-                  <p>{estudianteSeleccionado.turno}</p>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Nombre:</span>
-                  <p>{estudianteSeleccionado.perfil.nombre_completo}</p>
-                </div>
+
+                {(() => {
+                  const est =
+                    estudianteSeleccionado ||
+                    estudiantesDisponibles.find(
+                      (e) => e.id_perfil.toString() === estudianteId,
+                    );
+                  if (!est) return null;
+                  return (
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+                      <div className="space-y-1">
+                        <p className="text-[10px] uppercase font-bold text-slate-400">
+                          Nombre
+                        </p>
+                        <p className="text-sm font-medium text-slate-700">
+                          {est.perfil.nombre_completo}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] uppercase font-bold text-slate-400">
+                          Semestre
+                        </p>
+                        <p className="text-sm font-medium text-slate-700">
+                          {est.semestre}º Semestre
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] uppercase font-bold text-slate-400">
+                          Turno / Jornada
+                        </p>
+                        <p className="text-sm font-medium text-slate-700">
+                          {est.turno} ({est.jornada})
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] uppercase font-bold text-slate-400">
+                          Casos Actuales
+                        </p>
+                        <div className="flex items-center gap-2">
+                          <span
+                            className={cn(
+                              "text-sm font-bold",
+                              est.total_casos! >= casosMaximos
+                                ? "text-red-600"
+                                : "text-blue-600",
+                            )}
+                          >
+                            {est.total_casos}
+                          </span>
+                          <div className="h-1.5 w-16 bg-slate-100 rounded-full overflow-hidden">
+                            <div
+                              className={cn(
+                                "h-full transition-all duration-500",
+                                est.total_casos! >= casosMaximos
+                                  ? "bg-red-500"
+                                  : "bg-blue-500",
+                              )}
+                              style={{
+                                width: `${Math.min((est.total_casos! / 10) * 100, 100)}%`,
+                              }}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             )}
           </div>
@@ -197,28 +323,77 @@ export function AsignacionCaso({ usuario, onCasoRegistrado, datosIniciales }: As
                 </SelectTrigger>
                 <SelectContent>
                   {asesoresDisponibles.map((asesor) => (
-                    <SelectItem key={asesor.id_perfil} value={asesor.id_perfil.toString()}>
-                      {asesor.perfil.nombre_completo} - {asesor.area} ({asesor.turno})
+                    <SelectItem
+                      key={asesor.id_perfil}
+                      value={asesor.id_perfil.toString()}
+                    >
+                      <div className="flex items-center justify-between w-full min-w-[300px] py-1">
+                        <div className="flex flex-col">
+                          <span className="font-semibold">
+                            {asesor.perfil.nombre_completo}
+                          </span>
+                          <span className="text-xs text-muted-foreground flex items-center gap-1">
+                            Área: {asesor.area} Turno: {asesor.turno}
+                          </span>
+                        </div>
+                        
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
             </div>
 
-            {asesorSeleccionado && (
-              <div className="grid grid-cols-3 gap-4 p-3 bg-white rounded border border-slate-200 text-sm">
-                <div>
-                  <span className="text-muted-foreground">Área:</span>
-                  <p>{asesorSeleccionado.area}</p>
+            {(asesorSeleccionado ||
+              (asesorId &&
+                asesoresDisponibles.find(
+                  (a) => a.id_perfil.toString() === asesorId,
+                ))) && (
+              <div className="mt-4 p-4 bg-white rounded-xl border border-slate-200 shadow-sm space-y-3">
+                <div className="flex items-center justify-between">
+                  <h4 className="font-semibold text-slate-800 flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-blue-500" />
+                    Detalles del Asesor
+                  </h4>
                 </div>
-                <div>
-                  <span className="text-muted-foreground">Turno:</span>
-                  <p>{asesorSeleccionado.turno}</p>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Nombre:</span>
-                  <p>{asesorSeleccionado.perfil.nombre_completo}</p>
-                </div>
+
+                {(() => {
+                  const ase =
+                    asesorSeleccionado ||
+                    asesoresDisponibles.find(
+                      (a) => a.id_perfil.toString() === asesorId,
+                    );
+                  if (!ase) return null;
+                  return (
+                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+                      <div className="space-y-1">
+                        <p className="text-[10px] uppercase font-bold text-slate-400">
+                          Nombre
+                        </p>
+                        <p className="text-sm font-medium text-slate-700">
+                          {ase.perfil.nombre_completo}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] uppercase font-bold text-slate-400">
+                          Área
+                        </p>
+                        <p className="text-sm font-medium text-slate-700 capitalize">
+                          {ase.area}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] uppercase font-bold text-slate-400">
+                          Turno
+                        </p>
+                        <p className="text-sm font-medium text-slate-700">
+                          {ase.turno}
+                        </p>
+                      </div>
+                    
+                    </div>
+                  );
+                })()}
               </div>
             )}
           </div>

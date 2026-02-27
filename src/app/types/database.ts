@@ -1,12 +1,25 @@
 // --- ENUMS -----------------------------------------------------
 
-export type EstadoEnum = "aprobado" | "en_proceso" | "pendiente_aprobacion" | "cerrado" | "archivado";
+export type EstadoEnum =
+  | "aprobado"
+  | "en_proceso"
+  | "pendiente_aprobacion"
+  | "cerrado"
+  | "archivado";
 export type AreaEnum = "laboral" | "familia" | "penal" | "civil" | "otros";
 export type TurnoEnum = "9-11" | "2-4" | "4-6";
 export type JornadaEnum = "diurna" | "nocturna" | "mixto";
-export type EstadoCivilEnum = "soltero" | "casado" | "union libre" | 'otro';
-export type TipoContratoEnum = 'escrito' | 'verbal' | 'prestacion_servicios' | 'otro';
-export type situacionLaboral = 'dependiente' | 'desempleado' | 'independiente' | 'otro';
+export type EstadoCivilEnum = "soltero" | "casado" | "union libre" | "otro";
+export type TipoContratoEnum =
+  | "escrito"
+  | "verbal"
+  | "prestacion_servicios"
+  | "otro";
+export type situacionLaboral =
+  | "dependiente"
+  | "desempleado"
+  | "independiente"
+  | "otro";
 
 // --- USUARIOS --------------------------------------------------
 
@@ -48,6 +61,7 @@ export type Estudiante = {
   jornada: JornadaEnum;
   turno: TurnoEnum;
   perfil: Perfil;
+  total_casos?: number;
 };
 
 // --- ASESORES --------------------------------------------------
@@ -57,6 +71,7 @@ export type Asesor = {
   perfil: Perfil;
   turno: TurnoEnum;
   area: AreaEnum;
+  total_casos?: number;
 };
 
 // --- RELACIONES ------------------------------------------------
