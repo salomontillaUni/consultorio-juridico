@@ -27,9 +27,11 @@ export function Navbar() {
               className="flex items-center hover:opacity-80 transition-opacity duration-200"
             >
               <Logo className="h-15 w-15" />
-              <span className="ml-2 text-xl text-gray-900">Consulorio Jurídico</span>
-              <div className="ml-3 px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs">
-                Estudiante
+              <div className="flex flex-col md:flex-row items-center">
+                <span className="ml-2 text-xl text-gray-900">Consulorio Jurídico</span>
+                <div className="ml-3 px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs">
+                  Estudiante
+                </div>
               </div>
             </button>
           </div>

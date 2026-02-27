@@ -45,7 +45,7 @@ export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: Registr
   };
 
   return (
-    <Card className="md:min-w-3xl mx-auto shadow-lg">
+    <Card className="w-full md:min-w-3xl mx-auto shadow-lg">
       <CardHeader className="space-y-1 pb-6">
         <div className="flex items-center gap-2">
           <Link
@@ -141,7 +141,7 @@ export function RegistroUsuario({ onContinuar, datosIniciales, onBack }: Registr
           <div className="pt-4 flex justify-center">
             <Button
               type="submit"
-              className="w-sm bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
+              className="w-full bg-blue-600 hover:bg-blue-700 transition-colors duration-200"
               disabled={!isFormValid()}
             >
               Continuar
