@@ -281,14 +281,7 @@ export default function Asesor() {
                                                         {caso.estudiantes_casos?.[caso.estudiantes_casos.length - 1]?.estudiante?.perfil?.nombre_completo || 'Sin asignar'}
                                                     </p>
                                                 </div>
-                                                <div>
-                                                    <span className="text-xs uppercase text-slate-500 font-medium">
-                                                        Asesor
-                                                    </span>
-                                                    <p className="text-sm text-slate-900">
-                                                        {caso.asesores_casos?.[caso.asesores_casos.length - 1]?.asesor?.perfil?.nombre_completo || 'Sin asignar'}
-                                                    </p>
-                                                </div>
+                                                
                                             </div>
 
                                             {/* Resumen */}

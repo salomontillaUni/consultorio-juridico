@@ -23,6 +23,7 @@ import { cn } from "@/components/ui/utils";
 import { Asesor, Caso, Estudiante, Usuario } from "app/types/database";
 import { getEstudiantes } from "../../../../../supabase/queries/getEstudiantes";
 import { getAsesores } from "../../../../../supabase/queries/getAsesores";
+import { SearchableSelector } from "@/components/SearchableSelector";
 
 interface AsignacionCasoProps {
   usuario: Usuario;
@@ -177,52 +178,48 @@ export function AsignacionCaso({
 
             <div className="space-y-2">
               <Label htmlFor="estudiante">Seleccionar estudiante *</Label>
-              <Select value={estudianteId} onValueChange={setEstudianteId}>
-                <SelectTrigger id="estudiante">
-                  <SelectValue placeholder="Seleccione un estudiante" />
-                </SelectTrigger>
-                <SelectContent>
-                  {estudiantesDisponibles.map((estudiante) => (
-                    <SelectItem
-                      key={estudiante.id_perfil}
-                      value={estudiante.id_perfil.toString()}
+              <SearchableSelector
+                items={estudiantesDisponibles}
+                value={estudianteId}
+                onValueChange={setEstudianteId}
+                placeholder="Seleccione un estudiante"
+                searchPlaceholder="Buscar por nombre o cédula..."
+                getItemValue={(e) => e.id_perfil.toString()}
+                getItemLabel={(e) => e.perfil.nombre_completo}
+                getItemSearchValue={(e) => e.perfil.cedula || ""}
+                renderItem={(estudiante) => (
+                  <div className="flex items-center justify-between w-full py-1">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-sm">
+                        {estudiante.perfil.nombre_completo}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                        CC: {estudiante.perfil.cedula} | Semestre:{" "}
+                        {estudiante.semestre} | Turno: {estudiante.turno}
+                      </span>
+                    </div>
+                    <Badge
+                      variant={
+                        estudiante.total_casos! >= casosMaximos
+                          ? "destructive"
+                          : "secondary"
+                      }
+                      className={cn(
+                        "ml-4 text-[10px] h-5",
+                        estudiante.total_casos! === 0 &&
+                          "bg-green-100 text-green-700 hover:bg-green-100",
+                        estudiante.total_casos! > 0 &&
+                          estudiante.total_casos! < casosMaximos &&
+                          "bg-blue-100 text-blue-700 hover:bg-blue-100",
+                      )}
                     >
-                      <div className="flex items-center justify-between w-full min-w-[300px] py-1">
-                        <div className="flex flex-col">
-                          <span className="font-semibold">
-                            {estudiante.perfil.nombre_completo}
-                          </span>
-                          <span className="text-xs text-muted-foreground flex items-center gap-1">
-                            Semestre: {estudiante.semestre} Turno:{" "}
-                            {estudiante.turno}
-                          </span>
-                        </div>
-                        <Badge
-                          variant={
-                            estudiante.total_casos! >= casosMaximos
-                              ? "destructive"
-                              : "secondary"
-                          }
-                          className={cn(
-                            "ml-4 transition-colors",
-                            estudiante.total_casos! === 0 &&
-                              "bg-green-100 text-green-700 hover:bg-green-100",
-                            estudiante.total_casos! > 0 &&
-                              estudiante.total_casos! < casosMaximos &&
-                              "bg-blue-100 text-blue-700 hover:bg-blue-100",
-                          )}
-                        >
-                          {estudiante.total_casos === 1
-                            ? `${estudiante.total_casos} Caso asignado`
-                            : estudiante.total_casos === 0
-                              ? "Sin casos asignados"
-                              : `${estudiante.total_casos} Casos asignados`}
-                        </Badge>
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                      {estudiante.total_casos === 0
+                        ? "0 casos"
+                        : `${estudiante.total_casos} ${estudiante.total_casos === 1 ? "caso" : "casos"}`}
+                    </Badge>
+                  </div>
+                )}
+              />
             </div>
 
             {(estudianteSeleccionado ||
@@ -317,31 +314,29 @@ export function AsignacionCaso({
 
             <div className="space-y-2">
               <Label htmlFor="asesor">Seleccionar asesor *</Label>
-              <Select value={asesorId} onValueChange={setAsesorId}>
-                <SelectTrigger id="asesor">
-                  <SelectValue placeholder="Seleccione un asesor" />
-                </SelectTrigger>
-                <SelectContent>
-                  {asesoresDisponibles.map((asesor) => (
-                    <SelectItem
-                      key={asesor.id_perfil}
-                      value={asesor.id_perfil.toString()}
-                    >
-                      <div className="flex items-center justify-between w-full min-w-[300px] py-1">
-                        <div className="flex flex-col">
-                          <span className="font-semibold">
-                            {asesor.perfil.nombre_completo}
-                          </span>
-                          <span className="text-xs text-muted-foreground flex items-center gap-1">
-                            Área: {asesor.area} Turno: {asesor.turno}
-                          </span>
-                        </div>
-                        
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+              <SearchableSelector
+                items={asesoresDisponibles}
+                value={asesorId}
+                onValueChange={setAsesorId}
+                placeholder="Seleccione un asesor"
+                searchPlaceholder="Buscar por nombre o cédula..."
+                getItemValue={(a) => a.id_perfil.toString()}
+                getItemLabel={(a) => a.perfil.nombre_completo}
+                getItemSearchValue={(a) => a.perfil.cedula || ""}
+                renderItem={(asesor) => (
+                  <div className="flex items-center justify-between w-full py-1">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-sm">
+                        {asesor.perfil.nombre_completo}
+                      </span>
+                      <span className="text-[10px] text-muted-foreground flex items-center gap-1">
+                        CC: {asesor.perfil.cedula} | Área: {asesor.area} |
+                        Turno: {asesor.turno}
+                      </span>
+                    </div>
+                  </div>
+                )}
+              />
             </div>
 
             {(asesorSeleccionado ||
@@ -390,7 +385,6 @@ export function AsignacionCaso({
                           {ase.turno}
                         </p>
                       </div>
-                    
                     </div>
                   );
                 })()}
