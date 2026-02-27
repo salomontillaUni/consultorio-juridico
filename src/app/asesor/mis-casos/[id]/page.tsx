@@ -192,7 +192,12 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   <span className="text-sm text-gray-600">
                     Resumen de los hechos:
                   </span>
-                  <p className="text-gray-900 mt-2">{caso.resumen_hechos}</p>
+                  <div className="mt-2 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <p className="text-sm text-slate-700 leading-relaxed font-sans">
+                      {caso.resumen_hechos ||
+                        "No hay resumen de los hechos registrado."}
+                    </p>
+                  </div>
                 </div>
 
                 <div className="space-y-4">
