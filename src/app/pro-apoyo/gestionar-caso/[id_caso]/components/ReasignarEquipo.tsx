@@ -49,6 +49,20 @@ export function ReasignarEquipo({ idCaso, type, casosData, onRefresh }: Props) {
 
   const handleReassign = async () => {
     if (!selectedId) return;
+
+    // Validation to avoid reassigning the same person
+    const currentId =
+      type === "estudiante"
+        ? current?.estudiante?.id_perfil?.toString()
+        : current?.asesor?.id_perfil?.toString();
+
+    if (selectedId === currentId) {
+      toast.error(
+        `Este ${type === "estudiante" ? "estudiante" : "asesor"} ya está asignado actualmente al caso.`,
+      );
+      return;
+    }
+
     setLoading(true);
     try {
       if (type === "estudiante") {
