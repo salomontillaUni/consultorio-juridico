@@ -13,6 +13,22 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Spinner } from "@/components/ui/spinner";
 import { supabase } from "@/utils/supabase/supabase";
 
+export  const getStatusBadge = (status: string) => {
+  const statusConfig = {
+      pendiente_aprobacion: {
+        color: "bg-yellow-100 text-yellow-800",
+        text: "Pendiente de aprobación",
+      },
+      aprobado: { color: "bg-green-100 text-green-800", text: "Aprobado" },
+      en_proceso: { color: "bg-blue-100 text-blue-800", text: "En proceso" },
+      cerrado: { color: "bg-gray-100 text-gray-800", text: "Cerrado" },
+      archivado: { color: "bg-red-100 text-red-800", text: "Archivado" },
+    };
+
+    const config = statusConfig[status as keyof typeof statusConfig];
+    return <Badge className={config.color}>{config.text}</Badge>;
+}
+
 interface Case {
     id: string;
     caseNumber: string;

@@ -13,16 +13,8 @@ import { Loader2 } from "lucide-react";
 import { supabase } from "@/utils/supabase/supabase";
 import { get } from "http";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { getStatusBadge } from "app/asesor/mis-casos/page";
 
-export const getStatusColor = (status: string) => {
-  switch (status) {
-    case "aprobado": return "bg-green-100 text-green-800 border-green-200";
-    case "pendiente_aprobacion": return "bg-yellow-100 text-yellow-800 border-yellow-200";
-    case "en_proceso": return "bg-blue-100 text-black-800 border-blue-200";
-    case "archivado": return "bg-gray-100 text-gray-800 border-gray-200";
-    default: return "bg-gray-100 text-gray-800 border-gray-200";
-  }
-};
 export const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString('es-ES', {
     year: 'numeric',
@@ -241,10 +233,7 @@ export default function SupportCasesPage() {
                     <p className="text-gray-800">Documento: {caso.usuarios.cedula}</p>
                   </div>
                   <div className="flex flex-col gap-2">
-                    <Badge className={`text-xs ${getStatusColor(caso.estado)}`}>
-                      {caso.estado.charAt(0).toUpperCase() + caso.estado.slice(1)}
-                    </Badge>
-
+                    {getStatusBadge(caso.estado)}
                   </div>
                 </div>
 

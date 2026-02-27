@@ -7,11 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import Link from "next/link";
 import { Navbar } from "../components/NavBarEstudiante";
-import { getStatusColor } from "app/pro-apoyo/gestionar-caso/page";
 import { Caso } from "app/types/database";
 import { getCasos } from "../../../../supabase/queries/getCasos";
 import { supabase } from "@/utils/supabase/supabase";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { getStatusBadge } from "app/asesor/mis-casos/page";
 
 export default function CasesPage() {
     const [searchTerm, setSearchTerm] = useState("");
@@ -194,10 +194,7 @@ export default function CasesPage() {
                                         <p className="text-gray-600">Documento: {caso.usuarios?.cedula}</p>
                                     </div>
                                     <div className="flex flex-col gap-2">
-                                        <Badge className={`text-xs ${getStatusColor(caso.estado)}`}>
-                                            {caso.estado.charAt(0).toUpperCase() + caso.estado.slice(1)}
-                                        </Badge>
-
+                                        {getStatusBadge(caso.estado)}
                                     </div>
                                 </div>
 

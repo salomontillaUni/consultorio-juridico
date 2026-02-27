@@ -12,6 +12,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { updateObservaciones } from "../../../../../supabase/queries/updateObservaciones";
 import { toast } from "sonner";
 import { Pencil, Save, X } from "lucide-react";
+import { getStatusBadge } from "../page";
+
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params);
@@ -89,21 +91,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     traerDatos();
   }, []);
 
-  const getStatusBadge = (status: string) => {
-    const statusConfig = {
-      pendiente_aprobacion: {
-        color: "bg-yellow-100 text-yellow-800",
-        text: "Pendiente de aprobación",
-      },
-      aprobado: { color: "bg-green-100 text-green-800", text: "Aprobado" },
-      en_proceso: { color: "bg-blue-100 text-blue-800", text: "En proceso" },
-      cerrado: { color: "bg-gray-100 text-gray-800", text: "Cerrado" },
-      archivado: { color: "bg-red-100 text-red-800", text: "Archivado" },
-    };
-
-    const config = statusConfig[status as keyof typeof statusConfig];
-    return <Badge className={config.color}>{config.text}</Badge>;
-  };
+  
 
   if (loading) {
     return (
@@ -368,7 +356,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
               </Card>
 
               {/* Estado del caso (si ya está aprobado) */}
-              {caso.estado !== "pendiente_aprobacion" && (
+              {caso.estado === "aprobado" && (
                 <Card className="p-6">
                   <h3 className="text-gray-900 mb-4">Estado del Caso</h3>
 

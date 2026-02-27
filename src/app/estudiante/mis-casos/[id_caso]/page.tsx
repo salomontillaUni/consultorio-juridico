@@ -14,9 +14,10 @@ import React from "react";
 import { Caso, Demandado } from "app/types/database";
 import { getCasoById } from "../../../../../supabase/queries/getCasoById";
 import { getDemandadoByCasoId } from "../../../../../supabase/queries/getDemandadoByCasoId";
-import { formatDate, getStatusColor } from "app/pro-apoyo/gestionar-caso/page";
+import { formatDate } from "app/pro-apoyo/gestionar-caso/page";
 import { CassetteTapeIcon } from "lucide-react";
 import { supabase } from "@/utils/supabase/supabase";
+import { getStatusBadge } from "app/asesor/mis-casos/page";
 
 
 export default function Page({ params }: { params: Promise<{ id_caso: string }> }) {
@@ -115,9 +116,7 @@ export default function Page({ params }: { params: Promise<{ id_caso: string }> 
                 <div className="flex items-center gap-3">
                   <h1 className="text-3xl font-bold text-gray-900 tracking-tight">Caso #{id_caso.slice(0, 8)}</h1>
                   {caso && (
-                    <Badge className={`${getStatusColor(caso.estado)} font-semibold`}>
-                      {caso.estado}
-                    </Badge>
+                    getStatusBadge(caso.estado)
                   )}
                 </div>
                 <p className="text-lg text-gray-600 flex items-center gap-2">

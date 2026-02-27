@@ -21,10 +21,11 @@ import Link from "next/link";
 import { Caso, Demandado, Estudiante, Usuario } from "app/types/database";
 import { getCasoById } from "../../../../../supabase/queries/getCasoById";
 import { getDemandadoByCasoId } from "../../../../../supabase/queries/getDemandadoByCasoId";
-import { formatDate, getStatusColor } from "../page";
+import { formatDate } from "../page";
 import { cleanData } from "@/utils/utils";
 import { supabase } from "@/utils/supabase/supabase";
 import { Notebook } from "lucide-react";
+import { getStatusBadge } from "app/asesor/mis-casos/page";
 
 export default function Page({
   params,
@@ -385,11 +386,7 @@ export default function Page({
               </div>
               <div className="flex flex-col sm:flex-row gap-3">
                 {caso && (
-                  <Badge
-                    className={`text-sm ${getStatusColor(caso?.estado)} justify-center sm:justify-start`}
-                  >
-                    {caso?.estado}
-                  </Badge>
+                  getStatusBadge(caso?.estado)
                 )}
               </div>
             </div>
@@ -501,18 +498,7 @@ export default function Page({
                             {displayCaseData?.area}
                           </p>
 
-                          <Label className="text-gray-600">
-                            Estado de aprobación
-                          </Label>
-                          <div className="mb-4">
-                            <Badge
-                              className={`${displayCaseData?.aprobacion_asesor ? "bg-green-100 text-green-800 border-green-200" : "bg-yellow-100 text-yellow-800 border-yellow-200"}`}
-                            >
-                              {displayCaseData?.aprobacion_asesor
-                                ? "Caso Aprobado"
-                                : "Pendiente de Aprobación"}
-                            </Badge>
-                          </div>
+                          
 
                           <Label className="text-gray-600">
                             Tipo de proceso
