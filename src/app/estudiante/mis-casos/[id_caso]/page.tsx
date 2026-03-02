@@ -24,6 +24,7 @@ import { getStatusBadge } from "app/asesor/mis-casos/page";
 import { CaseInfoTab } from "@/components/casos-juridicos/case-info-tab";
 import { ClientInfo } from "@/components/casos-juridicos/client-info";
 import { DefendantInfo } from "@/components/casos-juridicos/defendant-info";
+import { AdvisorInfo } from "@/components/casos-juridicos/advisor-info";
 import { supabase } from "@/utils/supabase/supabase";
 import { formatDate } from "app/pro-apoyo/gestionar-caso/page";
 
@@ -171,10 +172,11 @@ export default function Page({
             onValueChange={setActiveTab}
             className="w-full"
           >
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-3">
+            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
               <TabsTrigger value="overview">Resumen</TabsTrigger>
               <TabsTrigger value="client">Cliente</TabsTrigger>
               <TabsTrigger value="defendant">Demandado</TabsTrigger>
+              <TabsTrigger value="advisor">Asesor</TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}
@@ -191,6 +193,7 @@ export default function Page({
                     onCancel={() => {}}
                     onChange={() => {}}
                     getStatusBadge={getStatusBadge}
+                    canEdit={false}
                   />
 
                   <Card className="p-6">
@@ -343,6 +346,7 @@ export default function Page({
                 onSave={() => {}}
                 onCancel={() => {}}
                 onChange={() => {}}
+                canEdit={false}
               />
             </TabsContent>
 
@@ -356,6 +360,14 @@ export default function Page({
                 onSave={() => {}}
                 onCancel={() => {}}
                 onChange={() => {}}
+                canEdit={false}
+              />
+            </TabsContent>
+
+            {/* Advisor Tab */}
+            <TabsContent value="advisor" className="space-y-6">
+              <AdvisorInfo
+                advisors={caso?.asesores_casos?.map((ac) => ac.asesor) || []}
               />
             </TabsContent>
           </Tabs>

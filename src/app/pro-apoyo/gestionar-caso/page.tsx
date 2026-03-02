@@ -259,8 +259,12 @@ export default function SupportCasesPage() {
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Asesor:</span>
                     <span className="text-gray-900">
-                      {caso.asesores_casos?.length ? (
-                        <p className="text-green-600">{caso.asesores_casos.map(ac => ac.asesor?.perfil?.nombre_completo).filter(Boolean).join(', ')}</p>
+                      {caso.asesores_casos?.length ? (caso?.estudiantes_casos &&
+                    caso.asesores_casos.length > 0
+                      ? caso.asesores_casos[
+                          caso.asesores_casos.length - 1
+                        ].asesor.perfil.nombre_completo
+                      : "Sin asignar"
                       ) : (
                         <p className="text-gray-600 italic">Sin asesor asignado</p>
                       )}</span>

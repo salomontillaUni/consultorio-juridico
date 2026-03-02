@@ -307,6 +307,16 @@ export default function CasesPage() {
                         <span className="text-gray-900">{caso.area}</span>
                       </div>
                       <div className="flex justify-between text-sm">
+                        <span className="text-gray-600">Asesor:</span>
+                        <span className="text-gray-900 font-medium">
+                          {caso.asesores_casos && caso.asesores_casos.length > 0
+                            ? caso.asesores_casos[
+                                caso.asesores_casos.length - 1
+                              ].asesor?.perfil?.nombre_completo
+                            : "Sin asignar"}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
                         <span className="text-gray-600">Creado:</span>
                         <span className="text-gray-900">
                           {formatDate(caso.fecha_creacion)}

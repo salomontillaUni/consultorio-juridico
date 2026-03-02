@@ -21,6 +21,7 @@ interface ClientInfoProps {
   onSave: () => void;
   onCancel: () => void;
   onChange: (field: string, value: any) => void;
+  canEdit?: boolean;
 }
 
 export const ClientInfo = ({
@@ -31,37 +32,40 @@ export const ClientInfo = ({
   onSave,
   onCancel,
   onChange,
+  canEdit = true,
 }: ClientInfoProps) => {
-  const headerActions = !isEditing ? (
-    <Button
-      onClick={onEdit}
-      size="sm"
-      variant="ghost"
-      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-semibold"
-    >
-      <Edit3 className="w-4 h-4 mr-2" />
-      Modificar
-    </Button>
-  ) : (
-    <div className="flex gap-2">
+  const headerActions = canEdit ? (
+    !isEditing ? (
       <Button
-        onClick={onSave}
-        size="sm"
-        className="bg-green-600 hover:bg-green-700 text-white font-semibold"
-      >
-        <Check className="w-4 h-4 mr-2" />
-        Guardar
-      </Button>
-      <Button
-        onClick={onCancel}
+        onClick={onEdit}
         size="sm"
         variant="ghost"
-        className="text-slate-600 hover:bg-slate-100 font-semibold"
+        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-semibold"
       >
-        Cancelar
+        <Edit3 className="w-4 h-4 mr-2" />
+        Modificar
       </Button>
-    </div>
-  );
+    ) : (
+      <div className="flex gap-2">
+        <Button
+          onClick={onSave}
+          size="sm"
+          className="bg-green-600 hover:bg-green-700 text-white font-semibold"
+        >
+          <Check className="w-4 h-4 mr-2" />
+          Guardar
+        </Button>
+        <Button
+          onClick={onCancel}
+          size="sm"
+          variant="ghost"
+          className="text-slate-600 hover:bg-slate-100 font-semibold"
+        >
+          Cancelar
+        </Button>
+      </div>
+    )
+  ) : null;
 
   return (
     <div className="space-y-6">
