@@ -709,7 +709,9 @@ export default function Page({
                       <div className="p-2 bg-green-100 rounded-lg text-green-600">
                         <Notebook className="w-5 h-5" />
                       </div>
-                      <h3 className="font-bold text-slate-800 tracking-tight">Resumen de los hechos</h3>
+                      <h3 className="font-bold text-slate-800 tracking-tight">
+                        Resumen de los hechos
+                      </h3>
                     </div>
 
                     <div className="p-6">
@@ -730,7 +732,10 @@ export default function Page({
                         <Textarea
                           value={editedCaseData?.resumen_hechos || ""}
                           onChange={(e) =>
-                            handleCaseDataChange("resumen_hechos", e.target.value)
+                            handleCaseDataChange(
+                              "resumen_hechos",
+                              e.target.value,
+                            )
                           }
                           placeholder="Descripción detallada de los hechos del caso..."
                           className="min-h-48 border-slate-200 focus:ring-blue-500/20 focus:border-blue-500 rounded-xl leading-relaxed"
@@ -744,7 +749,9 @@ export default function Page({
                       <div className="p-2 bg-yellow-100 rounded-lg text-yellow-600">
                         <ClipboardList className="w-5 h-5" />
                       </div>
-                      <h3 className="font-bold text-slate-800 tracking-tight">Observaciones</h3>
+                      <h3 className="font-bold text-slate-800 tracking-tight">
+                        Observaciones
+                      </h3>
                     </div>
 
                     <div className="p-6">
@@ -753,7 +760,7 @@ export default function Page({
                           {displayNotes ? (
                             displayNotes
                               .split("\n")
-                              .filter(note => note.trim() !== "")
+                              .filter((note) => note.trim() !== "")
                               .map((note: string, index: number) => (
                                 <div
                                   key={index}
@@ -799,11 +806,15 @@ export default function Page({
                       <div className="p-2 bg-purple-100 rounded-lg text-purple-600">
                         <Calendar className="w-5 h-5" />
                       </div>
-                      <h3 className="font-bold text-slate-800 tracking-tight">Fechas importantes</h3>
+                      <h3 className="font-bold text-slate-800 tracking-tight">
+                        Fechas importantes
+                      </h3>
                     </div>
                     <div className="p-6 space-y-4">
                       <div>
-                        <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2 block">Fecha de creación</Label>
+                        <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2 block">
+                          Fecha de creación
+                        </Label>
                         {caso && (
                           <div className="flex items-center gap-2 text-slate-900 font-medium">
                             <div className="w-2 h-2 rounded-full bg-purple-400" />
@@ -819,7 +830,9 @@ export default function Page({
                       <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
                         <Users className="w-5 h-5" />
                       </div>
-                      <h3 className="font-bold text-slate-800 tracking-tight">Equipo asignado</h3>
+                      <h3 className="font-bold text-slate-800 tracking-tight">
+                        Equipo asignado
+                      </h3>
                     </div>
                     <div className="p-6 space-y-6">
                       <ReasignarEquipo
@@ -846,202 +859,225 @@ export default function Page({
             <TabsContent value="supervision" className="space-y-6">
               <div className="grid grid-cols-1 gap-6">
                 {displayStudentData?.map((student, index) => (
-                  <Card key={student.id_perfil || index} className="p-6">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center">
-                        <div className="p-2 bg-blue-100 rounded-lg mr-3">
-                          <svg
-                            className="w-5 h-5 text-blue-600"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                            />
-                          </svg>
+                  <Card
+                    key={student.id_perfil || index}
+                    className="p-0 overflow-hidden border-slate-200 shadow-sm"
+                  >
+                    <div className="bg-slate-50 border-b border-slate-200 p-4">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
+                          <Users className="w-5 h-5" />
                         </div>
-                        <h3 className="text-gray-900 font-semibold">
+                        <h3 className="font-bold text-slate-800 tracking-tight">
                           Estudiante{" "}
                           {displayStudentData.length > 1 ? index + 1 : ""}
                         </h3>
                       </div>
                     </div>
 
-                    {!isEditingStudent ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div>
-                          <Label className="text-gray-600">
-                            Nombre completo
-                          </Label>
-                          <p className="text-gray-900 font-medium">
-                            {student.perfil.nombre_completo}
-                          </p>
+                    <div className="p-6">
+                      {!isEditingStudent ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
+                          <div className="space-y-1">
+                            <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                              Nombre completo
+                            </Label>
+                            <p className="text-slate-900 font-semibold">
+                              {student.perfil.nombre_completo}
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                              Cédula
+                            </Label>
+                            <p className="text-slate-900 font-medium">
+                              {student.perfil.cedula}
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                              Correo electrónico
+                            </Label>
+                            <p className="text-blue-600 font-medium">
+                              {student.perfil.correo}
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                              Semestre
+                            </Label>
+                            <p className="text-slate-900 font-medium">
+                              {student.semestre}° Semestre
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                              Jornada
+                            </Label>
+                            <p className="text-slate-900 font-medium capitalize">
+                              {student.jornada}
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                              Turno
+                            </Label>
+                            <p className="text-slate-900 font-medium">
+                              {student.turno}
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                              Teléfono
+                            </Label>
+                            <p className="text-slate-900 font-medium">
+                              {student.perfil.telefono || "No registrado"}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <Label className="text-gray-600">Cédula</Label>
-                          <p className="text-gray-900">
-                            {student.perfil.cedula}
-                          </p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">
-                            Correo electrónico
-                          </Label>
-                          <p className="text-blue-600">
-                            {student.perfil.correo}
-                          </p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Semestre</Label>
-                          <p className="text-gray-900">{student.semestre}</p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Jornada</Label>
-                          <p className="text-gray-900">{student.jornada}</p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Turno</Label>
-                          <p className="text-gray-900">{student.turno}</p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Teléfono</Label>
-                          <p className="text-gray-900">
-                            {student.perfil.telefono || "No registrado"}
-                          </p>
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div>
-                          <Label className="text-gray-600">
-                            Nombre completo
-                          </Label>
-                          <Input
-                            value={student.perfil.nombre_completo || ""}
-                            onChange={(e) =>
-                              handleStudentDataChange(
-                                index,
-                                "perfil.nombre_completo",
-                                e.target.value,
-                              )
-                            }
-                            placeholder="Nombre completo"
-                          />
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Cédula</Label>
-                          <Input
-                            value={student.perfil.cedula || ""}
-                            onChange={(e) =>
-                              handleStudentDataChange(
-                                index,
-                                "perfil.cedula",
-                                e.target.value,
-                              )
-                            }
-                            placeholder="Cédula"
-                          />
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">
-                            Correo electrónico
-                          </Label>
-                          <Input
-                            type="email"
-                            value={student.perfil.correo || ""}
-                            onChange={(e) =>
-                              handleStudentDataChange(
-                                index,
-                                "perfil.correo",
-                                e.target.value,
-                              )
-                            }
-                            placeholder="correo@estudiantes.edu.co"
-                          />
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Semestre</Label>
-                          <Select
-                            value={student.semestre?.toString()}
-                            onValueChange={(value) =>
-                              handleStudentDataChange(index, "semestre", value)
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Semestre" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              {[...Array(10)].map((_, i) => (
-                                <SelectItem
-                                  key={i + 1}
-                                  value={(i + 1).toString()}
-                                >
-                                  {i + 1}
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                          <div className="space-y-2">
+                            <Label className="text-slate-700 font-bold">
+                              Nombre completo
+                            </Label>
+                            <Input
+                              value={student.perfil.nombre_completo || ""}
+                              onChange={(e) =>
+                                handleStudentDataChange(
+                                  index,
+                                  "perfil.nombre_completo",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-slate-700 font-bold">
+                              Cédula
+                            </Label>
+                            <Input
+                              value={student.perfil.cedula || ""}
+                              onChange={(e) =>
+                                handleStudentDataChange(
+                                  index,
+                                  "perfil.cedula",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-slate-700 font-bold">
+                              Correo electrónico
+                            </Label>
+                            <Input
+                              type="email"
+                              value={student.perfil.correo || ""}
+                              onChange={(e) =>
+                                handleStudentDataChange(
+                                  index,
+                                  "perfil.correo",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-slate-700 font-bold">
+                              Semestre
+                            </Label>
+                            <Select
+                              value={student.semestre?.toString()}
+                              onValueChange={(value) =>
+                                handleStudentDataChange(
+                                  index,
+                                  "semestre",
+                                  value,
+                                )
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Semestre" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                {[...Array(10)].map((_, i) => (
+                                  <SelectItem
+                                    key={i + 1}
+                                    value={(i + 1).toString()}
+                                  >
+                                    {i + 1}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-slate-700 font-bold">
+                              Jornada
+                            </Label>
+                            <Select
+                              value={student.jornada || ""}
+                              onValueChange={(value) =>
+                                handleStudentDataChange(index, "jornada", value)
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Jornada" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="diurna">Diurna</SelectItem>
+                                <SelectItem value="nocturna">
+                                  Nocturna
                                 </SelectItem>
-                              ))}
-                            </SelectContent>
-                          </Select>
+                                <SelectItem value="mixto">Mixto</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-slate-700 font-bold">
+                              Turno
+                            </Label>
+                            <Select
+                              value={student.turno || ""}
+                              onValueChange={(value) =>
+                                handleStudentDataChange(index, "turno", value)
+                              }
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Turno" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="9-11">9-11</SelectItem>
+                                <SelectItem value="2-4">2-4</SelectItem>
+                                <SelectItem value="4-6">4-6</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-slate-700 font-bold">
+                              Teléfono
+                            </Label>
+                            <Input
+                              value={student.perfil.telefono || ""}
+                              onChange={(e) =>
+                                handleStudentDataChange(
+                                  index,
+                                  "perfil.telefono",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
                         </div>
-                        <div>
-                          <Label className="text-gray-600">Jornada</Label>
-                          <Select
-                            value={student.jornada || ""}
-                            onValueChange={(value) =>
-                              handleStudentDataChange(index, "jornada", value)
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Jornada" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="diurna">Diurna</SelectItem>
-                              <SelectItem value="nocturna">Nocturna</SelectItem>
-                              <SelectItem value="mixto">Mixto</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Turno</Label>
-                          <Select
-                            value={student.turno || ""}
-                            onValueChange={(value) =>
-                              handleStudentDataChange(index, "turno", value)
-                            }
-                          >
-                            <SelectTrigger>
-                              <SelectValue placeholder="Turno" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="9-11">9-11</SelectItem>
-                              <SelectItem value="2-4">2-4</SelectItem>
-                              <SelectItem value="4-6">4-6</SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">Teléfono</Label>
-                          <Input
-                            value={student.perfil.telefono || ""}
-                            onChange={(e) =>
-                              handleStudentDataChange(
-                                index,
-                                "perfil.telefono",
-                                e.target.value,
-                              )
-                            }
-                          />
-                        </div>
-                      </div>
-                    )}
+                      )}
+                    </div>
                   </Card>
                 ))}
                 {(!displayStudentData || displayStudentData.length === 0) && (
-                  <Card className="p-12 text-center">
-                    <p className="text-gray-500 italic">
+                  <Card className="p-12 text-center border-dashed border-2 border-slate-200 bg-slate-50/50 rounded-2xl">
+                    <Users className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                    <p className="text-slate-500 font-medium italic">
                       No hay estudiantes asignados a este caso.
                     </p>
                   </Card>
@@ -1051,76 +1087,41 @@ export default function Page({
 
             {/* Client Tab */}
             <TabsContent value="client" className="space-y-6">
-              {/* Personal Information */}
-              <Card className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-indigo-100 rounded-lg mr-3">
-                      <svg
-                        className="w-5 h-5 text-indigo-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                        />
-                      </svg>
+              <Card className="p-0 overflow-hidden border-slate-200 shadow-sm">
+                <div className="bg-slate-50 border-b border-slate-200 p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
+                      <User className="w-5 h-5" />
                     </div>
-                    <h3 className="text-gray-900">Información personal</h3>
+                    <h3 className="font-bold text-slate-800 tracking-tight">
+                      Datos personales
+                    </h3>
                   </div>
                   {!isEditingClient ? (
                     <Button
                       onClick={handleEditClient}
                       size="sm"
-                      variant="outline"
-                      className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                      variant="ghost"
+                      className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-semibold"
                     >
-                      <svg
-                        className="w-4 h-4 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                        />
-                      </svg>
-                      Modificar información
+                      <Edit3 className="w-4 h-4 mr-2" />
+                      Modificar
                     </Button>
                   ) : (
                     <div className="flex gap-2">
                       <Button
                         onClick={handleSaveClient}
                         size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white"
+                        className="bg-green-600 hover:bg-green-700 text-white font-semibold"
                       >
-                        <svg
-                          className="w-4 h-4 mr-2"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
+                        <Check className="w-4 h-4 mr-2" />
                         Guardar
                       </Button>
                       <Button
                         onClick={handleCancelClientEdit}
                         size="sm"
-                        variant="outline"
-                        className="text-gray-600 border-gray-300 hover:bg-gray-50"
+                        variant="ghost"
+                        className="text-slate-600 hover:bg-slate-100 font-semibold"
                       >
                         Cancelar
                       </Button>
@@ -1128,399 +1129,437 @@ export default function Page({
                   )}
                 </div>
 
-                {!isEditingClient ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div>
-                      <Label className="text-gray-600">Nombre completo</Label>
-                      <p className="text-gray-900">
-                        {caso?.usuarios.nombre_completo}
-                      </p>
+                <div className="p-6">
+                  {!isEditingClient ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-6">
+                      <div className="space-y-1">
+                        <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                          Nombre completo
+                        </Label>
+                        <p className="text-slate-900 font-semibold">
+                          {caso?.usuarios.nombre_completo || "N/A"}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                          Sexo
+                        </Label>
+                        <p className="text-slate-900 font-medium">
+                          {caso?.usuarios.sexo || "N/A"}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                          Cédula
+                        </Label>
+                        <p className="text-slate-900 font-medium">
+                          {caso?.usuarios.cedula || "N/A"}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                          Edad
+                        </Label>
+                        <p className="text-slate-900 font-medium">
+                          {caso?.usuarios.edad
+                            ? `${caso.usuarios.edad} años`
+                            : "N/A"}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                          Estado civil
+                        </Label>
+                        <p className="text-slate-900 font-medium capitalize">
+                          {caso?.usuarios.estado_civil || "N/A"}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                          Estrato
+                        </Label>
+                        <p className="text-slate-900 font-medium">
+                          {caso?.usuarios.estrato
+                            ? `Estrato ${caso.usuarios.estrato}`
+                            : "N/A"}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <Label className="text-gray-600">Sexo</Label>
-                      <p className="text-gray-900">{caso?.usuarios.sexo}</p>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                      <div className="space-y-2">
+                        <Label className="text-slate-700 font-bold">
+                          Nombre completo
+                        </Label>
+                        <Input
+                          value={editedClientData?.nombre_completo || ""}
+                          onChange={(e) =>
+                            handleClientDataChange(
+                              "nombre_completo",
+                              e.target.value,
+                            )
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-slate-700 font-bold">Sexo</Label>
+                        <Select
+                          value={editedClientData?.sexo}
+                          onValueChange={(value) =>
+                            handleClientDataChange("sexo", value)
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Sexo" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="M">Masculino</SelectItem>
+                            <SelectItem value="F">Femenino</SelectItem>
+                            <SelectItem value="O">Otro</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-slate-700 font-bold">
+                          Cédula
+                        </Label>
+                        <Input
+                          value={editedClientData?.cedula || ""}
+                          onChange={(e) =>
+                            handleClientDataChange("cedula", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-slate-700 font-bold">Edad</Label>
+                        <Input
+                          type="number"
+                          value={editedClientData?.edad || ""}
+                          onChange={(e) =>
+                            handleClientDataChange("edad", e.target.value)
+                          }
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-slate-700 font-bold">
+                          Estado civil
+                        </Label>
+                        <Select
+                          value={editedClientData?.estado_civil || ""}
+                          onValueChange={(value) =>
+                            handleClientDataChange("estado_civil", value)
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Estado civil" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            <SelectItem value="soltero">Soltero</SelectItem>
+                            <SelectItem value="casado">Casado</SelectItem>
+                            <SelectItem value="union libre">
+                              Union Libre
+                            </SelectItem>
+                            <SelectItem value="otro">Otro</SelectItem>
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label className="text-slate-700 font-bold">
+                          Estrato
+                        </Label>
+                        <Select
+                          value={editedClientData?.estrato?.toString()}
+                          onValueChange={(value) =>
+                            handleClientDataChange("estrato", value)
+                          }
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Estrato" />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {["1", "2", "3", "4", "5", "6", "Otro"].map((s) => (
+                              <SelectItem key={s} value={s}>
+                                Estrato {s}
+                              </SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
-                    <div>
-                      <Label className="text-gray-600">Cédula</Label>
-                      <p className="text-gray-900">{caso?.usuarios.cedula}</p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Edad</Label>
-                      <p className="text-gray-900">
-                        {caso?.usuarios.edad} años
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Estado civil</Label>
-                      <p className="text-gray-900">
-                        {caso?.usuarios.estado_civil}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Estrato</Label>
-                      <p className="text-gray-900">{caso?.usuarios.estrato}</p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div>
-                      <Label className="text-gray-600">Nombre completo</Label>
-                      <Input
-                        value={editedClientData?.nombre_completo || ""}
-                        onChange={(e) =>
-                          handleClientDataChange(
-                            "nombre_completo",
-                            e.target.value,
-                          )
-                        }
-                        placeholder="Nombre completo del cliente"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Sexo</Label>
-                      <Select
-                        value={editedClientData?.sexo}
-                        onValueChange={(value) =>
-                          handleClientDataChange("sexo", value)
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar sexo" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="M">Masculino</SelectItem>
-                          <SelectItem value="F">Femenino</SelectItem>
-                          <SelectItem value="O">Otro</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Cédula</Label>
-                      <Input
-                        value={editedClientData?.cedula || ""}
-                        onChange={(e) =>
-                          handleClientDataChange("cedula", e.target.value)
-                        }
-                        placeholder="Número de cédula"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Edad</Label>
-                      <Input
-                        type="number"
-                        value={editedClientData?.edad || ""}
-                        onChange={(e) =>
-                          handleClientDataChange("edad", e.target.value)
-                        }
-                        placeholder="Edad en años"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Estado civil</Label>
-                      <Select
-                        value={editedClientData?.estado_civil || ""}
-                        onValueChange={(value) =>
-                          handleClientDataChange("estado_civil", value)
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar estado civil" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="soltero">Soltero</SelectItem>
-                          <SelectItem value="casado">Casado</SelectItem>
-                          <SelectItem value="union libre">
-                            Union Libre
-                          </SelectItem>
-                          <SelectItem value="otro">Otro</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Estrato</Label>
-                      <Select
-                        value={editedClientData?.estrato?.toString()}
-                        onValueChange={(value) =>
-                          handleClientDataChange("estrato", value)
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar estrato" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="1">Estrato 1</SelectItem>
-                          <SelectItem value="2">Estrato 2</SelectItem>
-                          <SelectItem value="3">Estrato 3</SelectItem>
-                          <SelectItem value="4">Estrato 4</SelectItem>
-                          <SelectItem value="5">Estrato 5</SelectItem>
-                          <SelectItem value="6">Estrato 6</SelectItem>
-                          <SelectItem value="Otro">Otro</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                  </div>
-                )}
-              </Card>
-              <Card className="p-6">
-                <div className="flex items-center mb-6">
-                  <div className="p-2 bg-green-100 rounded-lg mr-3">
-                    <svg
-                      className="w-5 h-5 text-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                      />
-                    </svg>
-                  </div>
-                  <h3 className="text-gray-900">Información de contacto</h3>
+                  )}
                 </div>
-                {!isEditingClient ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label className="text-gray-600">Teléfono</Label>
-                      <p className="text-gray-900 mb-4">
-                        {caso?.usuarios.telefono}
-                      </p>
-
-                      <Label className="text-gray-600">
-                        Correo electrónico
-                      </Label>
-                      <p className="text-gray-900 mb-4">
-                        {caso?.usuarios.correo}
-                      </p>
-
-                      <Label className="text-gray-600">Dirección</Label>
-                      <p className="text-gray-900">
-                        {caso?.usuarios.direccion}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">
-                        Contacto de familiar
-                      </Label>
-                      <p className="text-gray-900 mb-4">
-                        {caso?.usuarios.contacto_familiar}
-                      </p>
-
-                      <Label className="text-gray-600">Tipo de vivienda</Label>
-                      <p className="text-gray-900 mb-4">
-                        {caso?.usuarios.tipo_vivienda}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label className="text-gray-600">Teléfono</Label>
-                      <Input
-                        value={editedClientData?.telefono || ""}
-                        onChange={(e) =>
-                          handleClientDataChange("telefono", e.target.value)
-                        }
-                        placeholder="Número de teléfono"
-                        className="mb-4"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">
-                        Contacto de familiar
-                      </Label>
-                      <Input
-                        value={editedClientData?.contacto_familiar || ""}
-                        onChange={(e) =>
-                          handleClientDataChange(
-                            "contacto_familiar",
-                            e.target.value,
-                          )
-                        }
-                        placeholder="Contacto de un familiar"
-                        className="mb-4"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">
-                        Correo electrónico
-                      </Label>
-                      <Input
-                        value={editedClientData?.correo || ""}
-                        onChange={(e) =>
-                          handleClientDataChange("correo", e.target.value)
-                        }
-                        placeholder="Correo electrónico"
-                        className="mb-4"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Tipo de vivienda</Label>
-                      <Input
-                        value={editedClientData?.tipo_vivienda || ""}
-                        onChange={(e) =>
-                          handleClientDataChange(
-                            "tipo_vivienda",
-                            e.target.value,
-                          )
-                        }
-                        placeholder="Tipo de vivienda"
-                        className="mb-4"
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Dirección</Label>
-                      <Input
-                        value={editedClientData?.direccion || ""}
-                        onChange={(e) =>
-                          handleClientDataChange("direccion", e.target.value)
-                        }
-                        placeholder="Dirección"
-                        className="mb-4"
-                      />
-                    </div>
-                  </div>
-                )}
               </Card>
 
-              {/* Financial Information */}
-              <Card className="p-6">
-                <div className="flex items-center mb-6">
-                  <div className="p-2 bg-emerald-100 rounded-lg mr-3">
-                    <svg
-                      className="w-5 h-5 text-emerald-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
+              <Card className="p-0 overflow-hidden border-slate-200 shadow-sm">
+                <div className="bg-slate-50 border-b border-slate-200 p-4 flex items-center gap-3">
+                  <div className="p-2 bg-green-100 rounded-lg text-green-600">
+                    <Phone className="w-5 h-5" />
                   </div>
-                  <h3 className="text-gray-900">
+                  <h3 className="font-bold text-slate-800 tracking-tight">
+                    Información de contacto
+                  </h3>
+                </div>
+                <div className="p-6">
+                  {!isEditingClient ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-4">
+                        <div className="space-y-1">
+                          <div className="flex items-center text-slate-500 mb-1">
+                            <Phone className="w-3.5 h-3.5 mr-2 opacity-70" />
+                            <Label className="text-xs font-bold uppercase tracking-wider">
+                              Teléfono
+                            </Label>
+                          </div>
+                          <p className="text-slate-900 font-medium pl-5">
+                            {caso?.usuarios.telefono || "N/A"}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex items-center text-slate-500 mb-1">
+                            <Mail className="w-3.5 h-3.5 mr-2 opacity-70" />
+                            <Label className="text-xs font-bold uppercase tracking-wider">
+                              Correo electrónico
+                            </Label>
+                          </div>
+                          <p className="text-blue-600 font-medium pl-5">
+                            {caso?.usuarios.correo || "N/A"}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="space-y-1">
+                          <div className="flex items-center text-slate-500 mb-1">
+                            <MapPin className="w-3.5 h-3.5 mr-2 opacity-70" />
+                            <Label className="text-xs font-bold uppercase tracking-wider">
+                              Dirección
+                            </Label>
+                          </div>
+                          <p className="text-slate-700 pl-5">
+                            {caso?.usuarios.direccion || "N/A"}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <div className="flex items-center text-slate-500 mb-1">
+                            <Smile className="w-3.5 h-3.5 mr-2 opacity-70" />
+                            <Label className="text-xs font-bold uppercase tracking-wider">
+                              Contacto familiar
+                            </Label>
+                          </div>
+                          <p className="text-slate-700 pl-5">
+                            {caso?.usuarios.contacto_familiar || "N/A"}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label className="text-slate-700 font-bold">
+                            Teléfono
+                          </Label>
+                          <Input
+                            value={editedClientData?.telefono || ""}
+                            onChange={(e) =>
+                              handleClientDataChange("telefono", e.target.value)
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-slate-700 font-bold">
+                            Correo electrónico
+                          </Label>
+                          <Input
+                            value={editedClientData?.correo || ""}
+                            onChange={(e) =>
+                              handleClientDataChange("correo", e.target.value)
+                            }
+                          />
+                        </div>
+                      </div>
+                      <div className="space-y-4">
+                        <div className="space-y-2">
+                          <Label className="text-slate-700 font-bold">
+                            Dirección
+                          </Label>
+                          <Input
+                            value={editedClientData?.direccion || ""}
+                            onChange={(e) =>
+                              handleClientDataChange(
+                                "direccion",
+                                e.target.value,
+                              )
+                            }
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label className="text-slate-700 font-bold">
+                            Contacto familiar
+                          </Label>
+                          <Input
+                            value={editedClientData?.contacto_familiar || ""}
+                            onChange={(e) =>
+                              handleClientDataChange(
+                                "contacto_familiar",
+                                e.target.value,
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </Card>
+
+              <Card className="p-0 overflow-hidden border-slate-200 shadow-sm">
+                <div className="bg-slate-50 border-b border-slate-200 p-4 flex items-center gap-3">
+                  <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600">
+                    <DollarSign className="w-5 h-5" />
+                  </div>
+                  <h3 className="font-bold text-slate-800 tracking-tight">
                     Información laboral y financiera
                   </h3>
                 </div>
-                {!isEditingClient ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label className="text-gray-600">Situación laboral</Label>
-                      <p className="text-gray-900 mb-4">
-                        {caso?.usuarios.situacion_laboral}
-                      </p>
-
-                      <Label className="text-gray-600">Otros ingresos</Label>
-                      {caso?.usuarios.otros_ingresos ? (
-                        <p className="text-gray-900 mb-4">Sí</p>
-                      ) : (
-                        <p className="text-gray-900 mb-4">No</p>
+                <div className="p-6">
+                  {!isEditingClient ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
+                      <div className="space-y-6">
+                        <div className="space-y-1">
+                          <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                            Situación laboral
+                          </Label>
+                          <p className="text-slate-900 font-semibold text-lg">
+                            {caso?.usuarios.situacion_laboral || "N/A"}
+                          </p>
+                        </div>
+                        <div className="space-y-1">
+                          <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider">
+                            ¿Tiene otros ingresos?
+                          </Label>
+                          <p className="text-slate-900 font-medium">
+                            {caso?.usuarios.otros_ingresos ? "Sí" : "No"}
+                          </p>
+                        </div>
+                      </div>
+                      {caso?.usuarios.otros_ingresos && (
+                        <div className="space-y-6 p-5 bg-emerald-50/50 rounded-2xl border border-emerald-100">
+                          <div className="space-y-1">
+                            <Label className="text-emerald-700 text-xs font-bold uppercase tracking-wider">
+                              Valor otros ingresos
+                            </Label>
+                            <p className="text-emerald-900 font-bold text-xl">
+                              ${caso?.usuarios.valor_otros_ingresos || "0"}
+                            </p>
+                          </div>
+                          <div className="space-y-1">
+                            <Label className="text-emerald-700 text-xs font-bold uppercase tracking-wider">
+                              Concepto
+                            </Label>
+                            <p className="text-emerald-800 font-medium">
+                              {caso?.usuarios.concepto_otros_ingresos || "N/A"}
+                            </p>
+                          </div>
+                        </div>
                       )}
                     </div>
-
-                    {caso?.usuarios.otros_ingresos && (
-                      <div>
-                        <Label className="text-gray-600">
-                          Valor de otros ingresos
-                        </Label>
-                        <p className="text-gray-900 mb-4">
-                          {caso?.usuarios.valor_otros_ingresos}
-                        </p>
-
-                        <Label className="text-gray-600">
-                          Concepto de otros ingresos
-                        </Label>
-                        <p className="text-gray-900">
-                          {caso?.usuarios.concepto_otros_ingresos}
-                        </p>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-5">
+                        <div className="space-y-2">
+                          <Label className="text-slate-700 font-bold">
+                            Situación laboral
+                          </Label>
+                          <Select
+                            value={editedClientData?.situacion_laboral?.toString()}
+                            onValueChange={(value) =>
+                              handleClientDataChange("situacion_laboral", value)
+                            }
+                          >
+                            <SelectTrigger className="border-slate-200">
+                              <SelectValue placeholder="Seleccionar situación" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {[
+                                "Empleado",
+                                "Desempleado",
+                                "Independiente",
+                                "Pensionado",
+                                "Estudiante",
+                              ].map((s) => (
+                                <SelectItem key={s} value={s}>
+                                  {s}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div className="flex items-center space-x-3 p-4 bg-slate-50 rounded-xl border border-slate-100">
+                          <input
+                            type="checkbox"
+                            id="edit_otros_ingresos"
+                            className="w-5 h-5 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                            checked={editedClientData?.otros_ingresos || false}
+                            onChange={(e) =>
+                              handleClientDataChange(
+                                "otros_ingresos",
+                                e.target.checked,
+                              )
+                            }
+                          />
+                          <Label
+                            htmlFor="edit_otros_ingresos"
+                            className="text-slate-700 font-semibold cursor-pointer"
+                          >
+                            Tiene otros ingresos adicionales
+                          </Label>
+                        </div>
                       </div>
-                    )}
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label className="text-gray-600">Situación laboral</Label>
-                      <Select
-                        value={editedClientData?.situacion_laboral?.toString()}
-                        onValueChange={(value) =>
-                          handleClientDataChange("situacion_laboral", value)
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar situación laboral" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="dependiente">
-                            Dependiente
-                          </SelectItem>
-                          <SelectItem value="desempleado">
-                            Desempleado
-                          </SelectItem>
-                          <SelectItem value="independiente">
-                            Independiente
-                          </SelectItem>
-                          <SelectItem value="otro">Otro</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">
-                        Valor de otros ingresos
-                      </Label>
-                      <Input
-                        type="text"
-                        value={editedClientData?.valor_otros_ingresos || ""}
-                        onChange={(e) =>
-                          handleClientDataChange(
-                            "valor_otros_ingresos",
-                            e.target.value,
-                          )
-                        }
-                      />
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Otros ingresos</Label>
-                      <Select
-                        value={String(editedClientData?.otros_ingresos)}
-                        onValueChange={(value) =>
-                          handleClientDataChange(
-                            "otros_ingresos",
-                            value === "true",
-                          )
-                        }
-                      >
-                        <SelectTrigger>
-                          <SelectValue placeholder="Seleccionar" />
-                        </SelectTrigger>
-                        <SelectContent>
-                          <SelectItem value="true">Sí</SelectItem>
-                          <SelectItem value="false">No</SelectItem>
-                        </SelectContent>
-                      </Select>
-                    </div>
 
-                    <div>
-                      <Label className="text-gray-600">
-                        Concepto de otros ingresos
-                      </Label>
-                      <Input
-                        type="text"
-                        value={editedClientData?.concepto_otros_ingresos || ""}
-                        onChange={(e) =>
-                          handleClientDataChange(
-                            "concepto_otros_ingresos",
-                            e.target.value,
-                          )
-                        }
-                      />
+                      {editedClientData?.otros_ingresos && (
+                        <div className="space-y-5 p-6 bg-emerald-50/30 rounded-2xl border border-emerald-100">
+                          <div className="space-y-2">
+                            <Label className="text-emerald-800 font-bold">
+                              Valor mensual
+                            </Label>
+                            <Input
+                              type="number"
+                              value={
+                                editedClientData?.valor_otros_ingresos || ""
+                              }
+                              onChange={(e) =>
+                                handleClientDataChange(
+                                  "valor_otros_ingresos",
+                                  e.target.value,
+                                )
+                              }
+                              className="border-emerald-200 focus:ring-emerald-500/20 focus:border-emerald-500"
+                              placeholder="0.00"
+                            />
+                          </div>
+                          <div className="space-y-2">
+                            <Label className="text-emerald-800 font-bold">
+                              Concepto
+                            </Label>
+                            <Input
+                              value={
+                                editedClientData?.concepto_otros_ingresos || ""
+                              }
+                              onChange={(e) =>
+                                handleClientDataChange(
+                                  "concepto_otros_ingresos",
+                                  e.target.value,
+                                )
+                              }
+                              className="border-emerald-200 focus:ring-emerald-500/20 focus:border-emerald-500"
+                              placeholder="Ej: Arriendos, ventas..."
+                            />
+                          </div>
+                        </div>
+                      )}
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </Card>
             </TabsContent>
 
@@ -1532,7 +1571,9 @@ export default function Page({
                     <div className="p-2 bg-red-100 rounded-lg text-red-600">
                       <UserX className="w-5 h-5" />
                     </div>
-                    <h3 className="font-bold text-slate-800 tracking-tight">Información del demandado</h3>
+                    <h3 className="font-bold text-slate-800 tracking-tight">
+                      Información del demandado
+                    </h3>
                   </div>
                   {!isEditingDefendant ? (
                     <Button
@@ -1573,17 +1614,22 @@ export default function Page({
                         <div className="space-y-1">
                           <div className="flex items-center text-slate-500 mb-1">
                             <UserX className="w-4 h-4 mr-2 opacity-70" />
-                            <Label className="text-xs font-bold uppercase tracking-wider">Nombre completo</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider">
+                              Nombre completo
+                            </Label>
                           </div>
                           <p className="text-slate-900 font-semibold pl-6 text-lg">
-                            {displayDefendantData?.nombre_completo || "No registrado"}
+                            {displayDefendantData?.nombre_completo ||
+                              "No registrado"}
                           </p>
                         </div>
 
                         <div className="space-y-1">
                           <div className="flex items-center text-slate-500 mb-1">
                             <IdCard className="w-4 h-4 mr-2 opacity-70" />
-                            <Label className="text-xs font-bold uppercase tracking-wider">Documento / NIT</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider">
+                              Documento / NIT
+                            </Label>
                           </div>
                           <p className="text-slate-700 font-medium pl-6">
                             {displayDefendantData?.documento || "Sin documento"}
@@ -1593,7 +1639,9 @@ export default function Page({
                         <div className="space-y-1">
                           <div className="flex items-center text-slate-500 mb-1">
                             <Phone className="w-4 h-4 mr-2 opacity-70" />
-                            <Label className="text-xs font-bold uppercase tracking-wider">Celular</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider">
+                              Celular
+                            </Label>
                           </div>
                           <p className="text-slate-700 font-medium pl-6">
                             {displayDefendantData?.celular || "No disponible"}
@@ -1605,17 +1653,22 @@ export default function Page({
                         <div className="space-y-1">
                           <div className="flex items-center text-slate-500 mb-1">
                             <MapPin className="w-4 h-4 mr-2 opacity-70" />
-                            <Label className="text-xs font-bold uppercase tracking-wider">Lugar de residencia</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider">
+                              Lugar de residencia
+                            </Label>
                           </div>
                           <p className="text-slate-700 font-medium pl-6 leading-relaxed">
-                            {displayDefendantData?.lugar_residencia || "Dirección no registrada"}
+                            {displayDefendantData?.lugar_residencia ||
+                              "Dirección no registrada"}
                           </p>
                         </div>
 
                         <div className="space-y-1">
                           <div className="flex items-center text-slate-500 mb-1">
                             <Mail className="w-4 h-4 mr-2 opacity-70" />
-                            <Label className="text-xs font-bold uppercase tracking-wider">Correo electrónico</Label>
+                            <Label className="text-xs font-bold uppercase tracking-wider">
+                              Correo electrónico
+                            </Label>
                           </div>
                           <p className="text-blue-600 font-medium pl-6 break-all">
                             {displayDefendantData?.correo || "Sin correo"}
@@ -1670,7 +1723,10 @@ export default function Page({
                           <Input
                             value={editedDefendantData?.celular || ""}
                             onChange={(e) =>
-                              handleDefendantDataChange("celular", e.target.value)
+                              handleDefendantDataChange(
+                                "celular",
+                                e.target.value,
+                              )
                             }
                             placeholder="+57 321 ..."
                             className="border-slate-200 focus:ring-red-500/20 focus:border-red-500 rounded-lg h-11"
@@ -1706,7 +1762,10 @@ export default function Page({
                             type="email"
                             value={editedDefendantData?.correo || ""}
                             onChange={(e) =>
-                              handleDefendantDataChange("correo", e.target.value)
+                              handleDefendantDataChange(
+                                "correo",
+                                e.target.value,
+                              )
                             }
                             placeholder="correo@ejemplo.com"
                             className="border-slate-200 focus:ring-red-500/20 focus:border-red-500 rounded-lg h-11"
