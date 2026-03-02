@@ -11,9 +11,12 @@ import { Asesor, Caso, Demandado, Estudiante } from "app/types/database";
 import { Textarea } from "@/components/ui/textarea";
 import { updateObservaciones } from "../../../../../supabase/queries/updateObservaciones";
 import { toast } from "sonner";
-import { Pencil, Save, X } from "lucide-react";
+import { Pencil, Save, X, Notebook, FileText } from "lucide-react";
 import { getStatusBadge } from "../page";
-
+import { CaseInfoTab } from "@/components/casos-juridicos/case-info-tab";
+import { ClientInfo } from "@/components/casos-juridicos/client-info";
+import { DefendantInfo } from "@/components/casos-juridicos/defendant-info";
+import { SectionCard } from "@/components/casos-juridicos/shared-ui";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params);
@@ -91,8 +94,6 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
     traerDatos();
   }, []);
 
-  
-
   if (loading) {
     return (
       <div className="flex flex-col justify-center items-center h-screen bg-slate-50/50">
@@ -162,166 +163,123 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             {/* Columna principal */}
             <div className="lg:col-span-2 space-y-6">
               {/* Información del Caso */}
-              <Card className="p-6">
-                <h2 className="text-gray-900 mb-4">Información del Caso</h2>
+              <CaseInfoTab
+                caseData={caso}
+                isEditing={false}
+                editedData={null}
+                onEdit={() => {}}
+                onSave={() => {}}
+                onCancel={() => {}}
+                onChange={() => {}}
+                getStatusBadge={getStatusBadge}
+              />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                  <div>
-                    <span className="text-sm text-gray-600">Área:</span>
-                    <p className="text-gray-900">{caso.area}</p>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600">Tipo de caso:</span>
-                    <p className="text-gray-900">{caso.tipo_proceso}</p>
-                  </div>
-                </div>
-
-                <div className="mb-4">
-                  <span className="text-sm text-gray-600">
-                    Resumen de los hechos:
-                  </span>
-                  <div className="mt-2 p-4 bg-slate-50 rounded-xl border border-slate-100">
-                    <p className="text-sm text-slate-700 leading-relaxed font-sans">
-                      {caso.resumen_hechos ||
-                        "No hay resumen de los hechos registrado."}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-medium text-gray-700">
-                      Observaciones:
+              <SectionCard
+                title="Información adicional"
+                icon={Notebook}
+                iconBgColor="bg-yellow-100"
+                iconColor="text-yellow-600"
+              >
+                <div className="space-y-6">
+                  {/* Resumen de los hechos */}
+                  <div className="space-y-2">
+                    <span className="text-sm font-bold text-slate-500 uppercase tracking-wider">
+                      Resumen de los hechos:
                     </span>
-                    {!isEditing && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={startEditing}
-                        className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
-                      >
-                        <Pencil className="w-4 h-4 mr-2" />
-                        Agregar Observacion
-                      </Button>
+                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                      <p className="text-sm text-slate-700 leading-relaxed font-sans">
+                        {caso.resumen_hechos ||
+                          "No hay resumen de los hechos registrado."}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Observaciones */}
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-bold text-slate-500 uppercase tracking-wider">
+                        Observaciones:
+                      </span>
+                      {!isEditing && (
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={startEditing}
+                          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                        >
+                          <Pencil className="w-4 h-4 mr-2" />
+                          Agregar Observacion
+                        </Button>
+                      )}
+                    </div>
+
+                    {isEditing ? (
+                      <div className="space-y-3">
+                        <Textarea
+                          value={editObservaciones}
+                          onChange={(e) => setEditObservaciones(e.target.value)}
+                          placeholder="Ingrese las observaciones aquí..."
+                          className="min-h-[150px] bg-white border-slate-200 focus:ring-blue-500/20"
+                          disabled={isSaving}
+                        />
+                        <div className="flex justify-end space-x-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => setIsEditing(false)}
+                            disabled={isSaving}
+                          >
+                            <X className="w-4 h-4 mr-2" />
+                            Cancelar
+                          </Button>
+                          <Button
+                            size="sm"
+                            onClick={handleUpdateObservaciones}
+                            disabled={isSaving}
+                            className="bg-blue-600 hover:bg-blue-700 text-white"
+                          >
+                            {isSaving ? (
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            ) : (
+                              <Save className="w-4 h-4 mr-2" />
+                            )}
+                            Guardar cambios
+                          </Button>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                        <pre className="text-sm text-slate-700 whitespace-pre-wrap font-sans leading-relaxed">
+                          {caso.observaciones ||
+                            "No hay observaciones registradas."}
+                        </pre>
+                      </div>
                     )}
                   </div>
-
-                  {isEditing ? (
-                    <div className="space-y-3">
-                      <Textarea
-                        value={editObservaciones}
-                        onChange={(e) => setEditObservaciones(e.target.value)}
-                        placeholder="Ingrese las observaciones aquí..."
-                        className="min-h-[150px] bg-white"
-                        disabled={isSaving}
-                      />
-                      <div className="flex justify-end space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => setIsEditing(false)}
-                          disabled={isSaving}
-                        >
-                          <X className="w-4 h-4 mr-2" />
-                          Cancelar
-                        </Button>
-                        <Button
-                          size="sm"
-                          onClick={handleUpdateObservaciones}
-                          disabled={isSaving}
-                          className="bg-blue-600 hover:bg-blue-700 text-white"
-                        >
-                          {isSaving ? (
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                          ) : (
-                            <Save className="w-4 h-4 mr-2" />
-                          )}
-                          Guardar cambios
-                        </Button>
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="p-4 bg-slate-50 rounded-xl border border-slate-100">
-                      <pre className="text-sm text-slate-700 whitespace-pre-wrap font-sans leading-relaxed">
-                        {caso.observaciones ||
-                          "No hay observaciones registradas."}
-                      </pre>
-                    </div>
-                  )}
                 </div>
-              </Card>
+              </SectionCard>
 
               {/* Información del Cliente */}
-              <Card className="p-6">
-                <h3 className="text-gray-900 mb-4">Información del Cliente</h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <span className="text-sm text-gray-600">
-                      Nombre completo:
-                    </span>
-                    <p className="text-gray-900">
-                      {caso.usuarios?.nombre_completo || "N/A"}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600">Documento:</span>
-                    <p className="text-gray-900">
-                      {caso.usuarios?.cedula || "N/A"}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600">Teléfono:</span>
-                    <p className="text-gray-900">
-                      {caso.usuarios?.telefono || "N/A"}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600">Correo:</span>
-                    <p className="text-gray-900">
-                      {caso.usuarios?.correo || "N/A"}
-                    </p>
-                  </div>
-                </div>
-              </Card>
+              <ClientInfo
+                usuarios={caso?.usuarios}
+                isEditing={false}
+                editedData={null}
+                onEdit={() => {}}
+                onSave={() => {}}
+                onCancel={() => {}}
+                onChange={() => {}}
+              />
 
               {/* Información del Demandado */}
-              <Card className="p-6">
-                <h3 className="text-gray-900 mb-4">
-                  Información del Demandado
-                </h3>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div>
-                    <span className="text-sm text-gray-600">
-                      Nombre/Razón social:
-                    </span>
-                    <p className="text-gray-900">
-                      {demandado?.nombre_completo || "N/A"}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600">
-                      NIT/Documento:
-                    </span>
-                    <p className="text-gray-900">
-                      {demandado?.documento || "N/A"}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600">Teléfono:</span>
-                    <p className="text-gray-900">
-                      {demandado?.celular || "N/A"}
-                    </p>
-                  </div>
-                  <div>
-                    <span className="text-sm text-gray-600">Correo:</span>
-                    <p className="text-gray-900">
-                      {demandado?.correo || "N/A"}
-                    </p>
-                  </div>
-                </div>
-              </Card>
+              <DefendantInfo
+                defendantData={demandado}
+                isEditing={false}
+                editedData={null}
+                onEdit={() => {}}
+                onSave={() => {}}
+                onCancel={() => {}}
+                onChange={() => {}}
+              />
             </div>
 
             {/* Sidebar */}
