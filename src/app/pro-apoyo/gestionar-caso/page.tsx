@@ -245,8 +245,12 @@ export default function SupportCasesPage() {
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Estudiante:</span>
                     <span className="text-blue-600">
-                      {caso.estudiantes_casos?.length ? (
-                        <p className="text-blue-600">{caso.estudiantes_casos.map(ec => ec.estudiante?.perfil?.nombre_completo).filter(Boolean).join(', ')}</p>
+                      {caso.estudiantes_casos?.length ? (caso?.estudiantes_casos &&
+                    caso.estudiantes_casos.length > 0
+                      ? caso.estudiantes_casos[
+                          caso.estudiantes_casos.length - 1
+                        ].estudiante.perfil.nombre_completo
+                      : "Sin asignar"
                       ) : (
                         <p className="text-gray-600 italic">Sin estudiante asignado</p>
                       )}

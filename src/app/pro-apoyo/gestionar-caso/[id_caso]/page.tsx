@@ -24,7 +24,29 @@ import { getDemandadoByCasoId } from "../../../../../supabase/queries/getDemanda
 import { formatDate } from "../page";
 import { cleanData } from "@/utils/utils";
 import { supabase } from "@/utils/supabase/supabase";
-import { Notebook } from "lucide-react";
+import {
+  Notebook,
+  FileText,
+  Edit3,
+  Check,
+  Briefcase,
+  Activity,
+  ClipboardList,
+  ShieldCheck,
+  CheckCircle2,
+  Users,
+  Calendar,
+  UserX,
+  Mail,
+  Phone,
+  MapPin,
+  IdCard,
+  User,
+  Heart,
+  DollarSign,
+  BriefcaseIcon,
+  Smile,
+} from "lucide-react";
 import { getStatusBadge } from "app/asesor/mis-casos/page";
 import { ReasignarEquipo } from "./components/ReasignarEquipo";
 import { toast } from "sonner";
@@ -424,75 +446,41 @@ export default function Page({
               <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Case Info */}
                 <div className="lg:col-span-2 space-y-6">
-                  <Card className="p-6">
-                    <div className="flex items-center justify-between mb-6">
-                      <div className="flex items-center">
-                        <div className="p-2 bg-blue-100 rounded-lg mr-3">
-                          <svg
-                            className="w-5 h-5 text-blue-600"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                            />
-                          </svg>
+                  <Card className="p-0 overflow-hidden border-slate-200 shadow-sm hover:shadow-md transition-shadow duration-300">
+                    <div className="bg-slate-50 border-b border-slate-200 p-4 flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="p-2 bg-blue-100 rounded-lg text-blue-600">
+                          <FileText className="w-5 h-5" />
                         </div>
-                        <h3 className="text-gray-900">Información del caso</h3>
+                        <h3 className="font-bold text-slate-800 tracking-tight">
+                          Información del caso
+                        </h3>
                       </div>
                       {!isEditingCaseInfo ? (
                         <Button
                           onClick={handleEditCaseInfo}
                           size="sm"
-                          variant="outline"
-                          className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                          variant="ghost"
+                          className="text-blue-600 hover:text-blue-700 hover:bg-blue-50 font-semibold"
                         >
-                          <svg
-                            className="w-4 h-4 mr-2"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                            />
-                          </svg>
-                          Modificar información
+                          <Edit3 className="w-4 h-4 mr-2" />
+                          Modificar
                         </Button>
                       ) : (
                         <div className="flex gap-2">
                           <Button
                             onClick={handleSaveCaseInfo}
                             size="sm"
-                            className="bg-green-600 hover:bg-green-700 text-white"
+                            className="bg-green-600 hover:bg-green-700 text-white font-semibold"
                           >
-                            <svg
-                              className="w-4 h-4 mr-2"
-                              fill="none"
-                              stroke="currentColor"
-                              viewBox="0 0 24 24"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M5 13l4 4L19 7"
-                              />
-                            </svg>
+                            <Check className="w-4 h-4 mr-2" />
                             Guardar
                           </Button>
                           <Button
                             onClick={handleCancelCaseEdit}
                             size="sm"
-                            variant="outline"
-                            className="text-gray-600 border-gray-300 hover:bg-gray-50"
+                            variant="ghost"
+                            className="text-slate-600 hover:bg-slate-100 font-semibold"
                           >
                             Cancelar
                           </Button>
@@ -500,390 +488,347 @@ export default function Page({
                       )}
                     </div>
 
-                    {!isEditingCaseInfo ? (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                          <Label className="text-gray-600">Tipo de caso</Label>
-                          <p className="text-gray-900 mb-4">
-                            {displayCaseData?.area}
-                          </p>
-
-                          <Label className="text-gray-600">
-                            Estado del caso
-                          </Label>
-                          <div className="mb-4 mt-1">
-                            {caso && getStatusBadge(caso.estado)}
-                          </div>
-
-                          <Label className="text-gray-600">
-                            Tipo de proceso
-                          </Label>
-                          <p className="text-gray-900">
-                            {displayCaseData?.tipo_proceso}
-                          </p>
-                        </div>
-                        <div>
-                          <Label className="text-gray-600">
-                            Estudiantes asignados
-                          </Label>
-                          {displayCaseData?.estudiantes_casos.length ? (
-                            <p className="text-blue-600 mb-4">
-                              {displayCaseData?.estudiantes_casos
-                                .map(
-                                  (estudiante) =>
-                                    estudiante.estudiante.perfil
-                                      .nombre_completo,
-                                )
-                                .join(", ")}
+                    <div className="p-6">
+                      {!isEditingCaseInfo ? (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+                          <div className="space-y-1">
+                            <div className="flex items-center text-slate-500 mb-1">
+                              <Briefcase className="w-4 h-4 mr-2 opacity-70" />
+                              <Label className="text-xs font-bold uppercase tracking-wider">
+                                Tipo de caso
+                              </Label>
+                            </div>
+                            <p className="text-slate-900 font-semibold capitalize pl-6 text-lg">
+                              {displayCaseData?.area || "No definido"}
                             </p>
-                          ) : (
-                            <p className="text-gray-600 mb-4">
-                              No hay estudiantes asignados
+                          </div>
+
+                          <div className="space-y-1">
+                            <div className="flex items-center text-slate-500 mb-1">
+                              <Activity className="w-4 h-4 mr-2 opacity-70" />
+                              <Label className="text-xs font-bold uppercase tracking-wider">
+                                Estado del caso
+                              </Label>
+                            </div>
+                            <div className="pl-6 pt-1">
+                              {caso && getStatusBadge(caso.estado)}
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <div className="flex items-center text-slate-500 mb-1">
+                              <ClipboardList className="w-4 h-4 mr-2 opacity-70" />
+                              <Label className="text-xs font-bold uppercase tracking-wider">
+                                Tipo de proceso
+                              </Label>
+                            </div>
+                            <p className="text-slate-900 font-medium pl-6">
+                              {displayCaseData?.tipo_proceso ||
+                                "Sin especificar"}
                             </p>
-                          )}
-
-                          <Label className="text-gray-600">
-                            Asesores asignados
-                          </Label>
-                          {displayCaseData?.asesores_casos.length ? (
-                            <p className="text-gray-900">
-                              {displayCaseData?.asesores_casos
-                                .map(
-                                  (asesor) =>
-                                    asesor.asesor.perfil.nombre_completo,
-                                )
-                                .join(", ")}
-                            </p>
-                          ) : (
-                            <p className="text-gray-600 mb-4">
-                              No hay asesores asignados
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    ) : (
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-4">
-                          <div>
-                            <Label className="text-gray-600">
-                              Tipo de caso
-                            </Label>
-                            <Select
-                              value={editedCaseData?.area || ""}
-                              onValueChange={(value) =>
-                                handleCaseDataChange("area", value)
-                              }
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Seleccionar tipo de caso" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="laboral">Laboral</SelectItem>
-                                <SelectItem value="civil">Civil</SelectItem>
-                                <SelectItem value="penal">Penal</SelectItem>
-                                <SelectItem value="familia">Familia</SelectItem>
-                                <SelectItem value="otros">Otros</SelectItem>
-                              </SelectContent>
-                            </Select>
                           </div>
 
-                          <div>
-                            <Label className="text-gray-600">
-                              Estado de aprobación
-                            </Label>
-                            <Select
-                              value={
-                                editedCaseData?.aprobacion_asesor
-                                  ? "true"
-                                  : "false"
-                              }
-                              onValueChange={(value) =>
-                                handleCaseDataChange(
-                                  "aprobacion_asesor",
-                                  value === "true",
-                                )
-                              }
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Estado de aprobación" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="true">
-                                  Caso Aprobado
-                                </SelectItem>
-                                <SelectItem value="false">
-                                  Pendiente de Aprobación
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-
-                          <div>
-                            <Label className="text-gray-600">
-                              Estado del caso
-                            </Label>
-                            <Select
-                              value={editedCaseData?.estado || ""}
-                              onValueChange={(value) =>
-                                handleCaseDataChange("estado", value)
-                              }
-                            >
-                              <SelectTrigger>
-                                <SelectValue placeholder="Cambiar estado" />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="pendiente_aprobacion">
-                                  Pendiente de aprobación
-                                </SelectItem>
-                                <SelectItem value="aprobado">
-                                  Aprobado
-                                </SelectItem>
-                                <SelectItem value="en_proceso">
-                                  En proceso
-                                </SelectItem>
-                                <SelectItem value="cerrado">Cerrado</SelectItem>
-                                <SelectItem value="archivado">
-                                  Archivado
-                                </SelectItem>
-                              </SelectContent>
-                            </Select>
-                          </div>
-
-                          <div>
-                            <Label className="text-gray-600">
-                              Tipo de proceso
-                            </Label>
-                            <Input
-                              value={editedCaseData?.tipo_proceso || ""}
-                              onChange={(e) =>
-                                handleCaseDataChange(
-                                  "tipo_proceso",
-                                  e.target.value,
-                                )
-                              }
-                              placeholder="Ej: Radicado 2024-001-123"
-                            />
+                          <div className="space-y-1">
+                            <div className="flex items-center text-slate-500 mb-1">
+                              <ShieldCheck className="w-4 h-4 mr-2 opacity-70" />
+                              <Label className="text-xs font-bold uppercase tracking-wider">
+                                Aprobación Asesor
+                              </Label>
+                            </div>
+                            <div className="pl-6 pt-1">
+                              {displayCaseData?.aprobacion_asesor ? (
+                                <Badge className="bg-emerald-100 text-emerald-700 hover:bg-emerald-100 border-none px-3 py-1 font-bold">
+                                  <CheckCircle2 className="w-3 h-3 mr-1" />
+                                  APROBADO
+                                </Badge>
+                              ) : (
+                                <Badge
+                                  variant="outline"
+                                  className="border-slate-200 text-slate-400 font-bold px-3 py-1 uppercase"
+                                >
+                                  Pendiente
+                                </Badge>
+                              )}
+                            </div>
                           </div>
                         </div>
-                        <div className="space-y-4">
-                          <div>
-                            <Label className="text-gray-600">
-                              Estudiantes asignados
-                            </Label>
-                            {displayCaseData?.estudiantes_casos.length ? (
-                              <p className="text-blue-600">
-                                {displayCaseData?.estudiantes_casos
-                                  .map(
-                                    (estudiante) =>
-                                      estudiante.estudiante.perfil
-                                        .nombre_completo,
-                                  )
-                                  .join(", ")}
-                              </p>
-                            ) : (
-                              <p className="text-gray-600 mb-4">
-                                No hay estudiantes asignados
-                              </p>
-                            )}
-                          </div>
-                          <div>
-                            <Label className="text-gray-600">
-                              Asesores asignados
-                            </Label>
-                            {displayCaseData?.asesores_casos.length ? (
-                              <p className="text-gray-900">
-                                {displayCaseData?.asesores_casos
-                                  .map(
-                                    (asesor) =>
-                                      asesor.asesor.perfil.nombre_completo,
-                                  )
-                                  .join(",  ")}
-                              </p>
-                            ) : (
-                              <p className="text-gray-600 mb-4">
-                                No hay asesores asignados
-                              </p>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    )}
-                  </Card>
-
-                  <Card className="p-6">
-                    <div className="flex items-center mb-4">
-                      <div className="p-2 bg-green-100 rounded-lg mr-3">
-                        <svg
-                          className="w-5 h-5 text-green-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
-                          />
-                        </svg>
-                      </div>
-                      <h3 className="text-gray-900">Resumen de los hechos</h3>
-                    </div>
-
-                    {!isEditingCaseInfo ? (
-                      <div className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm relative overflow-hidden">
-                        <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-500 opacity-70" />
-                        {displayCaseData?.resumen_hechos ? (
-                          <p className="text-slate-700 leading-relaxed pl-2">
-                            {displayCaseData?.resumen_hechos}
-                          </p>
-                        ) : (
-                          <p className="text-sm text-center text-slate-500 italic pl-2">
-                            No hay resumen de los hechos registrado
-                          </p>
-                        )}
-                      </div>
-                    ) : (
-                      <Textarea
-                        value={editedCaseData?.resumen_hechos || ""}
-                        onChange={(e) =>
-                          handleCaseDataChange("resumen_hechos", e.target.value)
-                        }
-                        placeholder="Descripción detallada de los hechos del caso..."
-                        className="min-h-32"
-                      />
-                    )}
-                  </Card>
-
-                  <Card className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <div className="flex items-center">
-                        <div className="p-2 bg-yellow-100 rounded-lg mr-3">
-                          <svg
-                            className="w-5 h-5 text-yellow-600"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                          >
-                            <path
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                              strokeWidth={2}
-                              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                            />
-                          </svg>
-                        </div>
-                        <h3 className="text-gray-900">Observaciones</h3>
-                      </div>
-                    </div>
-
-                    {!isEditingCaseInfo ? (
-                      <div className="space-y-3">
-                        {displayNotes ? (
-                          displayNotes
-                            .split("\n")
-                            .map((note: string, index: number) => (
-                              <div
-                                key={index}
-                                className="p-5 bg-white rounded-xl border border-slate-100 shadow-sm relative overflow-hidden group"
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                          <div className="space-y-5">
+                            <div className="space-y-2">
+                              <Label className="text-slate-700 font-bold flex items-center gap-2 mb-1">
+                                <Briefcase className="w-4 h-4 text-slate-400" />
+                                Tipo de caso
+                              </Label>
+                              <Select
+                                value={editedCaseData?.area || ""}
+                                onValueChange={(value) =>
+                                  handleCaseDataChange("area", value)
+                                }
                               >
-                                <div className="absolute left-0 top-0 bottom-0 w-1 bg-yellow-400 opacity-70" />
-                                <p className="text-slate-700 leading-relaxed pl-2">
-                                  {note}
-                                </p>
-                              </div>
-                            ))
-                        ) : (
-                          <div className="p-4 text-center text-gray-500 bg-gray-50 rounded-lg border border-gray-200">
-                            <p className="text-sm">
-                              No hay observaciones registradas
-                            </p>
+                                <SelectTrigger className="border-slate-200 focus:ring-blue-500/20 focus:border-blue-500 rounded-lg h-11">
+                                  <SelectValue placeholder="Seleccionar tipo de caso" />
+                                </SelectTrigger>
+                                <SelectContent className="rounded-xl border-slate-200 shadow-xl">
+                                  <SelectItem
+                                    value="laboral"
+                                    className="focus:bg-blue-50 focus:text-blue-700"
+                                  >
+                                    Laboral
+                                  </SelectItem>
+                                  <SelectItem
+                                    value="civil"
+                                    className="focus:bg-blue-50 focus:text-blue-700"
+                                  >
+                                    Civil
+                                  </SelectItem>
+                                  <SelectItem
+                                    value="penal"
+                                    className="focus:bg-blue-50 focus:text-blue-700"
+                                  >
+                                    Penal
+                                  </SelectItem>
+                                  <SelectItem
+                                    value="familia"
+                                    className="focus:bg-blue-50 focus:text-blue-700"
+                                  >
+                                    Familia
+                                  </SelectItem>
+                                  <SelectItem
+                                    value="otros"
+                                    className="focus:bg-blue-50 focus:text-blue-700"
+                                  >
+                                    Otros
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label className="text-slate-700 font-bold flex items-center gap-2 mb-1">
+                                <ShieldCheck className="w-4 h-4 text-slate-400" />
+                                Estado de aprobación
+                              </Label>
+                              <Select
+                                value={
+                                  editedCaseData?.aprobacion_asesor
+                                    ? "true"
+                                    : "false"
+                                }
+                                onValueChange={(value) =>
+                                  handleCaseDataChange(
+                                    "aprobacion_asesor",
+                                    value === "true",
+                                  )
+                                }
+                              >
+                                <SelectTrigger className="border-slate-200 focus:ring-blue-500/20 focus:border-blue-500 rounded-lg h-11">
+                                  <SelectValue placeholder="Estado de aprobación" />
+                                </SelectTrigger>
+                                <SelectContent className="rounded-xl border-slate-200 shadow-xl">
+                                  <SelectItem
+                                    value="true"
+                                    className="focus:bg-blue-50 focus:text-blue-700"
+                                  >
+                                    Aprobado por asesor
+                                  </SelectItem>
+                                  <SelectItem
+                                    value="false"
+                                    className="focus:bg-blue-50 focus:text-blue-700"
+                                  >
+                                    Pendiente de revisión
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
                           </div>
-                        )}
-                      </div>
-                    ) : (
-                      <div className="space-y-4">
-                        {/* Existing notes editing */}
-                        <div className="space-y-3">
-                          <div className="flex gap-2 items-start">
-                            <Textarea
-                              value={editedCaseData?.observaciones || ""}
-                              onChange={(e) =>
-                                handleCaseDataChange(
-                                  "observaciones",
-                                  e.target.value,
-                                )
-                              }
-                              placeholder="Escribir observación..."
-                              className="min-h-32"
-                            />
+
+                          <div className="space-y-5">
+                            <div className="space-y-2">
+                              <Label className="text-slate-700 font-bold flex items-center gap-2 mb-1">
+                                <Activity className="w-4 h-4 text-slate-400" />
+                                Estado del caso
+                              </Label>
+                              <Select
+                                value={editedCaseData?.estado || ""}
+                                onValueChange={(value) =>
+                                  handleCaseDataChange("estado", value)
+                                }
+                              >
+                                <SelectTrigger className="border-slate-200 focus:ring-blue-500/20 focus:border-blue-500 rounded-lg h-11">
+                                  <SelectValue placeholder="Cambiar estado" />
+                                </SelectTrigger>
+                                <SelectContent className="rounded-xl border-slate-200 shadow-xl">
+                                  <SelectItem value="pendiente_aprobacion">
+                                    Pendiente de aprobación
+                                  </SelectItem>
+                                  <SelectItem value="aprobado">
+                                    Aprobado
+                                  </SelectItem>
+                                  <SelectItem value="en_proceso">
+                                    En proceso
+                                  </SelectItem>
+                                  <SelectItem value="cerrado">
+                                    Cerrado
+                                  </SelectItem>
+                                  <SelectItem value="archivado">
+                                    Archivado
+                                  </SelectItem>
+                                </SelectContent>
+                              </Select>
+                            </div>
+
+                            <div className="space-y-2">
+                              <Label className="text-slate-700 font-bold flex items-center gap-2 mb-1">
+                                <ClipboardList className="w-4 h-4 text-slate-400" />
+                                Tipo de proceso
+                              </Label>
+                              <Input
+                                value={editedCaseData?.tipo_proceso || ""}
+                                onChange={(e) =>
+                                  handleCaseDataChange(
+                                    "tipo_proceso",
+                                    e.target.value,
+                                  )
+                                }
+                                className="border-slate-200 focus:ring-blue-500/20 focus:border-blue-500 rounded-lg h-11"
+                                placeholder={
+                                  displayCaseData?.tipo_proceso ||
+                                  "Ej: Radicado legal..."
+                                }
+                              />
+                            </div>
                           </div>
                         </div>
+                      )}
+                    </div>
+                  </Card>
+
+                  <Card className="p-0 overflow-hidden border-slate-200 shadow-sm">
+                    <div className="bg-slate-50 border-b border-slate-200 p-4 flex items-center gap-3">
+                      <div className="p-2 bg-green-100 rounded-lg text-green-600">
+                        <Notebook className="w-5 h-5" />
                       </div>
-                    )}
+                      <h3 className="font-bold text-slate-800 tracking-tight">Resumen de los hechos</h3>
+                    </div>
+
+                    <div className="p-6">
+                      {!isEditingCaseInfo ? (
+                        <div className="p-5 bg-white rounded-xl border border-slate-100 shadow-[inset_0_1px_4px_rgba(0,0,0,0.02)] relative overflow-hidden">
+                          <div className="absolute left-0 top-0 bottom-0 w-1 bg-green-500 opacity-60" />
+                          {displayCaseData?.resumen_hechos ? (
+                            <p className="text-slate-700 leading-relaxed pl-3 whitespace-pre-wrap">
+                              {displayCaseData?.resumen_hechos}
+                            </p>
+                          ) : (
+                            <p className="text-sm text-center text-slate-500 italic py-4">
+                              No hay resumen de los hechos registrado
+                            </p>
+                          )}
+                        </div>
+                      ) : (
+                        <Textarea
+                          value={editedCaseData?.resumen_hechos || ""}
+                          onChange={(e) =>
+                            handleCaseDataChange("resumen_hechos", e.target.value)
+                          }
+                          placeholder="Descripción detallada de los hechos del caso..."
+                          className="min-h-48 border-slate-200 focus:ring-blue-500/20 focus:border-blue-500 rounded-xl leading-relaxed"
+                        />
+                      )}
+                    </div>
+                  </Card>
+
+                  <Card className="p-0 overflow-hidden border-slate-200 shadow-sm">
+                    <div className="bg-slate-50 border-b border-slate-200 p-4 flex items-center gap-3">
+                      <div className="p-2 bg-yellow-100 rounded-lg text-yellow-600">
+                        <ClipboardList className="w-5 h-5" />
+                      </div>
+                      <h3 className="font-bold text-slate-800 tracking-tight">Observaciones</h3>
+                    </div>
+
+                    <div className="p-6">
+                      {!isEditingCaseInfo ? (
+                        <div className="space-y-4">
+                          {displayNotes ? (
+                            displayNotes
+                              .split("\n")
+                              .filter(note => note.trim() !== "")
+                              .map((note: string, index: number) => (
+                                <div
+                                  key={index}
+                                  className="p-5 bg-white rounded-xl border border-slate-100 shadow-[inset_0_1px_4px_rgba(0,0,0,0.02)] relative overflow-hidden group transition-all"
+                                >
+                                  <div className="absolute left-0 top-0 bottom-0 w-1 bg-yellow-400 opacity-60" />
+                                  <p className="text-slate-700 leading-relaxed pl-3 whitespace-pre-wrap">
+                                    {note}
+                                  </p>
+                                </div>
+                              ))
+                          ) : (
+                            <div className="p-8 text-center bg-slate-50/50 rounded-xl border border-dashed border-slate-200">
+                              <p className="text-slate-400 text-sm italic">
+                                No hay observaciones registradas
+                              </p>
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <Textarea
+                            value={editedCaseData?.observaciones || ""}
+                            onChange={(e) =>
+                              handleCaseDataChange(
+                                "observaciones",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Escribir observaciones importantes sobre el seguimiento del caso..."
+                            className="min-h-48 border-slate-200 focus:ring-blue-500/20 focus:border-blue-500 rounded-xl leading-relaxed"
+                          />
+                        </div>
+                      )}
+                    </div>
                   </Card>
                 </div>
 
                 {/* Sidebar */}
                 <div className="space-y-6">
-                  <Card className="p-6">
-                    <div className="flex items-center mb-4">
-                      <div className="p-2 bg-purple-100 rounded-lg mr-3">
-                        <svg
-                          className="w-5 h-5 text-purple-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
-                          />
-                        </svg>
+                  <Card className="p-0 overflow-hidden border-slate-200 shadow-sm">
+                    <div className="bg-slate-50 border-b border-slate-200 p-4 flex items-center gap-3">
+                      <div className="p-2 bg-purple-100 rounded-lg text-purple-600">
+                        <Calendar className="w-5 h-5" />
                       </div>
-                      <h3 className="text-gray-900">Fechas importantes</h3>
+                      <h3 className="font-bold text-slate-800 tracking-tight">Fechas importantes</h3>
                     </div>
-                    <div className="space-y-3">
+                    <div className="p-6 space-y-4">
                       <div>
-                        <Label className="text-gray-600">Creado</Label>
+                        <Label className="text-slate-500 text-xs font-bold uppercase tracking-wider mb-2 block">Fecha de creación</Label>
                         {caso && (
-                          <p className="text-gray-900">
+                          <div className="flex items-center gap-2 text-slate-900 font-medium">
+                            <div className="w-2 h-2 rounded-full bg-purple-400" />
                             {formatDate(caso.fecha_creacion)}
-                          </p>
+                          </div>
                         )}
                       </div>
                     </div>
                   </Card>
 
-                  <Card className="p-6">
-                    <div className="flex items-center mb-4">
-                      <div className="p-2 bg-indigo-100 rounded-lg mr-3">
-                        <svg
-                          className="w-5 h-5 text-indigo-600"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                          />
-                        </svg>
+                  <Card className="p-0 overflow-hidden border-slate-200 shadow-sm">
+                    <div className="bg-slate-50 border-b border-slate-200 p-4 flex items-center gap-3">
+                      <div className="p-2 bg-indigo-100 rounded-lg text-indigo-600">
+                        <Users className="w-5 h-5" />
                       </div>
-                      <h3 className="text-gray-900">Equipo asignado</h3>
+                      <h3 className="font-bold text-slate-800 tracking-tight">Equipo asignado</h3>
                     </div>
-                    <div className="space-y-6">
+                    <div className="p-6 space-y-6">
                       <ReasignarEquipo
                         idCaso={id_caso}
                         type="estudiante"
                         casosData={displayCaseData?.estudiantes_casos || []}
                         onRefresh={traerDatos}
                       />
-                      <div className="border-t border-gray-100 pt-6">
+                      <div className="border-t border-slate-100 pt-6">
                         <ReasignarEquipo
                           idCaso={id_caso}
                           type="asesor"
@@ -899,242 +844,209 @@ export default function Page({
 
             {/* Student Data Tab */}
             <TabsContent value="supervision" className="space-y-6">
-              <Card className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-blue-100 rounded-lg mr-3">
-                      <svg
-                        className="w-5 h-5 text-blue-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
-                        />
-                      </svg>
+              <div className="grid grid-cols-1 gap-6">
+                {displayStudentData?.map((student, index) => (
+                  <Card key={student.id_perfil || index} className="p-6">
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex items-center">
+                        <div className="p-2 bg-blue-100 rounded-lg mr-3">
+                          <svg
+                            className="w-5 h-5 text-blue-600"
+                            fill="none"
+                            stroke="currentColor"
+                            viewBox="0 0 24 24"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth={2}
+                              d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                            />
+                          </svg>
+                        </div>
+                        <h3 className="text-gray-900 font-semibold">
+                          Estudiante{" "}
+                          {displayStudentData.length > 1 ? index + 1 : ""}
+                        </h3>
+                      </div>
                     </div>
-                    <h3 className="text-gray-900">
-                      Información del estudiante
-                    </h3>
-                  </div>
-                </div>
 
-                {!isEditingStudent ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div>
-                      <Label className="text-gray-600">Nombre completo</Label>
-                      <p className="text-gray-900">
-                        {displayStudentData
-                          ?.map((student) => student.perfil.nombre_completo)
-                          .join(", ")}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Cédula</Label>
-                      <p className="text-gray-900">
-                        {displayStudentData
-                          ?.map((ec) => ec.perfil.cedula)
-                          .join(", ")}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">
-                        Correo electrónico
-                      </Label>
-                      <p className="text-blue-600">
-                        {displayStudentData
-                          ?.map((student) => student.perfil.correo)
-                          .join(", ")}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Semestre</Label>
-                      <p className="text-gray-900">
-                        {displayStudentData
-                          ?.map((student) => student.semestre)
-                          .join(", ")}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Jornada</Label>
-                      <p className="text-gray-900">
-                        {displayStudentData
-                          ?.map((student) => student.jornada)
-                          .join(", ")}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Turno</Label>
-                      <p className="text-gray-900">
-                        {displayStudentData
-                          ?.map((student) => student.turno)
-                          .join(", ")}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Teléfono</Label>
-                      <p className="text-gray-900">
-                        {displayStudentData
-                          ?.map(
-                            (student) =>
-                              student.perfil.telefono || "No registrado",
-                          )
-                          .join(", ")}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div>
-                      <Label className="text-gray-600">Nombre completo</Label>
-                      {editedStudentData?.map((student, index) => (
-                        <Input
-                          key={student.perfil.id || index}
-                          value={student.perfil.nombre_completo || ""}
-                          onChange={(e) =>
-                            handleStudentDataChange(
-                              index,
-                              "perfil.nombre_completo",
-                              e.target.value,
-                            )
-                          }
-                          placeholder={`Nombre completo del estudiante ${index + 1}`}
-                          className="mb-2"
-                        />
-                      ))}
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Cédula</Label>
-                      {editedStudentData?.map((student, index) => (
-                        <Input
-                          key={student.perfil.id || index}
-                          value={student.perfil.cedula || ""}
-                          onChange={(e) =>
-                            handleStudentDataChange(
-                              index,
-                              "perfil.cedula",
-                              e.target.value,
-                            )
-                          }
-                          placeholder={`Cédula del estudiante ${index + 1}`}
-                          className="mb-2"
-                        />
-                      ))}
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">
-                        Correo electrónico
-                      </Label>
-                      {editedStudentData?.map((student, index) => (
-                        <Input
-                          key={student.perfil.id || index}
-                          type="email"
-                          value={student.perfil.correo || ""}
-                          onChange={(e) =>
-                            handleStudentDataChange(
-                              index,
-                              "perfil.correo",
-                              e.target.value,
-                            )
-                          }
-                          placeholder="correo@estudiantes.consultorijuridico.edu.co"
-                          className="mb-2"
-                        />
-                      ))}
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Semestre</Label>
-                      {editedStudentData?.map((student, index) => (
-                        <Select
-                          key={student.perfil.id || index}
-                          value={student.semestre.toString()}
-                          onValueChange={(value) =>
-                            handleStudentDataChange(index, "semestre", value)
-                          }
-                        >
-                          <SelectTrigger className="mb-2">
-                            <SelectValue placeholder="Seleccionar semestre" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="1">1</SelectItem>
-                            <SelectItem value="2">2</SelectItem>
-                            <SelectItem value="3">3</SelectItem>
-                            <SelectItem value="4">4</SelectItem>
-                            <SelectItem value="5">5</SelectItem>
-                            <SelectItem value="6">6</SelectItem>
-                            <SelectItem value="7">7</SelectItem>
-                            <SelectItem value="8">8</SelectItem>
-                            <SelectItem value="9">9</SelectItem>
-                            <SelectItem value="10">10</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      ))}
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Jornada</Label>
-                      {editedStudentData?.map((student, index) => (
-                        <Select
-                          key={student.perfil.id || index}
-                          value={student.jornada || ""}
-                          onValueChange={(value) =>
-                            handleStudentDataChange(index, "jornada", value)
-                          }
-                        >
-                          <SelectTrigger className="mb-2">
-                            <SelectValue placeholder="Seleccionar jornada" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="diurna">Diurna</SelectItem>
-                            <SelectItem value="nocturna">Nocturna</SelectItem>
-                            <SelectItem value="mixto">Mixto</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      ))}
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Turno</Label>
-                      {editedStudentData?.map((student, index) => (
-                        <Select
-                          key={student.perfil.id || index}
-                          value={student.turno || ""}
-                          onValueChange={(value) =>
-                            handleStudentDataChange(index, "turno", value)
-                          }
-                        >
-                          <SelectTrigger className="mb-2">
-                            <SelectValue placeholder="Seleccionar turno" />
-                          </SelectTrigger>
-                          <SelectContent>
-                            <SelectItem value="9-11">9-11</SelectItem>
-                            <SelectItem value="2-4">2-4</SelectItem>
-                            <SelectItem value="4-6">4-6</SelectItem>
-                          </SelectContent>
-                        </Select>
-                      ))}
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">Teléfono</Label>
-                      {editedStudentData?.map((student, index) => (
-                        <Input
-                          key={student.perfil.id || index}
-                          value={student.perfil.telefono || ""}
-                          onChange={(e) =>
-                            handleStudentDataChange(
-                              index,
-                              "telefono",
-                              e.target.value,
-                            )
-                          }
-                        />
-                      ))}
-                    </div>
-                  </div>
+                    {!isEditingStudent ? (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div>
+                          <Label className="text-gray-600">
+                            Nombre completo
+                          </Label>
+                          <p className="text-gray-900 font-medium">
+                            {student.perfil.nombre_completo}
+                          </p>
+                        </div>
+                        <div>
+                          <Label className="text-gray-600">Cédula</Label>
+                          <p className="text-gray-900">
+                            {student.perfil.cedula}
+                          </p>
+                        </div>
+                        <div>
+                          <Label className="text-gray-600">
+                            Correo electrónico
+                          </Label>
+                          <p className="text-blue-600">
+                            {student.perfil.correo}
+                          </p>
+                        </div>
+                        <div>
+                          <Label className="text-gray-600">Semestre</Label>
+                          <p className="text-gray-900">{student.semestre}</p>
+                        </div>
+                        <div>
+                          <Label className="text-gray-600">Jornada</Label>
+                          <p className="text-gray-900">{student.jornada}</p>
+                        </div>
+                        <div>
+                          <Label className="text-gray-600">Turno</Label>
+                          <p className="text-gray-900">{student.turno}</p>
+                        </div>
+                        <div>
+                          <Label className="text-gray-600">Teléfono</Label>
+                          <p className="text-gray-900">
+                            {student.perfil.telefono || "No registrado"}
+                          </p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div>
+                          <Label className="text-gray-600">
+                            Nombre completo
+                          </Label>
+                          <Input
+                            value={student.perfil.nombre_completo || ""}
+                            onChange={(e) =>
+                              handleStudentDataChange(
+                                index,
+                                "perfil.nombre_completo",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Nombre completo"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-gray-600">Cédula</Label>
+                          <Input
+                            value={student.perfil.cedula || ""}
+                            onChange={(e) =>
+                              handleStudentDataChange(
+                                index,
+                                "perfil.cedula",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Cédula"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-gray-600">
+                            Correo electrónico
+                          </Label>
+                          <Input
+                            type="email"
+                            value={student.perfil.correo || ""}
+                            onChange={(e) =>
+                              handleStudentDataChange(
+                                index,
+                                "perfil.correo",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="correo@estudiantes.edu.co"
+                          />
+                        </div>
+                        <div>
+                          <Label className="text-gray-600">Semestre</Label>
+                          <Select
+                            value={student.semestre?.toString()}
+                            onValueChange={(value) =>
+                              handleStudentDataChange(index, "semestre", value)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Semestre" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              {[...Array(10)].map((_, i) => (
+                                <SelectItem
+                                  key={i + 1}
+                                  value={(i + 1).toString()}
+                                >
+                                  {i + 1}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label className="text-gray-600">Jornada</Label>
+                          <Select
+                            value={student.jornada || ""}
+                            onValueChange={(value) =>
+                              handleStudentDataChange(index, "jornada", value)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Jornada" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="diurna">Diurna</SelectItem>
+                              <SelectItem value="nocturna">Nocturna</SelectItem>
+                              <SelectItem value="mixto">Mixto</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label className="text-gray-600">Turno</Label>
+                          <Select
+                            value={student.turno || ""}
+                            onValueChange={(value) =>
+                              handleStudentDataChange(index, "turno", value)
+                            }
+                          >
+                            <SelectTrigger>
+                              <SelectValue placeholder="Turno" />
+                            </SelectTrigger>
+                            <SelectContent>
+                              <SelectItem value="9-11">9-11</SelectItem>
+                              <SelectItem value="2-4">2-4</SelectItem>
+                              <SelectItem value="4-6">4-6</SelectItem>
+                            </SelectContent>
+                          </Select>
+                        </div>
+                        <div>
+                          <Label className="text-gray-600">Teléfono</Label>
+                          <Input
+                            value={student.perfil.telefono || ""}
+                            onChange={(e) =>
+                              handleStudentDataChange(
+                                index,
+                                "perfil.telefono",
+                                e.target.value,
+                              )
+                            }
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </Card>
+                ))}
+                {(!displayStudentData || displayStudentData.length === 0) && (
+                  <Card className="p-12 text-center">
+                    <p className="text-gray-500 italic">
+                      No hay estudiantes asignados a este caso.
+                    </p>
+                  </Card>
                 )}
-              </Card>
+              </div>
             </TabsContent>
 
             {/* Client Tab */}
@@ -1614,75 +1526,39 @@ export default function Page({
 
             {/* Defendant Tab */}
             <TabsContent value="defendant" className="space-y-6">
-              <Card className="p-6">
-                <div className="flex items-center justify-between mb-6">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-red-100 rounded-lg mr-3">
-                      <svg
-                        className="w-5 h-5 text-red-600"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"
-                        />
-                      </svg>
+              <Card className="p-0 overflow-hidden border-slate-200 shadow-sm">
+                <div className="bg-slate-50 border-b border-slate-200 p-4 flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <div className="p-2 bg-red-100 rounded-lg text-red-600">
+                      <UserX className="w-5 h-5" />
                     </div>
-                    <h3 className="text-gray-900">Información del demandado</h3>
+                    <h3 className="font-bold text-slate-800 tracking-tight">Información del demandado</h3>
                   </div>
                   {!isEditingDefendant ? (
                     <Button
                       onClick={handleEditDefendant}
                       size="sm"
-                      variant="outline"
-                      className="text-blue-600 border-blue-600 hover:bg-blue-50"
+                      variant="ghost"
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50 font-semibold"
                     >
-                      <svg
-                        className="w-4 h-4 mr-2"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          strokeWidth={2}
-                          d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"
-                        />
-                      </svg>
-                      Modificar información
+                      <Edit3 className="w-4 h-4 mr-2" />
+                      Modificar
                     </Button>
                   ) : (
                     <div className="flex gap-2">
                       <Button
                         onClick={handleSaveDefendant}
                         size="sm"
-                        className="bg-green-600 hover:bg-green-700 text-white"
+                        className="bg-green-600 hover:bg-green-700 text-white font-semibold"
                       >
-                        <svg
-                          className="w-4 h-4 mr-2"
-                          fill="none"
-                          stroke="currentColor"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
+                        <Check className="w-4 h-4 mr-2" />
                         Guardar
                       </Button>
                       <Button
                         onClick={handleCancelDefendantEdit}
                         size="sm"
-                        variant="outline"
-                        className="text-gray-600 border-gray-300 hover:bg-gray-50"
+                        variant="ghost"
+                        className="text-slate-600 hover:bg-slate-100 font-semibold"
                       >
                         Cancelar
                       </Button>
@@ -1690,116 +1566,156 @@ export default function Page({
                   )}
                 </div>
 
-                {!isEditingDefendant ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <Label className="text-gray-600">Nombre completo</Label>
-                      <p className="text-gray-900 mb-4">
-                        {displayDefendantData?.nombre_completo}
-                      </p>
+                <div className="p-6">
+                  {!isEditingDefendant ? (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8">
+                      <div className="space-y-6">
+                        <div className="space-y-1">
+                          <div className="flex items-center text-slate-500 mb-1">
+                            <UserX className="w-4 h-4 mr-2 opacity-70" />
+                            <Label className="text-xs font-bold uppercase tracking-wider">Nombre completo</Label>
+                          </div>
+                          <p className="text-slate-900 font-semibold pl-6 text-lg">
+                            {displayDefendantData?.nombre_completo || "No registrado"}
+                          </p>
+                        </div>
 
-                      <Label className="text-gray-600">Documento</Label>
-                      <p className="text-gray-900 mb-4">
-                        {displayDefendantData?.documento}
-                      </p>
+                        <div className="space-y-1">
+                          <div className="flex items-center text-slate-500 mb-1">
+                            <IdCard className="w-4 h-4 mr-2 opacity-70" />
+                            <Label className="text-xs font-bold uppercase tracking-wider">Documento / NIT</Label>
+                          </div>
+                          <p className="text-slate-700 font-medium pl-6">
+                            {displayDefendantData?.documento || "Sin documento"}
+                          </p>
+                        </div>
 
-                      <Label className="text-gray-600">Celular</Label>
-                      <p className="text-gray-900">
-                        {displayDefendantData?.celular}
-                      </p>
-                    </div>
-                    <div>
-                      <Label className="text-gray-600">
-                        Lugar de residencia
-                      </Label>
-                      <p className="text-gray-900 mb-4">
-                        {displayDefendantData?.lugar_residencia}
-                      </p>
-
-                      <Label className="text-gray-600">
-                        Correo electrónico
-                      </Label>
-                      <p className="text-blue-600">
-                        {displayDefendantData?.correo}
-                      </p>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div className="space-y-4">
-                      <div>
-                        <Label className="text-gray-600">Nombre completo</Label>
-                        <Input
-                          value={editedDefendantData?.nombre_completo || ""}
-                          onChange={(e) =>
-                            handleDefendantDataChange(
-                              "nombre_completo",
-                              e.target.value,
-                            )
-                          }
-                          placeholder="Nombre completo o razón social"
-                        />
+                        <div className="space-y-1">
+                          <div className="flex items-center text-slate-500 mb-1">
+                            <Phone className="w-4 h-4 mr-2 opacity-70" />
+                            <Label className="text-xs font-bold uppercase tracking-wider">Celular</Label>
+                          </div>
+                          <p className="text-slate-700 font-medium pl-6">
+                            {displayDefendantData?.celular || "No disponible"}
+                          </p>
+                        </div>
                       </div>
 
-                      <div>
-                        <Label className="text-gray-600">Documento</Label>
-                        <Input
-                          value={editedDefendantData?.documento || ""}
-                          onChange={(e) =>
-                            handleDefendantDataChange(
-                              "documento",
-                              e.target.value,
-                            )
-                          }
-                          placeholder="NIT, CC, etc."
-                        />
-                      </div>
+                      <div className="space-y-6">
+                        <div className="space-y-1">
+                          <div className="flex items-center text-slate-500 mb-1">
+                            <MapPin className="w-4 h-4 mr-2 opacity-70" />
+                            <Label className="text-xs font-bold uppercase tracking-wider">Lugar de residencia</Label>
+                          </div>
+                          <p className="text-slate-700 font-medium pl-6 leading-relaxed">
+                            {displayDefendantData?.lugar_residencia || "Dirección no registrada"}
+                          </p>
+                        </div>
 
-                      <div>
-                        <Label className="text-gray-600">Celular</Label>
-                        <Input
-                          value={editedDefendantData?.celular || ""}
-                          onChange={(e) =>
-                            handleDefendantDataChange("celular", e.target.value)
-                          }
-                          placeholder="+57 601 234 5678"
-                        />
+                        <div className="space-y-1">
+                          <div className="flex items-center text-slate-500 mb-1">
+                            <Mail className="w-4 h-4 mr-2 opacity-70" />
+                            <Label className="text-xs font-bold uppercase tracking-wider">Correo electrónico</Label>
+                          </div>
+                          <p className="text-blue-600 font-medium pl-6 break-all">
+                            {displayDefendantData?.correo || "Sin correo"}
+                          </p>
+                        </div>
                       </div>
                     </div>
-                    <div className="space-y-4">
-                      <div>
-                        <Label className="text-gray-600">
-                          Lugar de residencia
-                        </Label>
-                        <Textarea
-                          value={editedDefendantData?.lugar_residencia || ""}
-                          onChange={(e) =>
-                            handleDefendantDataChange(
-                              "lugar_residencia",
-                              e.target.value,
-                            )
-                          }
-                          placeholder="Dirección completa"
-                          className="min-h-16"
-                        />
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="space-y-5">
+                        <div className="space-y-2">
+                          <Label className="text-slate-700 font-bold flex items-center gap-2">
+                            <UserX className="w-4 h-4 text-slate-400" />
+                            Nombre completo
+                          </Label>
+                          <Input
+                            value={editedDefendantData?.nombre_completo || ""}
+                            onChange={(e) =>
+                              handleDefendantDataChange(
+                                "nombre_completo",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Nombre o razón social"
+                            className="border-slate-200 focus:ring-red-500/20 focus:border-red-500 rounded-lg h-11"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-slate-700 font-bold flex items-center gap-2">
+                            <IdCard className="w-4 h-4 text-slate-400" />
+                            Documento
+                          </Label>
+                          <Input
+                            value={editedDefendantData?.documento || ""}
+                            onChange={(e) =>
+                              handleDefendantDataChange(
+                                "documento",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="NIT, CC, etc."
+                            className="border-slate-200 focus:ring-red-500/20 focus:border-red-500 rounded-lg h-11"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-slate-700 font-bold flex items-center gap-2">
+                            <Phone className="w-4 h-4 text-slate-400" />
+                            Celular
+                          </Label>
+                          <Input
+                            value={editedDefendantData?.celular || ""}
+                            onChange={(e) =>
+                              handleDefendantDataChange("celular", e.target.value)
+                            }
+                            placeholder="+57 321 ..."
+                            className="border-slate-200 focus:ring-red-500/20 focus:border-red-500 rounded-lg h-11"
+                          />
+                        </div>
                       </div>
 
-                      <div>
-                        <Label className="text-gray-600">
-                          Correo electrónico
-                        </Label>
-                        <Input
-                          type="email"
-                          value={editedDefendantData?.correo || ""}
-                          onChange={(e) =>
-                            handleDefendantDataChange("correo", e.target.value)
-                          }
-                          placeholder="correo@email.com"
-                        />
+                      <div className="space-y-5">
+                        <div className="space-y-2">
+                          <Label className="text-slate-700 font-bold flex items-center gap-2">
+                            <MapPin className="w-4 h-4 text-slate-400" />
+                            Lugar de residencia
+                          </Label>
+                          <Textarea
+                            value={editedDefendantData?.lugar_residencia || ""}
+                            onChange={(e) =>
+                              handleDefendantDataChange(
+                                "lugar_residencia",
+                                e.target.value,
+                              )
+                            }
+                            placeholder="Dirección completa"
+                            className="min-h-24 border-slate-200 focus:ring-red-500/20 focus:border-red-500 rounded-lg resize-none"
+                          />
+                        </div>
+
+                        <div className="space-y-2">
+                          <Label className="text-slate-700 font-bold flex items-center gap-2">
+                            <Mail className="w-4 h-4 text-slate-400" />
+                            Correo electrónico
+                          </Label>
+                          <Input
+                            type="email"
+                            value={editedDefendantData?.correo || ""}
+                            onChange={(e) =>
+                              handleDefendantDataChange("correo", e.target.value)
+                            }
+                            placeholder="correo@ejemplo.com"
+                            className="border-slate-200 focus:ring-red-500/20 focus:border-red-500 rounded-lg h-11"
+                          />
+                        </div>
                       </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
               </Card>
             </TabsContent>
           </Tabs>
