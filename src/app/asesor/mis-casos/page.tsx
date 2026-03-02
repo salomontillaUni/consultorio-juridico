@@ -360,7 +360,7 @@ export default function Asesor() {
                     <SelectItem value="all">Todas las áreas</SelectItem>
                     <SelectItem value="civil">Derecho Civil</SelectItem>
                     <SelectItem value="laboral">Derecho Laboral</SelectItem>
-                    <SelectItem value="familiar">Derecho Familiar</SelectItem>
+                    <SelectItem value="familia">Derecho Familiar</SelectItem>
                     <SelectItem value="penal">Derecho Penal</SelectItem>
                   </SelectContent>
                 </Select>
