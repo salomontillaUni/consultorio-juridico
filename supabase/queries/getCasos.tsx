@@ -2,10 +2,7 @@ import { supabase } from "@/utils/supabase/supabase";
 import type { Caso } from "../../src/app/types/database";
 
 export async function getCasos(): Promise<Caso[]> {
-
-  const { data, error } = await supabase
-  .from('casos')
-  .select(`
+  const { data, error } = await supabase.from("casos").select(`
     id_caso,
     tipo_proceso,
     resumen_hechos,
@@ -25,12 +22,12 @@ export async function getCasos(): Promise<Caso[]> {
     estudiantes_casos (
       fecha_asignacion,
       fecha_fin_asignacion,
-      estudiante:estudiantes!estudiantes_casos_id_estudiante_fkey (
+      estudiante:estudiantes (
         id_perfil,
         semestre,
         jornada,
         turno,
-        perfil:perfiles!estudiantes_id_perfil_fkey (
+        perfil:perfiles (
           nombre_completo,
           correo,
           telefono
@@ -40,11 +37,11 @@ export async function getCasos(): Promise<Caso[]> {
     asesores_casos (
       fecha_asignacion,
       fecha_fin_asignacion,
-      asesor:asesores!asesores_casos_id_asesor_fkey (
+      asesor:asesores (
         id_perfil,
         area,
         turno,
-        perfil:perfiles!asesores_id_perfil_fkey (
+        perfil:perfiles (
           nombre_completo,
           correo,
           telefono
@@ -52,10 +49,6 @@ export async function getCasos(): Promise<Caso[]> {
       )
     )
   `);
-
-
-
-
 
   if (error) {
     console.error("Error al traer los casos:", error);
