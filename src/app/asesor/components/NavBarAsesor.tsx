@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, Edit } from "lucide-react";
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Logo } from "@/components/global/LogoUac";
@@ -13,6 +13,7 @@ export function Navbar() {
   const links = [
     { href: "/asesor/inicio", label: "Inicio" },
     { href: "/asesor/mis-casos", label: "Mis Casos" },
+    { href: "/centro-ayuda", label: "Centro de Ayuda" },
   ];
 
   return (
@@ -21,13 +22,15 @@ export function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
           <div className="shrink-0">
-            <button 
-              onClick={() => window.location.href='/asesor/inicio'}
+            <button
+              onClick={() => (window.location.href = "/asesor/inicio")}
               className="flex items-center hover:opacity-80 transition-opacity duration-200"
             >
               <Logo className="h-15 w-15" />
               <div className="flex flex-col md:flex-row items-center">
-                <span className="ml-2 text-xl text-gray-900">Consulorio Jurídico</span>
+                <span className="ml-2 text-xl text-gray-900">
+                  Consulorio Jurídico
+                </span>
                 <div className="ml-3 px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs">
                   Asesor
                 </div>
@@ -82,7 +85,7 @@ export function Navbar() {
               </Link>
             );
           })}
-            <LogoutButton></LogoutButton>
+          <LogoutButton></LogoutButton>
         </div>
       )}
     </nav>

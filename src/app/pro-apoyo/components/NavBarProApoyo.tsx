@@ -15,6 +15,7 @@ export function Navbar() {
     { href: "/pro-apoyo/inicio", label: "Inicio" },
     { href: "/pro-apoyo/gestionar-caso", label: "Casos" },
     { href: "/pro-apoyo/crear-caso", label: "Crear Caso" },
+    { href: "/centro-ayuda", label: "Centro de Ayuda" },
   ];
 
   return (
@@ -23,13 +24,15 @@ export function Navbar() {
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
           <div className="shrink-0">
-            <button 
-              onClick={() => window.location.href='/pro-apoyo/inicio'}
+            <button
+              onClick={() => (window.location.href = "/pro-apoyo/inicio")}
               className="flex items-center hover:opacity-80 transition-opacity duration-200"
             >
               <Logo className="h-15 w-15" />
               <div className="flex flex-col md:flex-row items-center">
-                <span className="ml-2 text-xl text-gray-900">Consulorio Jurídico</span>
+                <span className="ml-2 text-xl text-gray-900">
+                  Consulorio Jurídico
+                </span>
                 <div className="ml-3 px-2 py-1 bg-blue-100 text-blue-700 rounded-md text-xs">
                   Profesional de Apoyo
                 </div>
@@ -84,7 +87,7 @@ export function Navbar() {
               </Link>
             );
           })}
-            <LogoutButton></LogoutButton>
+          <LogoutButton></LogoutButton>
         </div>
       )}
     </nav>

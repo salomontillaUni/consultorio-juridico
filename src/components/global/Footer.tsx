@@ -36,7 +36,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <a
-                  href="mailto:supportfabsoft@gmail.com"
+                  href="mailto:fabsoft_uac@gmail.com"
                   className="group flex items-center text-gray-600 hover:text-blue-600 text-sm transition-all"
                 >
                   <Mail className="h-4 w-4 mr-2 text-gray-400 group-hover:text-blue-500" />
@@ -45,7 +45,7 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="#ayuda"
+                  href="/centro-ayuda"
                   className="text-gray-600 hover:text-blue-600 text-sm transition-colors"
                 >
                   Centro de ayuda
