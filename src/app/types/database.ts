@@ -51,6 +51,7 @@ export type Perfil = {
   correo?: string | null;
   cedula?: string | null;
   telefono?: string | null;
+  activo: boolean;
 };
 
 // --- ESTUDIANTES -----------------------------------------------

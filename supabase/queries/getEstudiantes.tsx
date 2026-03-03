@@ -10,7 +10,8 @@ export async function getEstudiantes(): Promise<Estudiante[]> {
     perfil:perfiles!estudiantes_id_perfil_fkey (
       nombre_completo,
       correo,
-      telefono
+      telefono,
+      activo
     ),
     estudiantes_casos(count)
   `);

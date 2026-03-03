@@ -9,7 +9,8 @@ export async function getAsesores(): Promise<Asesor[]> {
     perfil:perfiles!asesores_id_perfil_fkey (
       nombre_completo,
       correo,
-      telefono
+      telefono,
+      activo
     ),
     asesores_casos(count)
   `);
