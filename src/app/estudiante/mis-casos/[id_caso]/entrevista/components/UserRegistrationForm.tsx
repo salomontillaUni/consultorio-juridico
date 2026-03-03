@@ -191,11 +191,11 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
       case 4:
         return !!formData.situacion_laboral;
       case 5:
-        return true; // Optional section
+        return !!formData.nombreDemandado;
       case 6:
         return true; // Optional section
       case 7:
-        return true; // Optional section
+        return !!formData.area; // Area is required
       case 8:
         return !!(formData.firmasSolicitante && formData.cedulaSolicitante);
       default:
@@ -401,13 +401,14 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="edad">Edad del Solicitante</Label>
+                <Label htmlFor="edad">Edad del Solicitante *</Label>
                 <Input
                   id="edad"
                   type="number"
                   value={formData.edad || ""}
                   onChange={(e) => handleInputChange("edad", e.target.value)}
                   placeholder="Edad"
+                  className="bg-white/50 focus:bg-white transition-colors"
                 />
               </div>
 
@@ -447,14 +448,14 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="estadoCivil">Estado Civil</Label>
+                <Label htmlFor="estadoCivil">Estado Civil *</Label>
                 <Select
                   value={formData.estado_civil}
                   onValueChange={(value: string) =>
                     handleInputChange("estado_civil", value)
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-white/50 focus:bg-white transition-colors">
                     <SelectValue placeholder="Seleccione estado civil" />
                   </SelectTrigger>
                   <SelectContent>
@@ -468,7 +469,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
 
               <div className="space-y-2">
                 <Label htmlFor="estratoSocioeconomico">
-                  Estrato Socioeconómico
+                  Estrato Socioeconómico *
                 </Label>
                 <Select
                   value={formData.estrato}
@@ -476,7 +477,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                     handleInputChange("estrato", value)
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-white/50 focus:bg-white transition-colors">
                     <SelectValue placeholder="Seleccione estrato" />
                   </SelectTrigger>
                   <SelectContent>
@@ -491,7 +492,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
               </div>
 
               <div className="space-y-2 md:col-span-2">
-                <Label htmlFor="direccion">Dirección</Label>
+                <Label htmlFor="direccion">Dirección *</Label>
                 <Input
                   id="direccion"
                   value={formData.direccion}
@@ -499,6 +500,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                     handleInputChange("direccion", e.target.value)
                   }
                   placeholder="Dirección completa"
+                  className="bg-white/50 focus:bg-white transition-colors"
                 />
               </div>
 
@@ -514,14 +516,14 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="vivienda">Vivienda</Label>
+                <Label htmlFor="vivienda">Vivienda *</Label>
                 <Select
                   value={formData.tipo_vivienda}
                   onValueChange={(value: string) =>
                     handleInputChange("tipo_vivienda", value)
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-white/50 focus:bg-white transition-colors">
                     <SelectValue placeholder="Tipo de vivienda" />
                   </SelectTrigger>
                   <SelectContent>
@@ -549,14 +551,16 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="servicioSolicita">Seleccione una opción</Label>
+                <Label htmlFor="servicioSolicita">
+                  Seleccione una opción *
+                </Label>
                 <Select
                   value={formData.tiene_representado}
                   onValueChange={(value: string) =>
                     handleInputChange("tiene_representado", value)
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-white/50 focus:bg-white transition-colors">
                     <SelectValue placeholder="Seleccione quién lo solicita" />
                   </SelectTrigger>
                   <SelectContent>
@@ -583,14 +587,14 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="tipoTrabajo">Situación Laboral</Label>
+                <Label htmlFor="tipoTrabajo">Situación Laboral *</Label>
                 <Select
                   value={formData.situacion_laboral}
                   onValueChange={(value: string) =>
                     handleInputChange("situacion_laboral", value)
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-white/50 focus:bg-white transition-colors">
                     <SelectValue placeholder="Seleccione situación laboral" />
                   </SelectTrigger>
                   <SelectContent>
@@ -676,7 +680,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
             <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2 md:col-span-2">
                 <Label htmlFor="nombresDemandado">
-                  Nombres Completos del Demandado
+                  Nombres Completos del Demandado *
                 </Label>
                 <Input
                   id="nombresDemandado"
@@ -950,7 +954,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="area">Área</Label>
+                <Label htmlFor="area">Área *</Label>
                 <Select
                   required
                   value={formData.area}
@@ -958,7 +962,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                     handleInputChange("area", value)
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="bg-white/50 focus:bg-white transition-colors">
                     <SelectValue placeholder="Seleccione el área" />
                   </SelectTrigger>
                   <SelectContent>
@@ -982,6 +986,7 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
                   }
                   placeholder="Describa los hechos relevantes del caso..."
                   rows={4}
+                  className="bg-white/50 focus:bg-white transition-colors resize-none"
                 />
               </div>
 
@@ -1082,28 +1087,49 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
   }
 
   return (
-    <div className="space-y-6">
-      {/* Progress Bar */}
-      <div className="bg-white p-6 rounded-lg shadow-sm">
+    <div className="space-y-6 max-w-4xl mx-auto">
+      {/* Progress Bar Container */}
+      <div className="backdrop-blur-md bg-white/70 border border-white/20 p-6 rounded-2xl shadow-xl transition-all duration-300">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-medium text-gray-900">
-            Paso {currentStep} de {STEPS.length}
-          </h3>
-          <span className="text-sm text-blue-800">
-            {Math.round(progress)}% completado
-          </span>
+          <div className="space-y-1">
+            <h3 className="text-xl font-bold bg-linear-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+              Inscripción de Caso
+            </h3>
+            <p className="text-sm text-slate-500 font-medium">
+              Paso {currentStep} de {STEPS.length}
+            </p>
+          </div>
+          <div className="text-right">
+            <span className="text-2xl font-black text-blue-600">
+              {Math.round(progress)}%
+            </span>
+            <p className="text-[10px] uppercase tracking-widest text-slate-400 font-bold">
+              Completado
+            </p>
+          </div>
         </div>
-        <Progress value={progress} className="h-2 bg-blue-100 ">
-          <ProgressIndicator className="bg-blue-600" />
-        </Progress>
 
-        {/* Step Title */}
+        <div className="relative h-3 w-full bg-slate-100 rounded-full overflow-hidden border border-slate-200 shadow-inner">
+          <div
+            className="absolute top-0 left-0 h-full bg-linear-to-r from-blue-600 to-indigo-600 transition-all duration-500 ease-out shadow-lg"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+
+        {/* Step Title Integrated */}
         {currentStepData && (
-          <div className="flex items-center gap-2 mt-4">
-            <currentStepData.icon className="h-5 w-5 text-blue-600" />
-            <h4 className="text-base font-medium text-gray-800">
-              {currentStepData.title}
-            </h4>
+          <div className="flex items-center gap-3 mt-6 p-3 bg-blue-50/50 rounded-xl border border-blue-100/50">
+            <div className="p-2 bg-blue-600 rounded-lg shadow-blue-200 shadow-lg">
+              <currentStepData.icon className="h-5 w-5 text-white" />
+            </div>
+            <div>
+              <h4 className="text-sm font-bold text-slate-800 leading-none">
+                {currentStepData.title}
+              </h4>
+              <p className="text-xs text-slate-500 mt-1">
+                Por favor, complete la información requerida en esta sección.
+              </p>
+            </div>
           </div>
         )}
       </div>
@@ -1168,25 +1194,43 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
       </form>
 
       {/* Step Indicators */}
-      <div className="flex justify-center">
-        <div className="flex space-x-2">
-          {STEPS.map((step) => (
-            <button
-              //disabled={step.id > currentStep}
-              key={step.id}
-              type="button"
-              onClick={() => setCurrentStep(step.id)}
-              //disabled={step.id > currentStep}
-              className={`w-3 h-3 rounded-full transition-colors ${
-                step.id === currentStep
-                  ? "bg-blue-600"
-                  : step.id < currentStep
-                    ? "bg-green-500"
-                    : "bg-gray-300"
-              }`}
-              aria-label={`Ir al paso ${step.id}: ${step.title}`}
-            />
-          ))}
+      <div className="flex justify-center pt-4">
+        <div className="flex items-center gap-3 p-2 bg-white/50 backdrop-blur-sm rounded-full border border-slate-200">
+          {STEPS.map((step) => {
+            const isCompleted = step.id < currentStep;
+            const isCurrent = step.id === currentStep;
+            const isDisabled = step.id > currentStep;
+
+            return (
+              <button
+                key={step.id}
+                type="button"
+                onClick={() => {
+                  if (!isDisabled) setCurrentStep(step.id);
+                }}
+                disabled={isDisabled}
+                className={`
+                  relative group transition-all duration-300 flex items-center justify-center
+                  ${isCurrent ? "w-10" : "w-3"} h-3 rounded-full
+                  ${isCurrent ? "bg-blue-600 shadow-md shadow-blue-200" : isCompleted ? "bg-green-500" : "bg-slate-300"}
+                  ${isDisabled ? "cursor-not-allowed opacity-50" : "cursor-pointer hover:scale-110"}
+                `}
+                aria-label={`Ir al paso ${step.id}: ${step.title}`}
+              >
+                {isCurrent && (
+                  <span className="text-[8px] font-black text-white uppercase tracking-tighter">
+                    {step.id}
+                  </span>
+                )}
+                {/* Tooltip on hover */}
+                {!isDisabled && (
+                  <span className="absolute -top-10 left-1/2 -translate-x-1/2 bg-slate-800 text-white text-[10px] px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap pointer-events-none">
+                    {step.title}
+                  </span>
+                )}
+              </button>
+            );
+          })}
         </div>
       </div>
     </div>

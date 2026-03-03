@@ -284,25 +284,6 @@ export default function SupportCasesPage() {
                   <SelectItem value="Derecho Penal">Derecho Penal</SelectItem>
                 </SelectContent>
               </Select>
-              <Select value={studentFilter} onValueChange={setStudentFilter}>
-                <SelectTrigger className="w-full lg:w-64">
-                  <SelectValue placeholder="Estudiante" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="todos">Todos los estudiantes</SelectItem>
-                  {uniqueStudents.length > 0 ? (
-                    uniqueStudents.map((student) => (
-                      <SelectItem key={student} value={student}>
-                        {student}
-                      </SelectItem>
-                    ))
-                  ) : (
-                    <SelectItem value="ninguno">
-                      No hay estudiantes disponibles
-                    </SelectItem>
-                  )}
-                </SelectContent>
-              </Select>
             </div>
           </div>
 

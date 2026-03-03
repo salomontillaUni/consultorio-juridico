@@ -103,15 +103,26 @@ export function ReasignarEquipo({ idCaso, type, casosData, onRefresh }: Props) {
         </Label>
         <div className="flex items-center justify-between mt-1">
           {current ? (
-            <p
-              className={
-                type === "estudiante"
-                  ? "text-blue-600 font-medium"
-                  : "text-gray-900 font-medium"
-              }
-            >
-              {getNombre(current)}
-            </p>
+            <div className="flex flex-col">
+              <p
+                className={
+                  type === "estudiante"
+                    ? "text-blue-600 font-semibold"
+                    : "text-gray-900 font-semibold"
+                }
+              >
+                {getNombre(current)}
+              </p>
+              <p className="text-xs text-slate-500">
+                CC:{" "}
+                {type === "estudiante"
+                  ? current.estudiante?.perfil?.cedula
+                  : current.asesor?.perfil?.cedula}
+                {type === "estudiante" &&
+                  current.estudiante?.semestre &&
+                  ` | Semestre: ${current.estudiante.semestre}`}
+              </p>
+            </div>
           ) : (
             <p className="text-gray-500 italic">No asignado</p>
           )}
@@ -144,7 +155,10 @@ export function ReasignarEquipo({ idCaso, type, casosData, onRefresh }: Props) {
                         {item.perfil.nombre_completo}
                       </span>
                       <span className="text-[10px] text-muted-foreground">
-                        CC: {item.perfil.cedula} | Turno: {item.turno}
+                        Turno: {item.turno}
+                        {type === "estudiante" &&
+                          item.semestre &&
+                          ` | Semestre: ${item.semestre}`}
                       </span>
                     </div>
                   )}
