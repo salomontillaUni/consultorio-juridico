@@ -10,7 +10,8 @@ export async function getAsesores(): Promise<Asesor[]> {
       nombre_completo,
       correo,
       telefono,
-      activo
+      activo,
+      cedula
     ),
     asesores_casos(count)
   `);

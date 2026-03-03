@@ -19,6 +19,7 @@ import {
   Power,
   PowerOff,
   Search,
+  ChartNoAxesColumnDecreasingIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -159,23 +160,6 @@ export default function EstudiantesPage() {
     }
   };
 
-  const handleDelete = async (student: Estudiante) => {
-    if (
-      !confirm(
-        `¿Está seguro de eliminar al estudiante ${student.perfil.nombre_completo}? Esta acción no se puede deshacer.`,
-      )
-    )
-      return;
-
-    const result = await deleteUser(student.id_perfil, "estudiante");
-    if (result.success) {
-      toast.success(result.message);
-      fetchEstudiantes();
-    } else {
-      toast.error(result.error);
-    }
-  };
-
   const openEdit = (student: Estudiante) => {
     setEditingStudent(student);
     setEditForm({
@@ -207,6 +191,7 @@ export default function EstudiantesPage() {
         toast.success(result.message);
         setIsEditOpen(false);
         fetchEstudiantes();
+        
       } else {
         toast.error(result.error);
       }
@@ -470,14 +455,7 @@ export default function EstudiantesPage() {
                                   <Power className="h-4 w-4" />
                                 )}
                               </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
-                                onClick={() => handleDelete(student)}
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
+                          
                             </div>
                           </TableCell>
                         </TableRow>
@@ -589,7 +567,7 @@ export default function EstudiantesPage() {
               </Button>
               <Button
                 type="submit"
-                bg-blue-600
+                className="bg-blue-600 hover:bg-blue-700"
                 onClick={handleUpdate}
                 disabled={isPending}
               >

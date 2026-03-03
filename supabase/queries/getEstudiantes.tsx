@@ -11,6 +11,7 @@ export async function getEstudiantes(): Promise<Estudiante[]> {
       nombre_completo,
       correo,
       telefono,
+      cedula,
       activo
     ),
     estudiantes_casos(count)

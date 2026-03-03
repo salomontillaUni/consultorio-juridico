@@ -125,23 +125,6 @@ export default function ProApoyoPage() {
     }
   };
 
-  const handleDelete = async (pro: any) => {
-    if (
-      !confirm(
-        `¿Está seguro de eliminar al profesional ${pro.perfil.nombre_completo}? Esta acción no se puede deshacer.`,
-      )
-    )
-      return;
-
-    const result = await deleteUser(pro.id_perfil, "pro_apoyo");
-    if (result.success) {
-      toast.success(result.message);
-      fetchProfesionales();
-    } else {
-      toast.error(result.error);
-    }
-  };
-
   const openEdit = (pro: any) => {
     setEditingPro(pro);
     setEditForm({
@@ -373,14 +356,6 @@ export default function ProApoyoPage() {
                                 ) : (
                                   <Power className="h-4 w-4" />
                                 )}
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
-                                onClick={() => handleDelete(pro)}
-                              >
-                                <Trash2 className="h-4 w-4" />
                               </Button>
                             </div>
                           </TableCell>

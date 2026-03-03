@@ -3,17 +3,17 @@ import { supabase } from "@/utils/supabase/supabase";
 export async function getProApoyo() {
   const { data, error } = await supabase
     .from("perfiles_roles")
-    .select(
-      `
+    .select(`
       user_id,
-      perfil:perfiles!perfiles_roles_user_id_fkey (
+      perfiles (
+        id,
         nombre_completo,
         correo,
+        cedula,
         telefono,
         activo
       )
-    `,
-    )
+    `)
     .eq("role", "pro_apoyo");
 
   if (error) {
@@ -23,6 +23,7 @@ export async function getProApoyo() {
 
   return data.map((item: any) => ({
     id_perfil: item.user_id,
-    perfil: item.perfil,
+    perfil: item.perfiles,
   }));
 }
+
