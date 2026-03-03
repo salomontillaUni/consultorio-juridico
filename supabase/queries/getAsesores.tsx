@@ -1,12 +1,14 @@
 import { supabase } from "@/utils/supabase/supabase";
 import type { Asesor } from "../../src/app/types/database";
 
-export async function getAsesores(): Promise<Asesor[]> {
-  const { data, error } = await supabase.from("asesores").select(`
+export async function getAsesores(
+  soloActivos: boolean = false,
+): Promise<Asesor[]> {
+  let query = supabase.from("asesores").select(`
     id_perfil,
     turno,
     area,
-    perfil:perfiles!asesores_id_perfil_fkey (
+    perfil:perfiles!${soloActivos ? "inner" : "asesores_id_perfil_fkey"} (
       nombre_completo,
       correo,
       telefono,
@@ -15,6 +17,12 @@ export async function getAsesores(): Promise<Asesor[]> {
     ),
     asesores_casos(count)
   `);
+
+  if (soloActivos) {
+    query = query.eq("perfiles.activo", true);
+  }
+
+  const { data, error } = await query;
 
   if (error) {
     console.error("Error al traer los asesores:", error);

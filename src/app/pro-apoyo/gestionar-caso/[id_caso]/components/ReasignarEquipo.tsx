@@ -34,11 +34,11 @@ export function ReasignarEquipo({ idCaso, type, casosData, onRefresh }: Props) {
   useEffect(() => {
     if (open) {
       if (type === "estudiante") {
-        getEstudiantes().then((res) => {
+        getEstudiantes(true).then((res) => {
           if (res) setItems(res);
         });
       } else {
-        getAsesores().then((res) => {
+        getAsesores(true).then((res) => {
           if (res) setItems(res);
         });
       }

@@ -76,10 +76,10 @@ export function AsignacionCaso({
   useEffect(() => {
     const getData = async () => {
       try {
-        const estudiantes = await getEstudiantes();
+        const estudiantes = await getEstudiantes(true);
         setEstudiantesDisponibles(estudiantes);
 
-        const asesores = await getAsesores();
+        const asesores = await getAsesores(true);
         setAsesoresDisponibles(asesores);
       } catch (error) {
         console.error("Error al obtener estudiantes o asesores:", error);
