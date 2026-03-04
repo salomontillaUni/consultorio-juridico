@@ -53,10 +53,13 @@ export default function Footer() {
               </li>
               <li>
                 <a
-                  href="#privacidad"
-                  className="text-gray-600 hover:text-blue-600 text-sm transition-colors"
+                  href="https://drive.google.com/file/d/1N_LD7mKw_GmZTmpQeBR81WbcJhWHDM3o/view?usp=sharing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group flex items-center text-gray-600 hover:text-blue-600 text-sm transition-all"
                 >
-                  Privacidad
+                  Manual de usuario
+                  <ExternalLink className="h-3 w-3 ml-1 opacity-0 group-hover:opacity-100 transition-opacity" />
                 </a>
               </li>
             </ul>
