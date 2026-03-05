@@ -15,9 +15,7 @@ import Link from "next/link";
 import { Navbar } from "../components/NavBarProApoyo";
 import { Caso } from "app/types/database";
 import { getCasos } from "../../../../supabase/queries/getCasos";
-import { Loader2 } from "lucide-react";
 import { supabase } from "@/utils/supabase/supabase";
-import { get } from "http";
 import {
   Pagination,
   PaginationContent,
@@ -27,6 +25,15 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { getStatusBadge } from "app/asesor/mis-casos/page";
+import { Spinner } from "@/components/ui/spinner";
+import {
+  ArrowLeft,
+  Check,
+  Search,
+  FilterX,
+  FileText,
+  Users,
+} from "lucide-react";
 
 export const formatDate = (dateString: string) => {
   return new Date(dateString).toLocaleDateString("es-ES", {
@@ -88,14 +95,6 @@ export default function SupportCasesPage() {
     return matchesSearch && matchesStatus && matchesArea && matchesStudent;
   });
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
-
   const uniqueStudents = [
     ...new Set(
       (casos ?? []).flatMap(
@@ -106,6 +105,7 @@ export default function SupportCasesPage() {
       ),
     ),
   ];
+
   // Paginación
   const totalPages = Math.ceil(filteredCases.length / ITEMS_PER_PAGE);
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
@@ -114,10 +114,10 @@ export default function SupportCasesPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex flex-col">
+      <div className="min-h-screen bg-slate-50 flex flex-col">
         <Navbar />
         <div className="flex-1 flex flex-col items-center justify-center p-4">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+          <Spinner className="h-10 w-10 text-blue-600 mb-4" />
           <p className="mt-4 text-slate-500 font-medium">
             Cargando supervisión de casos...
           </p>
@@ -127,135 +127,102 @@ export default function SupportCasesPage() {
   }
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar />
-      <main className="flex-1 w-full flex items-center justify-center bg-gray-50">
-        <div className="w-full mx-auto px-4 sm:px-6 lg:px-14 py-8">
-          <div className="mb-8">
-            <div className="flex items-center justify-between mb-6">
+      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+        <div className="mb-8 space-y-4">
+          <Link
+            href="/pro-apoyo/inicio"
+            className="inline-flex items-center text-sm font-medium text-slate-500 hover:text-blue-600 transition-colors"
+          >
+            <ArrowLeft className="w-4 h-4 mr-2" />
+            Volver al inicio
+          </Link>
+
+          <div>
+            <h1 className="text-3xl font-bold text-slate-900 tracking-tight">
+              Supervisión de Casos
+            </h1>
+            <p className="text-slate-500 mt-1">
+              Supervisa y apoya el trabajo de los estudiantes en todos los casos
+              legales del consultorio.
+            </p>
+          </div>
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <Card className="bg-white border-none shadow-sm shadow-slate-200/50 p-6 flex flex-col justify-center rounded-2xl">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-blue-50 text-blue-600 rounded-xl">
+                <FileText className="w-6 h-6" />
+              </div>
               <div>
-                <Link
-                  href={"/pro-apoyo/inicio"}
-                  className="flex items-center text-blue-600 hover:text-blue-700 mb-4 transition-colors duration-200"
-                >
-                  <svg
-                    className="w-5 h-5 mr-2"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M10 19l-7-7m0 0l7-7m-7 7h18"
-                    />
-                  </svg>
-                  Volver al inicio
-                </Link>
-                <h1 className="text-gray-900 mb-2 font-semibold">
-                  Supervisión de casos
-                </h1>
-                <p className="text-gray-600">
-                  Supervisa y apoya el trabajo de los estudiantes en todos los
-                  casos legales
+                <p className="text-sm font-medium text-slate-500">
+                  Total casos
+                </p>
+                <p className="text-2xl font-bold text-slate-900">
+                  {casos?.length || 0}
                 </p>
               </div>
             </div>
+          </Card>
 
-            {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <div className="flex items-center">
-                  <div className="p-2 bg-blue-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-blue-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm text-gray-600">Total casos</p>
-                    <p className="text-xl text-gray-900">{casos?.length}</p>
-                  </div>
-                </div>
+          <Card className="bg-white border-none shadow-sm shadow-slate-200/50 p-6 flex flex-col justify-center rounded-2xl">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-green-50 text-green-600 rounded-xl">
+                <Check className="w-6 h-6" />
               </div>
-
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <div className="flex items-center">
-                  <div className="p-2 bg-green-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-green-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm text-gray-600">Aprobados</p>
-                    <p className="text-xl text-gray-900">
-                      {casos?.filter((c) => c.estado === "aprobado").length}
-                    </p>
-                  </div>
-                </div>
+              <div>
+                <p className="text-sm font-medium text-slate-500">Aprobados</p>
+                <p className="text-2xl font-bold text-slate-900">
+                  {casos?.filter((c) => c.estado === "aprobado").length || 0}
+                </p>
               </div>
+            </div>
+          </Card>
 
-              <div className="bg-white rounded-lg border border-gray-200 p-4">
-                <div className="flex items-center">
-                  <div className="p-2 bg-purple-100 rounded-lg">
-                    <svg
-                      className="w-5 h-5 text-purple-600"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="ml-4">
-                    <p className="text-sm text-gray-600">Estudiantes activos</p>
-                    <p className="text-xl text-gray-900">
-                      {uniqueStudents.length}
-                    </p>
-                  </div>
-                </div>
+          <Card className="bg-white border-none shadow-sm shadow-slate-200/50 p-6 flex flex-col justify-center rounded-2xl">
+            <div className="flex items-center gap-4">
+              <div className="p-3 bg-purple-50 text-purple-600 rounded-xl">
+                <Users className="w-6 h-6" />
+              </div>
+              <div>
+                <p className="text-sm font-medium text-slate-500">
+                  Estudiantes activos
+                </p>
+                <p className="text-2xl font-bold text-slate-900">
+                  {uniqueStudents.length}
+                </p>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Filters */}
+        <Card className="bg-white border-none shadow-sm shadow-slate-200/50 p-5 mb-8 rounded-2xl">
+          <div className="flex flex-col lg:flex-row gap-4 items-end">
+            <div className="flex-1 w-full space-y-1.5">
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                Buscar general
+              </label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
+                <Input
+                  placeholder="Cliente, documento, descripción..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-9 bg-slate-50 border-transparent focus:bg-white focus:border-blue-500 transition-colors rounded-xl"
+                />
               </div>
             </div>
 
-            {/* Filters */}
-            <div className="flex flex-col lg:flex-row gap-4 mb-6">
-              <div className="flex-1">
-                <Input
-                  placeholder="Buscar por cliente, número de caso, estudiante o descripción..."
-                  value={searchTerm}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                    setSearchTerm(e.target.value)
-                  }
-                  className="w-full"
-                />
-              </div>
+            <div className="w-full lg:w-48 space-y-1.5">
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                Estado
+              </label>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="w-full lg:w-48">
+                <SelectTrigger className="bg-slate-50 border-transparent focus:bg-white transition-colors rounded-xl">
                   <SelectValue placeholder="Estado" />
                 </SelectTrigger>
                 <SelectContent>
@@ -263,13 +230,19 @@ export default function SupportCasesPage() {
                   <SelectItem value="aprobado">Aprobado</SelectItem>
                   <SelectItem value="en_proceso">En proceso</SelectItem>
                   <SelectItem value="pendiente_aprobacion">
-                    Pendiente de aprobación
+                    Pendiente
                   </SelectItem>
                   <SelectItem value="archivado">Archivado</SelectItem>
                 </SelectContent>
               </Select>
+            </div>
+
+            <div className="w-full lg:w-48 space-y-1.5">
+              <label className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+                Tipo
+              </label>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
-                <SelectTrigger className="w-full lg:w-48">
+                <SelectTrigger className="bg-slate-50 border-transparent focus:bg-white transition-colors rounded-xl">
                   <SelectValue placeholder="Tipo de caso" />
                 </SelectTrigger>
                 <SelectContent>
@@ -285,205 +258,216 @@ export default function SupportCasesPage() {
                 </SelectContent>
               </Select>
             </div>
-          </div>
 
-          {/* Cases Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
-            {currentCases?.map((caso) => (
-              <Card
-                key={caso.id_caso}
-                className="p-6 hover:shadow-md max-w-2xl transition-shadow duration-200"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <div>
-                    <h3 className="text-gray-900 mb-1">
-                      No. Caso: {caso.id_caso}
-                    </h3>
-                    <p className="text-gray-600">
-                      Usuario:{" "}
-                      <span className="font-semibold">
-                        {caso.usuarios.nombre_completo}
-                      </span>
-                    </p>
-                    <p className="text-gray-800">
-                      Documento: {caso.usuarios.cedula}
-                    </p>
+            <Button
+              onClick={() => {
+                setSearchTerm("");
+                setStatusFilter("todos");
+                setTypeFilter("todos");
+                setStudentFilter("todos");
+              }}
+              variant="outline"
+              className="w-full md:w-auto shrink-0 bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900 rounded-xl"
+            >
+              <FilterX className="w-4 h-4 mr-2" />
+              Limpiar
+            </Button>
+          </div>
+        </Card>
+
+        {/* Case List Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
+          {currentCases?.map((caso) => (
+            <Card
+              key={caso.id_caso}
+              className="p-6 border-none shadow-sm shadow-slate-200/50 hover:shadow-md hover:shadow-blue-900/5 transition-all duration-300 bg-white rounded-2xl group flex flex-col"
+            >
+              <div className="flex justify-between items-start mb-5 border-b border-slate-100 pb-4">
+                <div className="space-y-1">
+                  <div className="text-xs font-semibold text-slate-400">
+                    Caso #{caso.id_caso}
                   </div>
-                  <div className="flex flex-col gap-2">
-                    {getStatusBadge(caso.estado)}
+                  <h3 className="text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1">
+                    {caso.usuarios.nombre_completo}
+                  </h3>
+                  <div className="text-sm font-medium text-slate-500">
+                    {caso.usuarios.cedula}
                   </div>
                 </div>
+                <div className="shrink-0">{getStatusBadge(caso.estado)}</div>
+              </div>
 
-                <div className="space-y-2 mb-4">
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Área:</span>
-                    <span className="text-gray-900">{caso.area}</span>
-                  </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Estudiante:</span>
-                    <span className="text-blue-600">
-                      {caso.estudiantes_casos?.length ? (
-                        caso?.estudiantes_casos &&
-                        caso.estudiantes_casos.length > 0 ? (
+              <div className="space-y-3 mb-6 flex-1">
+                <div className="space-y-1">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    Área
+                  </span>
+                  <p className="text-sm font-semibold text-slate-800">
+                    {caso.area}
+                  </p>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-1">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                      Estudiante
+                    </span>
+                    {caso.estudiantes_casos?.length ? (
+                      <p className="text-sm font-semibold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-md truncate max-w-full">
+                        {
                           caso.estudiantes_casos[
                             caso.estudiantes_casos.length - 1
                           ].estudiante.perfil.nombre_completo
-                        ) : (
-                          "Sin asignar"
-                        )
-                      ) : (
-                        <p className="text-gray-600 italic">
-                          Sin estudiante asignado
-                        </p>
-                      )}
-                    </span>
+                        }
+                      </p>
+                    ) : (
+                      <p className="text-sm italic text-slate-400">
+                        Sin asignar
+                      </p>
+                    )}
                   </div>
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Asesor:</span>
-                    <span className="text-gray-900">
-                      {caso.asesores_casos?.length ? (
-                        caso?.estudiantes_casos &&
-                        caso.asesores_casos.length > 0 ? (
+                  <div className="space-y-1">
+                    <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                      Asesor
+                    </span>
+                    {caso.asesores_casos?.length ? (
+                      <p className="text-sm font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md truncate max-w-full">
+                        {
                           caso.asesores_casos[caso.asesores_casos.length - 1]
                             .asesor.perfil.nombre_completo
-                        ) : (
-                          "Sin asignar"
-                        )
-                      ) : (
-                        <p className="text-gray-600 italic">
-                          Sin asesor asignado
-                        </p>
-                      )}
-                    </span>
+                        }
+                      </p>
+                    ) : (
+                      <p className="text-sm italic text-slate-400">
+                        Sin asignar
+                      </p>
+                    )}
                   </div>
                 </div>
 
-                <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                  {caso.resumen_hechos ?? (
-                    <span className="italic text-gray-400">
-                      No hay resumen de los hechos por ahora.
-                    </span>
-                  )}
-                </p>
-
-                <div className="flex gap-2">
-                  <Link
-                    className="flex-1 bg-blue-600 hover:bg-blue-700 text-white text-center px-4 py-2 rounded-md transition-colors duration-200"
-                    href={`/pro-apoyo/gestionar-caso/${caso.id_caso}`}
-                  >
-                    Supervisar
-                  </Link>
+                <div className="pt-2">
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-slate-400">
+                    Resumen
+                  </span>
+                  <p className="text-sm text-slate-600 line-clamp-2 mt-0.5 leading-relaxed">
+                    {caso.resumen_hechos ?? (
+                      <span className="italic opacity-70">
+                        No hay resumen redactado.
+                      </span>
+                    )}
+                  </p>
                 </div>
-              </Card>
-            ))}
-          </div>
+              </div>
 
-          {filteredCases?.length === 0 && (
-            <div className="text-center py-12">
-              <svg
-                className="w-16 h-16 text-gray-400 mx-auto mb-4"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                />
-              </svg>
-              <h3 className="text-gray-900 mb-2">No se encontraron casos</h3>
-              <p className="text-gray-600 mb-4">
-                No hay casos que coincidan con los criterios de búsqueda.
-              </p>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  setSearchTerm("");
-                  setStatusFilter("todos");
-                  setTypeFilter("todos");
-                  setStudentFilter("todos");
-                }}
-              >
-                Limpiar filtros
-              </Button>
-            </div>
-          )}
-          {filteredCases.length > 0 && totalPages > 1 && (
-            <div className="mt-8 flex flex-col items-center gap-4">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious
-                      size="default"
-                      onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
-                      className={
-                        currentPage === 1
-                          ? "pointer-events-none opacity-50"
-                          : "cursor-pointer"
-                      }
-                    />
-                  </PaginationItem>
-
-                  {[...Array(totalPages)].map((_, i) => {
-                    const pageNumber = i + 1;
-                    // Mostrar solo algunas páginas alrededor de la página actual
-                    if (
-                      pageNumber === 1 ||
-                      pageNumber === totalPages ||
-                      (pageNumber >= currentPage - 1 &&
-                        pageNumber <= currentPage + 1)
-                    ) {
-                      return (
-                        <PaginationItem key={pageNumber}>
-                          <PaginationLink
-                            size="default"
-                            onClick={() => setCurrentPage(pageNumber)}
-                            isActive={currentPage === pageNumber}
-                            className="cursor-pointer"
-                          >
-                            {pageNumber}
-                          </PaginationLink>
-                        </PaginationItem>
-                      );
-                    } else if (
-                      pageNumber === currentPage - 2 ||
-                      pageNumber === currentPage + 2
-                    ) {
-                      return (
-                        <PaginationItem key={pageNumber}>
-                          <span className="px-4">...</span>
-                        </PaginationItem>
-                      );
-                    }
-                    return null;
-                  })}
-
-                  <PaginationItem>
-                    <PaginationNext
-                      size="default"
-                      onClick={() =>
-                        setCurrentPage((p) => Math.min(totalPages, p + 1))
-                      }
-                      className={
-                        currentPage === totalPages
-                          ? "pointer-events-none opacity-50"
-                          : "cursor-pointer"
-                      }
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-
-              <p className="text-sm text-gray-600">
-                Mostrando {startIndex + 1}-
-                {Math.min(endIndex, filteredCases.length)} de{" "}
-                {filteredCases.length} casos
-              </p>
-            </div>
-          )}
+              <div className="mt-auto pt-4 border-t border-slate-50">
+                <Link
+                  className="flex w-full items-center justify-center bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 font-medium px-4 py-2.5 rounded-xl transition-colors duration-200 text-sm shadow-xs"
+                  href={`/pro-apoyo/gestionar-caso/${caso.id_caso}`}
+                >
+                  Modificar & Supervisar
+                </Link>
+              </div>
+            </Card>
+          ))}
         </div>
+
+        {filteredCases?.length === 0 && (
+          <Card className="flex flex-col items-center justify-center p-12 text-center border-dashed border-2 border-slate-200 bg-transparent shadow-none rounded-2xl mt-4">
+            <div className="h-16 w-16 bg-slate-100 text-slate-400 rounded-full flex items-center justify-center mb-4">
+              <Search className="h-8 w-8" />
+            </div>
+            <h3 className="text-lg font-bold text-slate-900 mb-1">
+              No se encontraron casos
+            </h3>
+            <p className="text-slate-500 max-w-sm mb-6">
+              No hay casos que coincidan con los criterios de búsqueda actuales.
+            </p>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchTerm("");
+                setStatusFilter("todos");
+                setTypeFilter("todos");
+                setStudentFilter("todos");
+              }}
+              className="bg-white"
+            >
+              <FilterX className="w-4 h-4 mr-2" />
+              Limpiar filtros
+            </Button>
+          </Card>
+        )}
+
+        {/* Pagination Block */}
+        {filteredCases.length > 0 && totalPages > 1 && (
+          <div className="mt-10 flex flex-col items-center gap-4">
+            <Pagination>
+              <PaginationContent className="bg-white px-2 py-1 rounded-full border border-slate-200 shadow-sm">
+                <PaginationItem>
+                  <PaginationPrevious
+                    className={
+                      currentPage === 1
+                        ? "pointer-events-none opacity-50 text-slate-400"
+                        : "cursor-pointer text-slate-700"
+                    }
+                    onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                  />
+                </PaginationItem>
+
+                {[...Array(totalPages)].map((_, i) => {
+                  const pageNumber = i + 1;
+                  if (
+                    pageNumber === 1 ||
+                    pageNumber === totalPages ||
+                    (pageNumber >= currentPage - 1 &&
+                      pageNumber <= currentPage + 1)
+                  ) {
+                    return (
+                      <PaginationItem key={pageNumber}>
+                        <PaginationLink
+                          onClick={() => setCurrentPage(pageNumber)}
+                          isActive={currentPage === pageNumber}
+                          className={`cursor-pointer rounded-full ${currentPage === pageNumber ? "bg-blue-600 text-white hover:bg-blue-700" : "text-slate-700 hover:bg-slate-100"}`}
+                        >
+                          {pageNumber}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  } else if (
+                    pageNumber === currentPage - 2 ||
+                    pageNumber === currentPage + 2
+                  ) {
+                    return (
+                      <PaginationItem key={pageNumber}>
+                        <span className="px-4 text-slate-400">...</span>
+                      </PaginationItem>
+                    );
+                  }
+                  return null;
+                })}
+
+                <PaginationItem>
+                  <PaginationNext
+                    className={
+                      currentPage === totalPages
+                        ? "pointer-events-none opacity-50 text-slate-400"
+                        : "cursor-pointer text-slate-700"
+                    }
+                    onClick={() =>
+                      setCurrentPage((p) => Math.min(totalPages, p + 1))
+                    }
+                  />
+                </PaginationItem>
+              </PaginationContent>
+            </Pagination>
+
+            <p className="text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+              Mostrando {startIndex + 1} -{" "}
+              {Math.min(endIndex, filteredCases.length)} de{" "}
+              {filteredCases.length} casos
+            </p>
+          </div>
+        )}
       </main>
     </div>
   );

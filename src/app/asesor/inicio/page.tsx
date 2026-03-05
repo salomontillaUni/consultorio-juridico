@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { Card, CardContent } from '@/components/ui/card';
-import { FileText, Scale } from 'lucide-react';
-import { Navbar } from '../components/NavBarAsesor';
-import { Button } from '@/components/ui/button';
-import { useRouter } from 'next/navigation';
+import { Card, CardContent } from "@/components/ui/card";
+import { FileText, Scale, ChevronRight } from "lucide-react";
+import { Navbar } from "../components/NavBarAsesor";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function PaginaPrincipal() {
   const router = useRouter();
@@ -14,49 +14,56 @@ export default function PaginaPrincipal() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-linear-to-br from-slate-50 to-slate-100">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
       <Navbar />
-      
-      <main className="flex flex-1 items-center justify-center px-4">
-        <div className="max-w-4xl w-full text-center space-y-12">
-          {/* Header */}
-          <header className="space-y-6">
-            <div className="flex justify-center">
-              <div className="p-6 bg-blue-600 rounded-full shadow-2xl">
-                <Scale className="h-16 w-16 text-white" strokeWidth={2} />
-              </div>
-            </div>
 
-            <div>
-              <h1 className="text-5xl font-semibold text-slate-900 tracking-tight">
-                Consultorio Jurídico
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+        <div className="w-full max-w-4xl space-y-10 sm:space-y-14 animate-in fade-in slide-in-from-bottom-4 duration-700">
+          {/* Header */}
+          <header className="text-center space-y-6">
+            <div className="mx-auto w-20 h-20 sm:w-24 sm:h-24 bg-linear-to-tr from-blue-600 to-indigo-600 rounded-3xl shadow-xl shadow-blue-600/20 flex items-center justify-center">
+              <Scale
+                className="h-10 w-10 sm:h-12 sm:w-12 text-white"
+                strokeWidth={1.5}
+              />
+            </div>
+            <div className="space-y-3">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight">
+                Panel del{" "}
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-indigo-600">
+                  Asesor
+                </span>
               </h1>
-              <p className="text-lg text-slate-600 max-w-2xl mx-auto mt-2">
-                Sistema integral para la gestión y registro de casos legales
+              <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto font-medium">
+                Plataforma integral para la gestión, seguimiento y supervisión
+                de casos legales.
               </p>
             </div>
           </header>
 
-          {/* Cards de información */}
-          <section className="flex justify-center">
-            <Card className="w-xl border-2 border-slate-200 hover:border-blue-300 transition-all duration-300 hover:shadow-md">
-              <CardContent className="pt-6 text-center space-y-4">
-                <div className="flex justify-center">
-                  <div className="p-3 bg-blue-100 rounded-lg">
-                    <FileText className="h-8 w-8 text-blue-600" />
-                  </div>
+          {/* Acciones Rápidas */}
+          <section className="grid grid-cols-1 md:grid-cols-1 gap-6 max-w-xl mx-auto">
+            <Card
+              className="group cursor-pointer border-slate-200 hover:border-blue-400 hover:shadow-2xl hover:shadow-blue-600/10 transition-all duration-300 bg-white/50 backdrop-blur-sm overflow-hidden"
+              onClick={handleNavigateToMisCasos}
+            >
+              <CardContent className="p-8 sm:p-10 text-center space-y-6 flex flex-col items-center">
+                <div className="h-16 w-16 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-blue-600 group-hover:text-white transition-all duration-300">
+                  <FileText className="h-8 w-8" strokeWidth={2} />
                 </div>
-
-                <Button 
-                  onClick={handleNavigateToMisCasos}
-                  className="min-w-sm bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-200"
-                >
-                  Mis Casos
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-bold text-slate-900">
+                    Mis Casos
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
+                    Accede a la lista de casos asignados, revísalos y aprueba
+                    las acciones de los estudiantes.
+                  </p>
+                </div>
+                <Button className="w-full sm:w-auto mt-4 px-8 bg-slate-900 hover:bg-blue-600 text-white rounded-full transition-all duration-300 gap-2">
+                  Continuar
+                  <ChevronRight className="h-4 w-4" />
                 </Button>
-
-                <p className="text-sm text-slate-600">
-                  Consulta, registra y da seguimiento a tus casos activos.
-                </p>
               </CardContent>
             </Card>
           </section>

@@ -91,85 +91,105 @@ export function LoginForm() {
   };
 
   return (
-    <Card className="w-full max-w-md mx-auto">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-center">Bienvenido!</CardTitle>
-        <CardDescription className="text-center">
-          Ingresa tus credenciales para acceder
+    <Card className="w-full mx-auto border-0 shadow-xl shadow-slate-200/50 bg-white/80 backdrop-blur-md rounded-2xl overflow-hidden">
+      <CardHeader className="space-y-2 pb-6 pt-8 px-8 border-b border-slate-100 bg-white">
+        <CardTitle className="text-2xl font-bold text-center text-slate-900 tracking-tight">
+          ¡Bienvenido de nuevo!
+        </CardTitle>
+        <CardDescription className="text-center text-slate-500 font-medium text-sm">
+          Ingresa tus credenciales para acceder a tu panel.
         </CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4">
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Correo</Label>
-            <div className="relative">
-              <MailIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+      <CardContent className="space-y-6 pt-8 px-8 pb-8">
+        <form onSubmit={handleLogin} className="space-y-5">
+          <div className="space-y-2.5">
+            <Label
+              htmlFor="email"
+              className="text-slate-700 font-semibold text-sm"
+            >
+              Correo Electrónico
+            </Label>
+            <div className="relative group">
+              <MailIcon className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5 group-focus-within:text-blue-600 transition-colors" />
               <Input
                 id="email"
                 type="email"
-                placeholder="Ingresa tu correo"
+                placeholder="usuario@uniautonoma.edu.co"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10"
+                className="pl-11 h-12 bg-slate-50 border-slate-200 focus:bg-white transition-all duration-200 text-sm rounded-xl focus-visible:ring-blue-500"
                 required
               />
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="password">Contraseña</Label>
-            <div className="relative">
-              <LockIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-4 w-4" />
+          <div className="space-y-2.5">
+            <Label
+              htmlFor="password"
+              className="text-slate-700 font-semibold text-sm"
+            >
+              Contraseña
+            </Label>
+            <div className="relative group">
+              <LockIcon className="absolute left-3.5 top-1/2 transform -translate-y-1/2 text-slate-400 h-5 w-5 group-focus-within:text-blue-600 transition-colors" />
               <Input
                 id="password"
                 type={showPassword ? "text" : "password"}
-                placeholder="Ingresa tu contraseña"
+                placeholder="••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 pr-10"
+                className="pl-11 pr-11 h-12 bg-slate-50 border-slate-200 focus:bg-white transition-all duration-200 text-sm rounded-xl focus-visible:ring-blue-500"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-1/2 transform -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                className="absolute right-3.5 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 transition-colors focus:outline-hidden"
               >
                 {showPassword ? (
-                  <EyeOffIcon className="h-4 w-4" />
+                  <EyeOffIcon className="h-5 w-5" />
                 ) : (
-                  <EyeIcon className="h-4 w-4" />
+                  <EyeIcon className="h-5 w-5" />
                 )}
               </button>
             </div>
           </div>
 
-          <div className="flex flex-col space-y-2">
+          <div className="flex flex-col space-y-3 pt-2">
             <button
               type="button"
-              className="text-sm text-primary underline hover:cursor-pointer hover:opacity-80 text-left"
-              onClick={() => handleRedirectToPasswordReset()}
+              className="text-sm font-medium text-blue-600 hover:text-blue-700 hover:underline transition-all text-left w-max"
+              onClick={handleRedirectToPasswordReset}
             >
-              Reestablece tu contraseña
+              ¿Olvidaste tu contraseña?
             </button>
-            <p className="text-sm text-muted-foreground italic">
-              * Si eres un usuario nuevo o has olvidado tu contraseña, debes
-              reestablecerla haciendo clic en el enlace superior.
+            <p className="text-xs text-slate-500 bg-slate-50 p-3 rounded-lg border border-slate-100 italic">
+              Si eres un usuario nuevo o es la primera vez que ingresas, debes
+              restablecer tu contraseña haciendo clic en el enlace superior.
             </p>
           </div>
 
           <Button
             type="submit"
             disabled={isLoading}
-            className="w-full bg-blue-500 hover:bg-blue-600"
+            className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-lg shadow-blue-600/20 transition-all font-semibold text-base mt-2"
           >
-            {isLoading ? <Spinner className="mr-2" /> : null}
-            Iniciar sesión
+            {isLoading ? <Spinner className="mr-2 h-5 w-5" /> : null}
+            {isLoading ? "Iniciando..." : "Iniciar Sesión"}
           </Button>
+
           {error && (
-            <Alert variant="destructive" className="">
-              <AlertCircleIcon />
-              <AlertTitle>Error</AlertTitle>
-              <AlertDescription>{error}</AlertDescription>
+            <Alert
+              variant="destructive"
+              className="mt-4 border-red-200 bg-red-50 text-red-800 rounded-xl"
+            >
+              <AlertCircleIcon className="h-5 w-5 text-red-600" />
+              <AlertTitle className="font-semibold text-red-900">
+                Error de Acceso
+              </AlertTitle>
+              <AlertDescription className="text-red-700 text-sm mt-1">
+                {error}
+              </AlertDescription>
             </Alert>
           )}
         </form>

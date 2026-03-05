@@ -1,18 +1,14 @@
-'use client';
+"use client";
 
-import { Card, CardContent } from '@/components/ui/card';
-import { FileText, Scale, Users, BookOpen } from 'lucide-react';
-import {Navbar} from '../components/NavBarProApoyo';
-import GestionCasosPage from '../gestionar-caso/page';
-import { useState } from 'react';
-import CreateCasePage from '../crear-caso/page';
-import { Button } from '@/components/ui/button';
-import {useRouter} from 'next/navigation';
+import { Card, CardContent } from "@/components/ui/card";
+import { FileText, Scale, Users, ChevronRight } from "lucide-react";
+import { Navbar } from "../components/NavBarProApoyo";
+import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 export default function PaginaPrincipal() {
-  const [currentPage, setCurrentPage] = useState<'inicio' | 'cases' | 'create'>('inicio');
-  const [selectedCaseId, setSelectedCaseId] = useState<number | null>(null);
   const router = useRouter();
+
   const handleNavigateToCases = () => {
     router.push("/pro-apoyo/gestionar-caso");
   };
@@ -22,71 +18,87 @@ export default function PaginaPrincipal() {
   };
 
   return (
-    <div>
-      <Navbar/>
-      <div className="h-[calc(100vh-4rem)] bg-linear-to-br from-slate-50 to-slate-100 flex items-center justify-center px-4">
-        <div className="max-w-4xl w-full space-y-8">
+    <div className="min-h-screen bg-slate-50 flex flex-col">
+      <Navbar />
+
+      <main className="flex-1 flex items-center justify-center p-4 sm:p-6 lg:p-8">
+        <div className="w-full max-w-5xl space-y-10 sm:space-y-14 animate-in fade-in slide-in-from-bottom-4 duration-700">
           {/* Header */}
-          <div className="text-center space-y-4">
-            <div className="flex justify-center mb-6">
-              <div className="p-6 bg-blue-600 rounded-full shadow-2xl">
-                <Scale className="h-16 w-16 text-white" strokeWidth={2} />
-              </div>
+          <header className="text-center space-y-6">
+            <div className="mx-auto w-20 h-20 sm:w-24 sm:h-24 bg-linear-to-tr from-blue-600 to-indigo-900 rounded-3xl shadow-xl shadow-blue-600/20 flex items-center justify-center ">
+              <Scale
+                className="h-10 w-10 sm:h-12 sm:w-12 text-white"
+                strokeWidth={1.5}
+              />
             </div>
-            <h1 className="text-5xl text-slate-900 tracking-tight">
-              Consultorio Jurídico
-            </h1>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
-              Sistema de gestión y registro de casos legales
-            </p>
-          </div>
+            <div className="space-y-3">
+              <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-slate-900 tracking-tight">
+                Panel del{" "}
+                <span className="text-transparent bg-clip-text bg-linear-to-r from-blue-600 to-indigo-900">
+                  Profesional de apoyo
+                </span>
+              </h1>
+              <p className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto font-medium">
+                Gestiona y asigna los casos legales a estudiantes y asesores con
+                eficiencia.
+              </p>
+            </div>
+          </header>
 
-          {/* Cards de información */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-12">
-            <Card className="border-2 hover:border-blue-200 transition-colors">
-              <CardContent className="pt-6 text-center space-y-3">
-                <div className="flex justify-center">
-                  <div className="p-3 bg-blue-100 rounded-lg">
-                    <FileText className="h-8 w-8 text-blue-600" />
-                  </div>
+          {/* Acciones Rápidas */}
+          <section className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+            {/* Gestion de casos */}
+            <Card
+              className="group cursor-pointer border-slate-200 hover:border-purple-400 hover:shadow-2xl hover:shadow-purple-600/10 transition-all duration-300 bg-white/50 backdrop-blur-sm overflow-hidden"
+              onClick={handleNavigateToCases}
+            >
+              <CardContent className="p-8 sm:p-10 text-center space-y-6 flex flex-col items-center">
+                <div className="h-16 w-16 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-purple-600 group-hover:text-white transition-all duration-300">
+                  <FileText className="h-8 w-8" strokeWidth={2} />
                 </div>
-                <Button 
-                  onClick={() => handleNavigateToCases()}
-                  className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-4 py-2 rounded-md transition-colors duration-200 w-full"
-                >
-                  Gestion de Casos
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-bold text-slate-900">
+                    Gestión de Casos
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
+                    Supervisa el estado de todos los reportes, filtra y reasigna
+                    los estudiantes y asesores responsables.
+                  </p>
+                </div>
+                <Button className="w-full sm:w-auto mt-4 px-8 bg-slate-900 hover:bg-purple-600 text-white rounded-full transition-all duration-300 gap-2">
+                  Continuar
+                  <ChevronRight className="h-4 w-4" />
                 </Button>
-                <p className="text-sm text-slate-600">
-                  Registro y seguimiento completo de cada caso legal
-                </p>
               </CardContent>
             </Card>
 
-            <Card className="border-2 hover:border-blue-200 transition-colors">
-              <CardContent className="pt-6 text-center space-y-3">
-                <div className="flex justify-center">
-                  <div className="p-3 bg-purple-100 rounded-lg">
-                    <Users className="h-8 w-8 text-purple-600" />
-                  </div>
+            {/* Crear caso */}
+            <Card
+              className="group cursor-pointer border-slate-200 hover:border-pink-400 hover:shadow-2xl hover:shadow-pink-600/10 transition-all duration-300 bg-white/50 backdrop-blur-sm overflow-hidden"
+              onClick={handleNavigateToCreate}
+            >
+              <CardContent className="p-8 sm:p-10 text-center space-y-6 flex flex-col items-center">
+                <div className="h-16 w-16 bg-pink-50 text-pink-600 rounded-2xl flex items-center justify-center group-hover:scale-110 group-hover:bg-pink-600 group-hover:text-white transition-all duration-300">
+                  <Users className="h-8 w-8" strokeWidth={2} />
                 </div>
-                <Button 
-                  onClick={() => handleNavigateToCreate()}
-                  className="bg-blue-600 hover:bg-blue-700 cursor-pointer text-white px-4 py-2 rounded-md transition-colors duration-200 w-full"
-                >
-                  Crear nuevo caso
+                <div className="space-y-2">
+                  <h3 className="text-2xl font-bold text-slate-900">
+                    Crear Caso
+                  </h3>
+                  <p className="text-slate-600 leading-relaxed text-sm sm:text-base">
+                    Registra un nuevo usuario con necesidades legales e inicia
+                    el proceso de perfilamiento y asignación.
+                  </p>
+                </div>
+                <Button className="w-full sm:w-auto mt-4 px-8 bg-slate-900 hover:bg-pink-600 text-white rounded-full transition-all duration-300 gap-2">
+                  Registrar
+                  <ChevronRight className="h-4 w-4" />
                 </Button>
-                <p className="text-sm text-slate-600">
-                  Registra un usuario nuevo que solicita asesoria
-                </p>
               </CardContent>
             </Card>
-
-          </div>
-
-
-
+          </section>
         </div>
-      </div>
+      </main>
     </div>
   );
 }
