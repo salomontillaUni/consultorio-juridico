@@ -166,7 +166,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
                   </div>
                 </div>
                 <p className="text-lg text-slate-500 font-medium">
-                  Cliente:{" "}
+                  Usuario:{" "}
                   <span className="font-semibold">
                     {caso?.usuarios?.nombre_completo || "N/A"}
                   </span>
@@ -192,7 +192,7 @@ export default function Page({ params }: { params: Promise<{ id: string }> }) {
             <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
               <TabsTrigger value="overview">Resumen</TabsTrigger>
               <TabsTrigger value="supervision">Datos estudiante</TabsTrigger>
-              <TabsTrigger value="client">Cliente</TabsTrigger>
+              <TabsTrigger value="client">Usuario</TabsTrigger>
               <TabsTrigger value="defendant">Demandado</TabsTrigger>
             </TabsList>
 

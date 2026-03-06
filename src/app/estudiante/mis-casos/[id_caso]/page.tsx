@@ -149,7 +149,7 @@ export default function Page({
                   {caso && getStatusBadge(caso.estado)}
                 </div>
                 <p className="text-lg text-gray-600 flex items-center gap-2">
-                  <span className="text-gray-400 font-medium">Cliente:</span>
+                  <span className="text-gray-400 font-medium">Usuario:</span>
                   <span className="font-semibold">
                     {caso?.usuarios?.nombre_completo || "N/A"}
                   </span>
@@ -174,7 +174,7 @@ export default function Page({
           >
             <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
               <TabsTrigger value="overview">Resumen</TabsTrigger>
-              <TabsTrigger value="client">Cliente</TabsTrigger>
+              <TabsTrigger value="client">Usuario</TabsTrigger>
               <TabsTrigger value="defendant">Demandado</TabsTrigger>
               <TabsTrigger value="advisor">Asesor</TabsTrigger>
             </TabsList>

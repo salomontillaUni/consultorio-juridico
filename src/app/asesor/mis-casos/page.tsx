@@ -282,7 +282,7 @@ export default function Asesor() {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 h-4 w-4" />
                 <Input
-                  placeholder="Cliente, cédula o área..."
+                  placeholder="Usuario, cédula o área..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   disabled={loading}
