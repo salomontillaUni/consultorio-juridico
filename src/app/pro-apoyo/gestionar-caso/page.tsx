@@ -247,14 +247,10 @@ export default function SupportCasesPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="todos">Todos los tipos</SelectItem>
-                  <SelectItem value="Derecho Civil">Derecho Civil</SelectItem>
-                  <SelectItem value="Derecho Laboral">
-                    Derecho Laboral
-                  </SelectItem>
-                  <SelectItem value="Derecho Familiar">
-                    Derecho Familiar
-                  </SelectItem>
-                  <SelectItem value="Derecho Penal">Derecho Penal</SelectItem>
+                  <SelectItem value="civil">Derecho Civil</SelectItem>
+                  <SelectItem value="laboral">Derecho Laboral</SelectItem>
+                  <SelectItem value="familiar">Derecho Familiar</SelectItem>
+                  <SelectItem value="penal">Derecho Penal</SelectItem>
                 </SelectContent>
               </Select>
             </div>

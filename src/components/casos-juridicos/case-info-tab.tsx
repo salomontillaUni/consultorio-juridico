@@ -179,7 +179,42 @@ export const CaseInfoTab = ({
               />
             </div>
           </div>
-          {/* Add more editing fields if needed */}
+          <div className="space-y-5">
+            <div className="space-y-2">
+              <Label className="text-slate-700 font-bold flex items-center gap-2 mb-1">
+                <Activity className="w-4 h-4 text-slate-400" />
+                Estado del caso
+              </Label>
+              <Select
+                value={editedData?.estado || ""}
+                onValueChange={(val) => onChange("estado", val)}
+              >
+                <SelectTrigger className="border-slate-200 focus:ring-blue-500/20 focus:border-blue-500 rounded-lg h-11">
+                  <SelectValue placeholder="Seleccionar estado" />
+                </SelectTrigger>
+                <SelectContent className="rounded-xl border-slate-200 shadow-xl">
+                  {[
+                    {
+                      value: "pendiente_aprobacion",
+                      label: "Pendiente de aprobación",
+                    },
+                    { value: "aprobado", label: "Aprobado" },
+                    { value: "en_proceso", label: "En proceso" },
+                    { value: "cerrado", label: "Cerrado" },
+                    { value: "archivado", label: "Archivado" },
+                  ].map((estado) => (
+                    <SelectItem
+                      key={estado.value}
+                      value={estado.value}
+                      className="focus:bg-blue-50 focus:text-blue-700"
+                    >
+                      {estado.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
         </div>
       )}
     </SectionCard>
