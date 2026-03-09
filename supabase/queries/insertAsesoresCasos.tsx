@@ -1,13 +1,11 @@
 import { supabase } from "@/utils/supabase/supabase";
 
-export async function insertAsesoresCasos( id_caso:string, id_asesor:string) {
-
-  const { data, error } = await supabase
-  .from('asesores_casos')
-  .insert({
-      id_asesor,
-      id_caso,
+export async function insertAsesoresCasos(id_caso: string, id_asesor: string) {
+  const { data, error } = await supabase.from("asesores_casos").upsert({
+    id_asesor,
+    id_caso,
     fecha_asignacion: new Date().toISOString(),
+    fecha_fin_asignacion: null,
   });
 
   if (error) {
