@@ -27,7 +27,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { supabase } from "@/utils/supabase/supabase";
 import { ArrowLeft, Check, Search, FilterX, FileText } from "lucide-react";
 
-export const getStatusBadge = (status: string) => {
+const getStatusBadge = (status: string) => {
   const statusConfig = {
     pendiente_aprobacion: {
       color: "bg-yellow-50 text-yellow-700 border-yellow-200",
