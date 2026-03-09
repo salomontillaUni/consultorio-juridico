@@ -20,7 +20,7 @@ import React from "react";
 import { Caso, Demandado } from "app/types/database";
 import { getCasoById } from "../../../../../supabase/queries/getCasoById";
 import { getDemandadoByCasoId } from "../../../../../supabase/queries/getDemandadoByCasoId";
-import { getStatusBadge } from "app/asesor/mis-casos/page";
+import { getStatusBadge } from "@/components/ui/status-badge";
 import { CaseInfoTab } from "@/components/casos-juridicos/case-info-tab";
 import { ClientInfo } from "@/components/casos-juridicos/client-info";
 import { DefendantInfo } from "@/components/casos-juridicos/defendant-info";

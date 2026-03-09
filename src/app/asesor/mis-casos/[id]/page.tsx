@@ -19,7 +19,7 @@ import {
   FileText,
   CheckCircle2,
 } from "lucide-react";
-import { getStatusBadge } from "../page";
+import { getStatusBadge } from "@/components/ui/status-badge";
 import { CaseInfoTab } from "@/components/casos-juridicos/case-info-tab";
 import { ClientInfo } from "@/components/casos-juridicos/client-info";
 import { DefendantInfo } from "@/components/casos-juridicos/defendant-info";

@@ -47,7 +47,7 @@ import {
   BriefcaseIcon,
   Smile,
 } from "lucide-react";
-import { getStatusBadge } from "app/asesor/mis-casos/page";
+import { getStatusBadge } from "@/components/ui/status-badge";
 import { ReasignarEquipo } from "./components/ReasignarEquipo";
 import { toast } from "sonner";
 import { CaseInfoTab } from "@/components/casos-juridicos/case-info-tab";

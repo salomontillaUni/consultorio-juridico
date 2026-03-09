@@ -24,7 +24,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from "@/components/ui/pagination";
-import { getStatusBadge } from "app/asesor/mis-casos/page";
+import { getStatusBadge } from "@/components/ui/status-badge";
 import { Spinner } from "@/components/ui/spinner";
 import {
   ArrowLeft,
