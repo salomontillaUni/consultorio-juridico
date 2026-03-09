@@ -446,14 +446,14 @@ export default function Page({
             className="w-full"
           >
             <TabsList
-              className={`grid w-full grid-cols-2 lg:grid-cols-${displayCaseData?.estudiantes_casos.length ? "4" : "3"}`}
+              className={`grid w-full grid-cols-4 lg:grid-cols-${displayCaseData?.estudiantes_casos.length ? "4" : "3"}`}
             >
               <TabsTrigger value="overview">Resumen</TabsTrigger>
               {displayCaseData?.estudiantes_casos.length ? (
                 <TabsTrigger value="supervision">Datos estudiante</TabsTrigger>
               ) : null}
-              <TabsTrigger value="client">Cliente</TabsTrigger>
-              <TabsTrigger value="defendant">Demandado</TabsTrigger>
+              <TabsTrigger value="client">Usuario</TabsTrigger>
+              <TabsTrigger value="defendant">Accionado</TabsTrigger>
             </TabsList>
 
             {/* Overview Tab */}

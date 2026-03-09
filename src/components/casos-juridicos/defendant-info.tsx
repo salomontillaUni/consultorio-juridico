@@ -62,7 +62,7 @@ export const DefendantInfo = ({
 
   return (
     <SectionCard
-      title="Información del demandado"
+      title="Información del accionado"
       icon={UserX}
       iconBgColor="bg-red-100"
       iconColor="text-red-600"

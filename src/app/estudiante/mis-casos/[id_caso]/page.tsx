@@ -172,10 +172,10 @@ export default function Page({
             onValueChange={setActiveTab}
             className="w-full"
           >
-            <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
+            <TabsList className="grid w-full grid-cols-4">
               <TabsTrigger value="overview">Resumen</TabsTrigger>
               <TabsTrigger value="client">Usuario</TabsTrigger>
-              <TabsTrigger value="defendant">Demandado</TabsTrigger>
+              <TabsTrigger value="defendant">Accionado</TabsTrigger>
               <TabsTrigger value="advisor">Asesor</TabsTrigger>
             </TabsList>
 

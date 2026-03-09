@@ -17,6 +17,7 @@ import { insertAsesoresCasos } from "../../../../../../supabase/queries/insertAs
 import { SearchableSelector } from "@/components/SearchableSelector";
 import { toast } from "sonner";
 import { EstudianteCaso, AsesorCaso } from "app/types/database";
+import { supabase } from "@/utils/supabase/supabase";
 
 interface Props {
   idCaso: string;
@@ -47,6 +48,9 @@ export function ReasignarEquipo({ idCaso, type, casosData, onRefresh }: Props) {
     }
   }, [open, type]);
 
+  const current =
+    casosData && casosData.length > 0 ? casosData[casosData.length - 1] : null;
+
   const handleReassign = async () => {
     if (!selectedId) return;
 
@@ -65,6 +69,24 @@ export function ReasignarEquipo({ idCaso, type, casosData, onRefresh }: Props) {
 
     setLoading(true);
     try {
+      if (current) {
+        // Cerrar la asignación actual poniendo la fecha fin
+        const now = new Date().toISOString();
+        if (type === "estudiante") {
+          await supabase
+            .from("estudiantes_casos")
+            .update({ fecha_fin_asignacion: now })
+            .eq("id_caso", idCaso)
+            .is("fecha_fin_asignacion", null);
+        } else {
+          await supabase
+            .from("asesores_casos")
+            .update({ fecha_fin_asignacion: now })
+            .eq("id_caso", idCaso)
+            .is("fecha_fin_asignacion", null);
+        }
+      }
+
       if (type === "estudiante") {
         await insertEstudiantesCasos(idCaso, selectedId);
       } else {
@@ -83,8 +105,6 @@ export function ReasignarEquipo({ idCaso, type, casosData, onRefresh }: Props) {
     }
   };
 
-  const current =
-    casosData && casosData.length > 0 ? casosData[casosData.length - 1] : null;
   const history =
     casosData && casosData.length > 1
       ? [...casosData].slice(0, casosData.length - 1).reverse()
@@ -187,12 +207,13 @@ export function ReasignarEquipo({ idCaso, type, casosData, onRefresh }: Props) {
                 key={idx}
                 className="flex justify-between items-center text-sm"
               >
-                <span className="text-gray-500 line-through">
-                  {getNombre(h)}
-                </span>
+                <span className="text-gray-500">{getNombre(h)}</span>
                 {h.fecha_asignacion && (
                   <span className="text-[10px] text-gray-400">
                     {new Date(h.fecha_asignacion).toLocaleDateString()}
+                    {h.fecha_fin_asignacion
+                      ? ` - ${new Date(h.fecha_fin_asignacion).toLocaleDateString()}`
+                      : ""}
                   </span>
                 )}
               </li>

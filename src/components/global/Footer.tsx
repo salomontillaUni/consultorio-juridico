@@ -36,7 +36,7 @@ export default function Footer() {
             <ul className="space-y-3">
               <li>
                 <a
-                  href="mailto:fabsoft_uac@gmail.com"
+                  href="mailto:fabrica.software@uniautonoma.edu.co"
                   className="group flex items-center text-gray-600 hover:text-blue-600 text-sm transition-all"
                 >
                   <Mail className="h-4 w-4 mr-2 text-gray-400 group-hover:text-blue-500" />
