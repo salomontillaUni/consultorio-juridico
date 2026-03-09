@@ -1,4 +1,4 @@
-'use client'
+"use client";
 import { useState } from "react";
 import { RegistroUsuario } from "./components/RegistroUsuario";
 import { AsignacionCaso } from "./components/AsignacionCaso";
@@ -10,7 +10,9 @@ import { Navbar } from "../components/NavBarProApoyo";
 import { Caso, Usuario } from "app/types/database";
 
 export default function CreateCasePage({ onBack }: { onBack: () => void }) {
-  const [seccionActual, setSeccionActual] = useState<"registro" | "asignacion" | "resumen">("registro");
+  const [seccionActual, setSeccionActual] = useState<
+    "registro" | "asignacion" | "resumen"
+  >("registro");
   const [usuario, setUsuario] = useState<Usuario | null>(null);
   const [caso, setCaso] = useState<Caso | null>(null);
 
@@ -37,56 +39,60 @@ export default function CreateCasePage({ onBack }: { onBack: () => void }) {
     setUsuario(null);
     setCaso(null);
     setSeccionActual("registro");
-    
   };
 
   return (
-    <div>
-      <Navbar/>
-      <main>
-        <div className="min-h-[calc(100vh-64px)] flex flex-col justify-center items-center p-4">
+    <div className="min-h-screen bg-slate-50">
+      <Navbar />
+      <main className="container mx-auto px-4 py-8 md:py-12 flex flex-col items-center">
+        <div className="w-full max-w-4xl mx-auto">
+          <div className="mb-8 flex flex-col gap-6">
+            <div className="w-full overflow-x-auto pb-4 -mb-4">
+              <div className="min-w-[600px] sm:min-w-0">
+                <StepIndicator currentStep={seccionActual} />
+              </div>
+            </div>
 
-      <div className="mb-6 max-w-3xl w-full flex flex-col gap-2">
-        <div className="flex flex-col items-center justify-between">
-          <StepIndicator currentStep={seccionActual} />
-          {seccionActual !== "registro"  && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleRetroceder}
-              className="text-blue-600 hover:bg-blue-50 transition-colors"
-            >
-              ← Retroceder
-            </Button>
-          )}
+            <div className="w-full flex justify-start">
+              {seccionActual !== "registro" && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleRetroceder}
+                  className="text-blue-600 hover:bg-blue-100 hover:text-blue-800 transition-colors"
+                >
+                  ← Volver al paso anterior
+                </Button>
+              )}
+            </div>
+          </div>
+
+          <div className="w-full transition-all duration-300 ease-in-out">
+            {/* Contenido dinámico */}
+            {seccionActual === "registro" && (
+              <RegistroUsuario
+                onContinuar={handleRegistroCompleto}
+                datosIniciales={usuario}
+                onBack={onBack}
+              />
+            )}
+            {seccionActual === "asignacion" && usuario && (
+              <AsignacionCaso
+                usuario={usuario}
+                datosIniciales={caso}
+                onCasoRegistrado={handleCasoRegistrado}
+              />
+            )}
+            {seccionActual === "resumen" && caso && usuario && (
+              <ResumenCaso
+                usuario={usuario}
+                caso={caso}
+                onNuevoCaso={handleNuevoCaso}
+              />
+            )}
+          </div>
         </div>
-      </div>
-
-      {/* Contenido dinámico */}
-      {seccionActual === "registro" && (
-        <RegistroUsuario
-          onContinuar={handleRegistroCompleto}
-          datosIniciales={usuario}
-          onBack={onBack}
-        />
-      )}
-      {seccionActual === "asignacion" && usuario && (
-        <AsignacionCaso
-          usuario={usuario}
-          datosIniciales={caso}
-          onCasoRegistrado={handleCasoRegistrado}
-        />
-      )}
-      {seccionActual === "resumen" && caso && usuario && (
-        <ResumenCaso
-          usuario={usuario}
-          caso={caso}
-          onNuevoCaso={handleNuevoCaso}
-        />
-      )}
-    </div>
       </main>
     </div>
-    
   );
 }
