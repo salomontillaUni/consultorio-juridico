@@ -26,7 +26,7 @@ import { ClientInfo } from "@/components/casos-juridicos/client-info";
 import { DefendantInfo } from "@/components/casos-juridicos/defendant-info";
 import { AdvisorInfo } from "@/components/casos-juridicos/advisor-info";
 import { supabase } from "@/utils/supabase/supabase";
-import { formatDate } from "app/pro-apoyo/gestionar-caso/page";
+import { formatDate } from "@/utils/format-date";
 
 export default function Page({
   params,

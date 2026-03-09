@@ -25,6 +25,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { getStatusBadge } from "@/components/ui/status-badge";
+import { formatDate } from "@/utils/format-date";
 import { Spinner } from "@/components/ui/spinner";
 import {
   ArrowLeft,
@@ -94,14 +95,6 @@ export default function CasesPage() {
     const matchesArea = typeFilter === "todos" || caso.area === typeFilter;
     return matchesSearch && matchesStatus && matchesArea;
   });
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString("es-ES", {
-      year: "numeric",
-      month: "short",
-      day: "numeric",
-    });
-  };
 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 10;

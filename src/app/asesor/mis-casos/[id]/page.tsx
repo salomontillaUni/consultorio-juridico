@@ -27,7 +27,7 @@ import { StudentInfo } from "@/components/casos-juridicos/student-info";
 import { SectionCard } from "@/components/casos-juridicos/shared-ui";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Calendar, Users } from "lucide-react";
-import { formatDate } from "app/pro-apoyo/gestionar-caso/page";
+import { formatDate } from "@/utils/format-date";
 
 export default function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = React.use(params);

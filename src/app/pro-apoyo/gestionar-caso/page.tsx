@@ -34,14 +34,7 @@ import {
   FileText,
   Users,
 } from "lucide-react";
-
-export const formatDate = (dateString: string) => {
-  return new Date(dateString).toLocaleDateString("es-ES", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-};
+import { formatDate } from "@/utils/format-date";
 
 export default function SupportCasesPage() {
   const [searchTerm, setSearchTerm] = useState("");

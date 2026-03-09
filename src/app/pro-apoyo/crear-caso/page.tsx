@@ -5,11 +5,12 @@ import { AsignacionCaso } from "./components/AsignacionCaso";
 import { ResumenCaso } from "./components/ResumenCaso";
 import { Button } from "@/components/ui/button";
 import { StepIndicator } from "./components/StepIndicator";
-import { on } from "events";
 import { Navbar } from "../components/NavBarProApoyo";
 import { Caso, Usuario } from "app/types/database";
+import { useRouter } from "next/navigation";
 
-export default function CreateCasePage({ onBack }: { onBack: () => void }) {
+export default function CreateCasePage() {
+  const router = useRouter();
   const [seccionActual, setSeccionActual] = useState<
     "registro" | "asignacion" | "resumen"
   >("registro");
@@ -73,7 +74,7 @@ export default function CreateCasePage({ onBack }: { onBack: () => void }) {
               <RegistroUsuario
                 onContinuar={handleRegistroCompleto}
                 datosIniciales={usuario}
-                onBack={onBack}
+                onBack={() => router.back()}
               />
             )}
             {seccionActual === "asignacion" && usuario && (
