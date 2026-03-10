@@ -22,9 +22,7 @@ export default function Footer() {
               </div>
             </div>
             <p className="text-gray-600 text-sm leading-relaxed max-w-sm">
-              Plataforma profesional para la gestión eficiente de casos legales
-              y entrevistas. Simplificamos el trabajo legal con herramientas
-              modernas, seguras y accesibles.
+              Plataforma especializada para la gestión integral, eficiente y estructurada de casos jurídicos.
             </p>
           </div>
 
