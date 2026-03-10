@@ -15,7 +15,7 @@ import Link from "next/link";
 import { Navbar } from "../components/NavBarProApoyo";
 import { Caso } from "app/types/database";
 import { getCasos } from "../../../../supabase/queries/getCasos";
-import { supabase } from "@/utils/supabase/supabase-client";
+import { supabase } from "@/lib/supabase/supabase-client";
 import {
   Pagination,
   PaginationContent,
@@ -34,7 +34,7 @@ import {
   FileText,
   Users,
 } from "lucide-react";
-import { formatDate } from "@/utils/format-date";
+import { formatDate } from "@/lib/format-date";
 
 export default function SupportCasesPage() {
   const [searchTerm, setSearchTerm] = useState("");

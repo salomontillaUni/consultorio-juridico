@@ -1,6 +1,6 @@
 "use server";
 
-import { supabaseAdmin } from "@/utils/supabase/supabase-admin";
+import { supabaseAdmin } from "@/lib/supabase/supabase-admin";
 import { revalidatePath } from "next/cache";
 
 type ActionResult =

@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Spinner } from "@/components/ui/spinner";
 import { AlertCircleIcon, MailIcon } from "lucide-react";
-import { supabase } from "@/utils/supabase/supabase-client";
+import { supabase } from "@/lib/supabase/supabase-client";
 
 export default function RecuperarContrasenaPage() {
   const [email, setEmail] = useState("");

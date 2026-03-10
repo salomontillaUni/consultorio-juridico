@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase/supabase-client";
+import { supabase } from "@/lib/supabase/supabase-client";
 
 export async function insertAsesoresCasos(id_caso: string, id_asesor: string) {
   const { data, error } = await supabase.from("asesores_casos").upsert({

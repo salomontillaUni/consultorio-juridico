@@ -21,9 +21,9 @@ import Link from "next/link";
 import { Caso, Demandado, Estudiante, Usuario } from "app/types/database";
 import { getCasoById } from "../../../../../supabase/queries/getCasoById";
 import { getDemandadoByCasoId } from "../../../../../supabase/queries/getDemandadoByCasoId";
-import { formatDate } from "@/utils/format-date";
-import { cleanData } from "@/utils/utils";
-import { supabase } from "@/utils/supabase/supabase-client";
+import { formatDate } from "@/lib/format-date";
+import { cleanData } from "@/lib/utils";
+import { supabase } from "@/lib/supabase/supabase-client";
 import {
   Notebook,
   FileText,

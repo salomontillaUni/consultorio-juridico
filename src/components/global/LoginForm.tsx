@@ -19,7 +19,7 @@ import {
   LockIcon,
   MailIcon,
 } from "lucide-react";
-import { supabase } from "../../utils/supabase/supabase-client";
+import { supabase } from "../../lib/supabase/supabase-client";
 import { useRouter } from "next/navigation";
 import { jwtDecode } from "jwt-decode";
 import { CustomJwtPayload } from "app/types/jwt";

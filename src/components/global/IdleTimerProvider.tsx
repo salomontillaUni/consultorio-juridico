@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/utils/supabase/supabase-client";
+import { supabase } from "@/lib/supabase/supabase-client";
 import {
   Dialog,
   DialogContent,

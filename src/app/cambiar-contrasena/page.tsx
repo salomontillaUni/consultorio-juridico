@@ -20,7 +20,7 @@ import {
   LockIcon,
   CheckCircle2,
 } from "lucide-react";
-import { supabase } from "../../utils/supabase/supabase-client";
+import { supabase } from "../../lib/supabase/supabase-client";
 
 export default function CambiarContrasenaPage() {
   const router = useRouter();

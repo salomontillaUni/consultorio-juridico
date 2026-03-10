@@ -15,7 +15,7 @@ import Link from "next/link";
 import { Navbar } from "../components/NavBarEstudiante";
 import { Caso } from "app/types/database";
 import { getCasos } from "../../../../supabase/queries/getCasos";
-import { supabase } from "@/utils/supabase/supabase-client";
+import { supabase } from "@/lib/supabase/supabase-client";
 import {
   Pagination,
   PaginationContent,
@@ -25,7 +25,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { getStatusBadge } from "@/components/ui/status-badge";
-import { formatDate } from "@/utils/format-date";
+import { formatDate } from "@/lib/format-date";
 import { Spinner } from "@/components/ui/spinner";
 import {
   ArrowLeft,

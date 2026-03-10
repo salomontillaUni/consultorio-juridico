@@ -17,7 +17,7 @@ import { insertAsesoresCasos } from "../../../../../../supabase/queries/insertAs
 import { SearchableSelector } from "@/components/SearchableSelector";
 import { toast } from "sonner";
 import { EstudianteCaso, AsesorCaso } from "app/types/database";
-import { supabase } from "@/utils/supabase/supabase-client";
+import { supabase } from "@/lib/supabase/supabase-client";
 
 interface Props {
   idCaso: string;

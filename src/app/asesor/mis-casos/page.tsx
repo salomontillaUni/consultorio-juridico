@@ -24,7 +24,7 @@ import {
   PaginationPrevious,
 } from "@/components/ui/pagination";
 import { Spinner } from "@/components/ui/spinner";
-import { supabase } from "@/utils/supabase/supabase-client";
+import { supabase } from "@/lib/supabase/supabase-client";
 import { ArrowLeft, Check, Search, FilterX, FileText } from "lucide-react";
 import { getStatusBadge } from "@/components/ui/status-badge";
 

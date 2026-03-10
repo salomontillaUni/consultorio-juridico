@@ -45,12 +45,12 @@ import { ProgressIndicator } from "@radix-ui/react-progress";
 import { Caso, Demandado } from "app/types/database";
 import { getCasoById } from "../../../../../../../supabase/queries/getCasoById";
 import { getDemandadoByCasoId } from "../../../../../../../supabase/queries/getDemandadoByCasoId";
-import { supabase } from "@/utils/supabase/supabase-client";
+import { supabase } from "@/lib/supabase/supabase-client";
 import { Switch } from "@/components/ui/switch";
 import { Tienne } from "next/font/google";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useRouter } from "next/navigation";
-import { cleanData } from "@/utils/utils";
+import { cleanData } from "@/lib/utils";
 import {
   Step1InfoEntrevista,
   Step2InfoSolicitante,

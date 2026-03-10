@@ -1,6 +1,6 @@
-'use server';
+"use server";
 
-import { supabaseAdmin } from '@/utils/supabase/supabase-admin';
+import { supabaseAdmin } from "@/lib/supabase/supabase-admin";
 
 // ─── Shared types ────────────────────────────────────────────────────────────
 
@@ -16,8 +16,8 @@ export interface RegisterEstudianteInput {
   cedula: string;
   telefono: string;
   semestre: number;
-  jornada: 'diurna' | 'nocturna' | 'mixto';
-  turno: '9-11' | '2-4' | '4-6';
+  jornada: "diurna" | "nocturna" | "mixto";
+  turno: "9-11" | "2-4" | "4-6";
 }
 
 export async function registerEstudiante(
@@ -38,27 +38,30 @@ export async function registerEstudiante(
     });
 
   if (authError || !authData.user) {
-    console.error('Error creating auth user:', authError);
-    return { success: false, error: authError?.message ?? 'Error al crear el usuario autenticado.' };
+    console.error("Error creating auth user:", authError);
+    return {
+      success: false,
+      error: authError?.message ?? "Error al crear el usuario autenticado.",
+    };
   }
 
   const userId = authData.user.id;
 
   // 2. Assign role
   const { error: roleError } = await supabaseAdmin
-    .from('perfiles_roles')
-    .insert({ user_id: userId, role: 'estudiante' });
+    .from("perfiles_roles")
+    .insert({ user_id: userId, role: "estudiante" });
 
   if (roleError) {
-    console.error('Error assigning role:', roleError);
+    console.error("Error assigning role:", roleError);
     // Rollback: delete the auth user
     await supabaseAdmin.auth.admin.deleteUser(userId);
-    return { success: false, error: 'Error al asignar el rol de estudiante.' };
+    return { success: false, error: "Error al asignar el rol de estudiante." };
   }
 
   // 3. Insert into estudiantes table
   const { error: estudianteError } = await supabaseAdmin
-    .from('estudiantes')
+    .from("estudiantes")
     .insert({
       id_perfil: userId,
       semestre: input.semestre,
@@ -67,12 +70,18 @@ export async function registerEstudiante(
     });
 
   if (estudianteError) {
-    console.error('Error inserting estudiante:', estudianteError);
+    console.error("Error inserting estudiante:", estudianteError);
     await supabaseAdmin.auth.admin.deleteUser(userId);
-    return { success: false, error: 'Error al registrar los datos del estudiante.' };
+    return {
+      success: false,
+      error: "Error al registrar los datos del estudiante.",
+    };
   }
 
-  return { success: true, message: `Estudiante ${input.nombre_completo} registrado exitosamente.` };
+  return {
+    success: true,
+    message: `Estudiante ${input.nombre_completo} registrado exitosamente.`,
+  };
 }
 
 // ─── Register Asesor ──────────────────────────────────────────────────────────
@@ -82,8 +91,8 @@ export interface RegisterAsesorInput {
   correo: string;
   cedula: string;
   telefono: string;
-  turno: '9-11' | '2-4' | '4-6';
-  area: 'laboral' | 'familia' | 'penal' | 'civil' | 'otros';
+  turno: "9-11" | "2-4" | "4-6";
+  area: "laboral" | "familia" | "penal" | "civil" | "otros";
 }
 
 export async function registerAsesor(
@@ -103,36 +112,43 @@ export async function registerAsesor(
     });
 
   if (authError || !authData.user) {
-    console.error('Error creating auth user:', authError);
-    return { success: false, error: authError?.message ?? 'Error al crear el usuario autenticado.' };
+    console.error("Error creating auth user:", authError);
+    return {
+      success: false,
+      error: authError?.message ?? "Error al crear el usuario autenticado.",
+    };
   }
 
   const userId = authData.user.id;
 
   const { error: roleError } = await supabaseAdmin
-    .from('perfiles_roles')
-    .insert({ user_id: userId, role: 'asesor' });
+    .from("perfiles_roles")
+    .insert({ user_id: userId, role: "asesor" });
 
   if (roleError) {
     await supabaseAdmin.auth.admin.deleteUser(userId);
-    return { success: false, error: 'Error al asignar el rol de asesor.' };
+    return { success: false, error: "Error al asignar el rol de asesor." };
   }
 
-  const { error: asesorError } = await supabaseAdmin
-    .from('asesores')
-    .insert({
-      id_perfil: userId,
-      turno: input.turno,
-      area: input.area,
-    });
+  const { error: asesorError } = await supabaseAdmin.from("asesores").insert({
+    id_perfil: userId,
+    turno: input.turno,
+    area: input.area,
+  });
 
   if (asesorError) {
-    console.error('Error inserting asesor:', asesorError);
+    console.error("Error inserting asesor:", asesorError);
     await supabaseAdmin.auth.admin.deleteUser(userId);
-    return { success: false, error: 'Error al registrar los datos del asesor.' };
+    return {
+      success: false,
+      error: "Error al registrar los datos del asesor.",
+    };
   }
 
-  return { success: true, message: `Asesor ${input.nombre_completo} registrado exitosamente.` };
+  return {
+    success: true,
+    message: `Asesor ${input.nombre_completo} registrado exitosamente.`,
+  };
 }
 
 // ─── Register Profesional de Apoyo ───────────────────────────────────────────
@@ -161,19 +177,25 @@ export async function registerProApoyo(
     });
 
   if (authError || !authData.user) {
-    console.error('Error creating auth user:', authError);
-    return { success: false, error: authError?.message ?? 'Error al crear el usuario autenticado.' };
+    console.error("Error creating auth user:", authError);
+    return {
+      success: false,
+      error: authError?.message ?? "Error al crear el usuario autenticado.",
+    };
   }
 
   const userId = authData.user.id;
 
   const { error: roleError } = await supabaseAdmin
-    .from('perfiles_roles')
-    .insert({ user_id: userId, role: 'pro_apoyo' });
+    .from("perfiles_roles")
+    .insert({ user_id: userId, role: "pro_apoyo" });
 
   if (roleError) {
     await supabaseAdmin.auth.admin.deleteUser(userId);
-    return { success: false, error: 'Error al asignar el rol de profesional de apoyo.' };
+    return {
+      success: false,
+      error: "Error al asignar el rol de profesional de apoyo.",
+    };
   }
 
   // Profesionales de apoyo only have a perfil — no extra role-specific table
@@ -190,9 +212,11 @@ export async function registerProApoyo(
  * Format: Temp + 8 random alphanumeric chars + !
  */
 function generateTempPassword(): string {
-  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-  const random = Array.from({ length: 8 }, () =>
-    chars[Math.floor(Math.random() * chars.length)],
-  ).join('');
+  const chars =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  const random = Array.from(
+    { length: 8 },
+    () => chars[Math.floor(Math.random() * chars.length)],
+  ).join("");
   return `Temp${random}!`;
 }

@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase/supabase-client";
+import { supabase } from "@/lib/supabase/supabase-client";
 
 export async function getProApoyo() {
   const { data, error } = await supabase

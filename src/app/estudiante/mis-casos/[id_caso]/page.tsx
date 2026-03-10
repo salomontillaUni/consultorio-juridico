@@ -25,8 +25,8 @@ import { CaseInfoTab } from "@/components/casos-juridicos/case-info-tab";
 import { ClientInfo } from "@/components/casos-juridicos/client-info";
 import { DefendantInfo } from "@/components/casos-juridicos/defendant-info";
 import { AdvisorInfo } from "@/components/casos-juridicos/advisor-info";
-import { supabase } from "@/utils/supabase/supabase-client";
-import { formatDate } from "@/utils/format-date";
+import { supabase } from "@/lib/supabase/supabase-client";
+import { formatDate } from "@/lib/format-date";
 
 export default function Page({
   params,

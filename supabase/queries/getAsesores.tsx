@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase/supabase-client";
+import { supabase } from "@/lib/supabase/supabase-client";
 import type { Asesor } from "../../src/app/types/database";
 
 export async function getAsesores(
