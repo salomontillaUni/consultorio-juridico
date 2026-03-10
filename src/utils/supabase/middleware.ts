@@ -44,17 +44,17 @@ export async function updateSession(request: NextRequest) {
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
+            request.cookies.set(name, value),
           );
 
           supabaseResponse = NextResponse.next({ request });
 
           cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
+            supabaseResponse.cookies.set(name, value, options),
           );
         },
       },
-    }
+    },
   );
 
   const pathname = request.nextUrl.pathname;
@@ -63,6 +63,29 @@ export async function updateSession(request: NextRequest) {
   // ─────────────────────────────────────────────────────────────────────
   // 2️⃣ Permitir flujos de autenticación (PKCE, recovery, magic link)
   // ─────────────────────────────────────────────────────────────────────
+  if (searchParams.has("code")) {
+    const code = searchParams.get("code");
+    if (code) {
+      // Intercambiamos el code por la sesión real en el servidor
+      const { error } = await supabase.auth.exchangeCodeForSession(code);
+
+      if (!error) {
+        // Limpiamos la URL quitando el code para evitar re-ejecuciones
+        const url = request.nextUrl.clone();
+        url.searchParams.delete("code");
+
+        const redirectResponse = NextResponse.redirect(url);
+
+        
+        supabaseResponse.cookies.getAll().forEach((cookie) => {
+          redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
+        });
+
+        return redirectResponse;
+      }
+    }
+  }
+
   const isAuthFlow =
     searchParams.has("code") ||
     searchParams.has("token") ||
@@ -98,7 +121,6 @@ export async function updateSession(request: NextRequest) {
   // 5️⃣ Si está autenticado, aplicar reglas de rol
   // ─────────────────────────────────────────────────────────────────────
   if (session) {
-
     const payload = decodeJwtPayload(session.access_token);
     const userRole = payload.user_role ?? "";
 
@@ -114,7 +136,7 @@ export async function updateSession(request: NextRequest) {
 
     // Proteger rutas por prefijo
     const matchedPrefix = Object.keys(ROLE_ROUTES).find((prefix) =>
-      pathname.startsWith(prefix)
+      pathname.startsWith(prefix),
     );
 
     if (matchedPrefix) {

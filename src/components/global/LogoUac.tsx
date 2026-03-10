@@ -10,6 +10,7 @@ export function Logo({ className = '' }: LogoProps) {
       className={`relative inline-flex items-center justify-center bg-linear-to-br from-blue-600 to-blue-700 rounded-2xl shadow-xl shadow-blue-500/25 overflow-hidden ${className}`}
     >
       <Image
+      loading="eager"
         src="/logo_uniautonoma_blanco.svg"
         alt="Logo"
         fill
