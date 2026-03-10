@@ -39,7 +39,7 @@ export default function CentroAyuda() {
     if (pathname.includes("/estudiante")) return <StudentNavbar />;
     if (pathname.includes("/asesor")) return <AdvisorNavbar />;
     if (pathname.includes("/pro-apoyo")) return <ProApoyoNavbar />;
-    return <StudentNavbar />; // Default
+    return null; // Default
   };
 
   const faqs = [
@@ -159,7 +159,7 @@ export default function CentroAyuda() {
             <div>
               <h3 className="font-bold text-slate-800">Correo Institucional</h3>
               <p className="text-sm text-slate-500">
-                fabsoft_uac@gmail.com
+                fabrica.software@uniautonoma.edu.co
               </p>
             </div>
           </div>

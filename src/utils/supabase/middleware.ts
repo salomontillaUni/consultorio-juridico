@@ -85,8 +85,8 @@ export async function updateSession(request: NextRequest) {
   const isPublicRoute =
     pathname === "/" ||
     pathname.startsWith("/recuperar-contrasena") ||
-    pathname.startsWith("/cambiar-contrasena") ||
-    pathname.startsWith("/auth");
+    pathname.startsWith("/auth") ||
+    pathname.startsWith("/centro-ayuda");
 
   if (!session && !isPublicRoute) {
     const url = request.nextUrl.clone();
@@ -98,10 +98,6 @@ export async function updateSession(request: NextRequest) {
   // 5️⃣ Si está autenticado, aplicar reglas de rol
   // ─────────────────────────────────────────────────────────────────────
   if (session) {
-    // Permitir cambiar contraseña aunque tenga sesión temporal
-    if (pathname.startsWith("/cambiar-contrasena")) {
-      return supabaseResponse;
-    }
 
     const payload = decodeJwtPayload(session.access_token);
     const userRole = payload.user_role ?? "";
