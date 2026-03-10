@@ -45,7 +45,7 @@ import { ProgressIndicator } from "@radix-ui/react-progress";
 import { Caso, Demandado } from "app/types/database";
 import { getCasoById } from "../../../../../../../supabase/queries/getCasoById";
 import { getDemandadoByCasoId } from "../../../../../../../supabase/queries/getDemandadoByCasoId";
-import { supabase } from "@/utils/supabase/supabase";
+import { supabase } from "@/utils/supabase/supabase-client";
 import { Switch } from "@/components/ui/switch";
 import { Tienne } from "next/font/google";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
@@ -342,21 +342,64 @@ export function UserRegistrationForm({ idCaso }: { idCaso: string }) {
   const renderStepContent = () => {
     switch (currentStep) {
       case 1:
-        return <Step1InfoEntrevista caso={caso} currentUserId={currentUserId} formData={formData} handleInputChange={handleInputChange} />;
+        return (
+          <Step1InfoEntrevista
+            caso={caso}
+            currentUserId={currentUserId}
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
       case 2:
-        return <Step2InfoSolicitante caso={caso} formData={formData} handleInputChange={handleInputChange} />;
+        return (
+          <Step2InfoSolicitante
+            caso={caso}
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
       case 3:
-        return <Step3QuienSolicita formData={formData} handleInputChange={handleInputChange} />;
+        return (
+          <Step3QuienSolicita
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
       case 4:
-        return <Step4InfoLaboral formData={formData} handleInputChange={handleInputChange} />;
+        return (
+          <Step4InfoLaboral
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
       case 5:
-        return <Step5DatosAccionado formData={formData} handleInputChange={handleInputChange} />;
+        return (
+          <Step5DatosAccionado
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
       case 6:
-        return <Step6InfoContrato formData={formData} handleInputChange={handleInputChange} />;
+        return (
+          <Step6InfoContrato
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
       case 7:
-        return <Step7DetallesCaso formData={formData} handleInputChange={handleInputChange} />;
+        return (
+          <Step7DetallesCaso
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
       case 8:
-        return <Step8Firmas formData={formData} handleInputChange={handleInputChange} />;
+        return (
+          <Step8Firmas
+            formData={formData}
+            handleInputChange={handleInputChange}
+          />
+        );
       default:
         return null;
     }

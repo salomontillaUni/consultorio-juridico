@@ -1,7 +1,9 @@
-import { supabase } from "@/utils/supabase/supabase";
+import { supabase } from "@/utils/supabase/supabase-client";
 import type { Demandado } from "../../src/app/types/database";
 
-export async function getDemandadoByCasoId(id_caso: string | number): Promise<Demandado | null> {
+export async function getDemandadoByCasoId(
+  id_caso: string | number,
+): Promise<Demandado | null> {
   const casoId = typeof id_caso === "string" ? parseInt(id_caso, 10) : id_caso;
 
   const { data, error } = await supabase

@@ -23,7 +23,7 @@ import { getCasoById } from "../../../../../supabase/queries/getCasoById";
 import { getDemandadoByCasoId } from "../../../../../supabase/queries/getDemandadoByCasoId";
 import { formatDate } from "@/utils/format-date";
 import { cleanData } from "@/utils/utils";
-import { supabase } from "@/utils/supabase/supabase";
+import { supabase } from "@/utils/supabase/supabase-client";
 import {
   Notebook,
   FileText,

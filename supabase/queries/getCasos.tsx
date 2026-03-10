@@ -1,4 +1,4 @@
-import { supabase } from "@/utils/supabase/supabase";
+import { supabase } from "@/utils/supabase/supabase-client";
 import type { Caso } from "../../src/app/types/database";
 
 export async function getCasos(): Promise<Caso[]> {

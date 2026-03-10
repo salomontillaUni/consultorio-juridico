@@ -1,7 +1,7 @@
-'use client';
+"use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import {supabase} from "@/utils/supabase/supabase";
+import { supabase } from "@/utils/supabase/supabase-client";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,21 +29,30 @@ export default function LogoutButton() {
   return (
     <AlertDialog open={open} onOpenChange={setOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="outline" className="text-red-600 hover:text-red-700 hover:bg-red-50 cursor-pointer">
+        <Button
+          variant="outline"
+          className="text-red-600 hover:text-red-700 hover:bg-red-50 cursor-pointer"
+        >
           Cerrar sesión
         </Button>
       </AlertDialogTrigger>
 
       <AlertDialogContent>
         <AlertDialogHeader>
-          <AlertDialogTitle>¿Seguro que quieres cerrar sesión?</AlertDialogTitle>
+          <AlertDialogTitle>
+            ¿Seguro que quieres cerrar sesión?
+          </AlertDialogTitle>
           <AlertDialogDescription>
-            Se cerrará tu sesión actual y tendrás que volver a iniciar sesión para continuar.
+            Se cerrará tu sesión actual y tendrás que volver a iniciar sesión
+            para continuar.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancelar</AlertDialogCancel>
-          <AlertDialogAction onClick={handleLogOut} className="bg-red-600 hover:bg-red-700">
+          <AlertDialogAction
+            onClick={handleLogOut}
+            className="bg-red-600 hover:bg-red-700"
+          >
             Cerrar sesión
           </AlertDialogAction>
         </AlertDialogFooter>

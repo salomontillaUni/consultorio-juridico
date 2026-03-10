@@ -1,10 +1,11 @@
-import { supabase } from "@/utils/supabase/supabase";
+import { supabase } from "@/utils/supabase/supabase-client";
 import type { Caso } from "../../src/app/types/database";
 
 export async function getCasoById(id_caso: string): Promise<Caso> {
   const { data, error } = await supabase
     .from("casos")
-    .select(`
+    .select(
+      `
       id_caso,
       id_usuario,
       tipo_proceso,
@@ -66,7 +67,8 @@ export async function getCasoById(id_caso: string): Promise<Caso> {
           )
         )
       )
-    `)
+    `,
+    )
     .eq("id_caso", id_caso)
     .single(); //devuelve un solo registro, no un array
 

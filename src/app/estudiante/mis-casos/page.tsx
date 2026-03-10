@@ -15,7 +15,7 @@ import Link from "next/link";
 import { Navbar } from "../components/NavBarEstudiante";
 import { Caso } from "app/types/database";
 import { getCasos } from "../../../../supabase/queries/getCasos";
-import { supabase } from "@/utils/supabase/supabase";
+import { supabase } from "@/utils/supabase/supabase-client";
 import {
   Pagination,
   PaginationContent,

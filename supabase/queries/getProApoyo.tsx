@@ -1,9 +1,10 @@
-import { supabase } from "@/utils/supabase/supabase";
+import { supabase } from "@/utils/supabase/supabase-client";
 
 export async function getProApoyo() {
   const { data, error } = await supabase
     .from("perfiles_roles")
-    .select(`
+    .select(
+      `
       user_id,
       perfiles (
         id,
@@ -13,7 +14,8 @@ export async function getProApoyo() {
         telefono,
         activo
       )
-    `)
+    `,
+    )
     .eq("role", "pro_apoyo");
 
   if (error) {
@@ -26,4 +28,3 @@ export async function getProApoyo() {
     perfil: item.perfiles,
   }));
 }
-
