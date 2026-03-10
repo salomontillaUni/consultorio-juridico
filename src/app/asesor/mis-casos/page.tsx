@@ -48,7 +48,6 @@ export default function Asesor() {
         ] = await Promise.all([supabase.auth.getUser(), getCasos()]);
 
         setCurrentUserId(user?.id || null);
-        console.log(data);
         setCasos(data || []);
       } catch (error) {
         console.error("Error fetching cases:", error);
@@ -77,8 +76,6 @@ export default function Asesor() {
             caso.id_caso === caseId ? { ...caso, estado: "aprobado" } : caso,
           ) || null,
       );
-
-      console.log("Caso aprobado exitosamente");
     } catch (error) {
       console.error("Error aprobando caso:", error);
     }

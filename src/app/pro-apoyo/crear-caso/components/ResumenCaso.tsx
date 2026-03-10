@@ -1,10 +1,10 @@
-import { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { FileText, CheckCircle2, AlertCircle } from 'lucide-react';
-import { toast } from 'sonner';
+import { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Separator } from "@/components/ui/separator";
+import { FileText, CheckCircle2, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 import {
   Dialog,
   DialogContent,
@@ -12,12 +12,12 @@ import {
   DialogTitle,
   DialogDescription,
   DialogFooter,
-} from '@/components/ui/dialog';
-import { Caso, Usuario } from 'app/types/database';
-import { insertUsuarioNuevo } from '../../../../../supabase/queries/insertUsuarioNuevo';
-import { insertCasoNuevo } from '../../../../../supabase/queries/insertCasoNuevo';
-import { insertEstudiantesCasos } from '../../../../../supabase/queries/insertEstudiantesCasos';
-import { insertAsesoresCasos } from '../../../../../supabase/queries/insertAsesoresCasos';
+} from "@/components/ui/dialog";
+import { Caso, Usuario } from "app/types/database";
+import { insertUsuarioNuevo } from "../../../../../supabase/queries/insertUsuarioNuevo";
+import { insertCasoNuevo } from "../../../../../supabase/queries/insertCasoNuevo";
+import { insertEstudiantesCasos } from "../../../../../supabase/queries/insertEstudiantesCasos";
+import { insertAsesoresCasos } from "../../../../../supabase/queries/insertAsesoresCasos";
 
 interface ResumenCasoProps {
   caso: Caso;
@@ -35,59 +35,53 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
 
   const handleConfirmacion = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-    console.log("Caso a insertar:", caso);
-    console.log("Usuario a insertar:", usuario);
     insertData();
   };
 
   const insertData = async () => {
-    console.log("Iniciando inserción de datos...");
-  setIsLoading(true);
-  try {
-    const usuarioData = await insertUsuarioNuevo(usuario);
+    setIsLoading(true);
+    try {
+      const usuarioData = await insertUsuarioNuevo(usuario);
 
-    const id_usuario = usuarioData?.[0]?.id_usuario;
-    if (!id_usuario) {
-      throw new Error("No se obtuvo el id_usuario del usuario insertado");
+      const id_usuario = usuarioData?.[0]?.id_usuario;
+      if (!id_usuario) {
+        throw new Error("No se obtuvo el id_usuario del usuario insertado");
+      }
+      const casoData = await insertCasoNuevo(caso, id_usuario);
+
+      const id_estudiante = caso.estudiantes_casos?.[0]?.estudiante.id_perfil;
+      const id_caso = casoData?.[0]?.id_caso;
+      const id_asesor = caso.asesores_casos?.[0]?.asesor.id_perfil;
+
+      if (id_caso && id_estudiante && id_asesor) {
+        await insertEstudiantesCasos(id_caso.toString(), id_estudiante);
+        await insertAsesoresCasos(id_caso.toString(), id_asesor);
+      } else {
+        console.error("Faltan IDs para vincular estudiante o asesor al caso.");
+      }
+      setDialogOpen(true);
+      toast.success("Caso creado exitosamente");
+    } catch (error: any) {
+      console.error("Error al insertar el usuario:", error);
+      let msg = "Ocurrió un error inesperado al registrar el caso.";
+
+      if (error.code === "23505") {
+        if (error.message.includes("usuarios_cedula_key")) {
+          msg = "Error: Ya existe un usuario registrado con esta cédula.";
+        } else {
+          msg = "Error: Ya existe un registro con estos datos únicos.";
+        }
+      } else if (error.message) {
+        msg = error.message;
+      }
+
+      setErrorMessage(msg);
+      setErrorDialogOpen(true);
+      toast.error(msg);
+    } finally {
+      setIsLoading(false);
     }
-    const casoData = await insertCasoNuevo(caso, id_usuario);
-    console.log("Caso insertado:", casoData);
-
-    const id_estudiante = caso.estudiantes_casos?.[0]?.estudiante.id_perfil;
-    const id_caso = casoData?.[0]?.id_caso;
-    const id_asesor = caso.asesores_casos?.[0]?.asesor.id_perfil;
-
-    if (id_caso && id_estudiante && id_asesor) {
-      await insertEstudiantesCasos(id_caso.toString(), id_estudiante);
-      await insertAsesoresCasos(id_caso.toString(), id_asesor);
-    } else {
-      console.error("Faltan IDs para vincular estudiante o asesor al caso.");
-    }
-    setDialogOpen(true);
-    toast.success("Caso creado exitosamente");
-  } catch (error: any) {
-    console.error("Error al insertar el usuario:", error);
-    let msg = "Ocurrió un error inesperado al registrar el caso.";
-    
-    if (error.code === '23505') {
-      console.log("Error al insertar el usuario:", error);
-       if (error.message.includes('usuarios_cedula_key')) {
-         msg = "Error: Ya existe un usuario registrado con esta cédula.";
-       } else {
-         msg = "Error: Ya existe un registro con estos datos únicos.";
-       }
-    } else if (error.message) {
-      msg = error.message;
-    }
-    
-    setErrorMessage(msg);
-    setErrorDialogOpen(true);
-    toast.error(msg);
-  } finally {
-    setIsLoading(false);
-  }
-};
-
+  };
 
   const handleNuevoCaso = () => {
     setDialogOpen(false);
@@ -112,14 +106,16 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
             <h3 className="text-slate-900 mb-3">Profesional que Registra</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-4 bg-slate-50 rounded-lg">
               <div>
-                <span className="text-sm text-muted-foreground">Nombre completo</span>
-                <p className="text-slate-900">{caso.usuarios.nombre_completo}</p>
+                <span className="text-sm text-muted-foreground">
+                  Nombre completo
+                </span>
+                <p className="text-slate-900">
+                  {caso.usuarios.nombre_completo}
+                </p>
               </div>
               <div>
                 <span className="text-sm text-muted-foreground">Sexo</span>
-                <p className="text-slate-900">
-                  Sexo {caso.usuarios.sexo}
-                </p>
+                <p className="text-slate-900">Sexo {caso.usuarios.sexo}</p>
               </div>
               <div>
                 <span className="text-sm text-muted-foreground">Documento</span>
@@ -132,7 +128,9 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
                 <p className="text-slate-900">{caso.usuarios.telefono}</p>
               </div>
               <div>
-                <span className="text-sm text-muted-foreground">Correo electrónico</span>
+                <span className="text-sm text-muted-foreground">
+                  Correo electrónico
+                </span>
                 <p className="text-slate-900">{caso.usuarios.correo}</p>
               </div>
             </div>
@@ -148,24 +146,33 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
                 <div>
                   <span className="text-sm text-muted-foreground">Nombre</span>
                   <p className="text-slate-900">
-                    {caso.estudiantes_casos[0].estudiante.perfil.nombre_completo}
+                    {
+                      caso.estudiantes_casos[0].estudiante.perfil
+                        .nombre_completo
+                    }
                   </p>
                 </div>
                 <div>
-                  <span className="text-sm text-muted-foreground">Semestre</span>
+                  <span className="text-sm text-muted-foreground">
+                    Semestre
+                  </span>
                   <p className="text-slate-900">
                     {caso.estudiantes_casos[0].estudiante.semestre}
                   </p>
                 </div>
                 <div>
-                  <span className="flex text-sm text-muted-foreground">Turno</span>
+                  <span className="flex text-sm text-muted-foreground">
+                    Turno
+                  </span>
                   <Badge variant="outline">
                     {caso.estudiantes_casos[0].estudiante.turno}
                   </Badge>
                 </div>
               </div>
             ) : (
-              <p className="text-gray-500 text-sm italic">Sin estudiante asignado</p>
+              <p className="text-gray-500 text-sm italic">
+                Sin estudiante asignado
+              </p>
             )}
           </div>
 
@@ -178,21 +185,35 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
                 <h3 className="text-slate-900 mb-3">Asesor Asignado</h3>
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-purple-50 rounded-lg">
                   <div>
-                    <span className="text-sm text-muted-foreground">Nombre</span>
-                    <p className="text-slate-900">{caso.asesores_casos[0]?.asesor.perfil.nombre_completo}</p>
+                    <span className="text-sm text-muted-foreground">
+                      Nombre
+                    </span>
+                    <p className="text-slate-900">
+                      {caso.asesores_casos[0]?.asesor.perfil.nombre_completo}
+                    </p>
                   </div>
                   <div>
-                    <span className="flex text-sm text-muted-foreground">Área</span>
-                    <Badge variant="outline">{caso.asesores_casos[0]?.asesor.area}</Badge>
+                    <span className="flex text-sm text-muted-foreground">
+                      Área
+                    </span>
+                    <Badge variant="outline">
+                      {caso.asesores_casos[0]?.asesor.area}
+                    </Badge>
                   </div>
                   <div>
-                    <span className="flex text-sm text-muted-foreground">Turno</span>
-                    <Badge variant="secondary">{caso.asesores_casos[0]?.asesor.turno}</Badge>
+                    <span className="flex text-sm text-muted-foreground">
+                      Turno
+                    </span>
+                    <Badge variant="secondary">
+                      {caso.asesores_casos[0]?.asesor.turno}
+                    </Badge>
                   </div>
                 </div>
               </>
             ) : (
-              <p className="text-gray-500 text-sm italic">Sin asesor asignado</p>
+              <p className="text-gray-500 text-sm italic">
+                Sin asesor asignado
+              </p>
             )}
           </div>
 
@@ -204,8 +225,12 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
             <div className="space-y-4 p-4 bg-slate-50 rounded-lg">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <span className="text-sm text-muted-foreground">Fecha de creación</span>
-                  <p className="text-slate-900">{caso.fecha_creacion.split('T')[0]}</p>
+                  <span className="text-sm text-muted-foreground">
+                    Fecha de creación
+                  </span>
+                  <p className="text-slate-900">
+                    {caso.fecha_creacion.split("T")[0]}
+                  </p>
                 </div>
                 <div>
                   <span className="text-sm text-muted-foreground">Estado</span>
@@ -218,8 +243,12 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
               </div>
               {caso.observaciones && (
                 <div>
-                  <span className="text-sm text-muted-foreground">Observaciones</span>
-                  <p className="text-slate-900 mt-1 whitespace-pre-wrap">{caso.observaciones}</p>
+                  <span className="text-sm text-muted-foreground">
+                    Observaciones
+                  </span>
+                  <p className="text-slate-900 mt-1 whitespace-pre-wrap">
+                    {caso.observaciones}
+                  </p>
                 </div>
               )}
             </div>
@@ -258,11 +287,15 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
               Caso creado exitosamente
             </DialogTitle>
             <DialogDescription>
-              El caso se ha registrado correctamente en el sistema. Puedes crear uno nuevo o cerrar esta ventana.
+              El caso se ha registrado correctamente en el sistema. Puedes crear
+              uno nuevo o cerrar esta ventana.
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex justify-center items-center">
-            <Button onClick={handleNuevoCaso} className="w-full bg-blue-600 hover:bg-blue-700">
+            <Button
+              onClick={handleNuevoCaso}
+              className="w-full bg-blue-600 hover:bg-blue-700"
+            >
               OK
             </Button>
           </DialogFooter>
@@ -282,8 +315,8 @@ export function ResumenCaso({ caso, usuario, onNuevoCaso }: ResumenCasoProps) {
             </DialogDescription>
           </DialogHeader>
           <DialogFooter className="flex justify-center items-center">
-            <Button 
-              onClick={() => setErrorDialogOpen(false)} 
+            <Button
+              onClick={() => setErrorDialogOpen(false)}
               className="w-full bg-red-600 hover:bg-red-700 text-white"
             >
               Entendido

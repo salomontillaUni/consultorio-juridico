@@ -59,7 +59,6 @@ export default function Page({
       }
 
       setCaso(casoFetch);
-      console.log(casoFetch);
       setDemandado(demandadoFetch);
     } catch (err) {
       console.error(err);

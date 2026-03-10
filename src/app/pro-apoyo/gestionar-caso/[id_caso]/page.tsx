@@ -173,7 +173,6 @@ export default function Page({
             concepto_otros_ingresos: limpio.concepto_otros_ingresos,
           })
           .eq("id_usuario", caso?.id_usuario);
-        console.log("🔄 Actualizando usuario...", limpio);
         if (errorCaso) {
           setError(errorCaso.message);
           throw errorCaso;
@@ -212,7 +211,6 @@ export default function Page({
       setIsEditingDefendant(false);
       setEditedDefendantData(null);
       const limpio = cleanData(editedDefendantData);
-      console.log("ID_CASO ENVIADO AL UPDATE:", id_caso, typeof id_caso);
 
       try {
         const { data, error } = await supabase
@@ -227,8 +225,6 @@ export default function Page({
           .eq("id_caso", id_caso)
           .select();
 
-        console.log("DATA:", data);
-        console.log("ERROR:", error);
         if (error) {
           setError(error.message);
           throw error;
@@ -294,7 +290,6 @@ export default function Page({
             observaciones: limpio.observaciones,
           })
           .eq("id_caso", id_caso);
-        console.log("🔄 Actualizando caso...", limpio);
         if (errorCaso) {
           setError(errorCaso.message);
           throw errorCaso;

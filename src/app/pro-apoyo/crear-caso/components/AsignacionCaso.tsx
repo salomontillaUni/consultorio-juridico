@@ -107,7 +107,6 @@ export function AsignacionCaso({
       console.error("No se pudo encontrar el estudiante o asesor seleccionado");
       return;
     }
-    console.log(datosIniciales);
     const datosCaso: Caso = {
       area: datosIniciales?.area || "otros",
       fecha_creacion:
