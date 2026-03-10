@@ -73,9 +73,9 @@ export default function CambiarContrasenaPage() {
       setSuccess(true);
       setTimeout(() => {
         if (!error) {
+          router.push("/");
           router.refresh();
           supabase.auth.signOut();
-          router.push("/");
         }
       }, 1000);
     } catch (err) {
