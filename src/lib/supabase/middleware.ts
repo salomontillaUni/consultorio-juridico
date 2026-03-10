@@ -63,28 +63,6 @@ export async function updateSession(request: NextRequest) {
   // ─────────────────────────────────────────────────────────────────────
   // 2️⃣ Permitir flujos de autenticación (PKCE, recovery, magic link)
   // ─────────────────────────────────────────────────────────────────────
-  if (searchParams.has("code")) {
-    const code = searchParams.get("code");
-    if (code) {
-      // Intercambiamos el code por la sesión real en el servidor
-      const { error } = await supabase.auth.exchangeCodeForSession(code);
-
-      if (!error) {
-        // Limpiamos la URL quitando el code para evitar re-ejecuciones
-        const url = request.nextUrl.clone();
-        url.searchParams.delete("code");
-
-        const redirectResponse = NextResponse.redirect(url);
-
-        
-        supabaseResponse.cookies.getAll().forEach((cookie) => {
-          redirectResponse.cookies.set(cookie.name, cookie.value, cookie);
-        });
-
-        return redirectResponse;
-      }
-    }
-  }
 
   const isAuthFlow =
     searchParams.has("code") ||
