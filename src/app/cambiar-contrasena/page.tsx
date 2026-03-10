@@ -44,6 +44,21 @@ export default function CambiarContrasenaPage() {
     return () => subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+  const checkSession = async () => {
+    const { data, error } = await supabase.auth.getSession();
+    console.log("🔍 Sesión actual:", data.session);
+    console.log("⚠️ Error de sesión:", error);
+    
+    // Escuchar cambios de estado
+    supabase.auth.onAuthStateChange((event, session) => {
+      console.log("🔔 Evento de Auth:", event);
+      console.log("👤 Sesión en evento:", session);
+    });
+  };
+  checkSession();
+}, []);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
