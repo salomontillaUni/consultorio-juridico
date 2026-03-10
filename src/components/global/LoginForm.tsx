@@ -56,6 +56,7 @@ export function LoginForm() {
       if (session) {
         const jwt = jwtDecode<CustomJwtPayload>(session.access_token);
         const role = jwt.user_role;
+        console.log(jwt);
         switch (role) {
           case "admin":
             router.refresh();
